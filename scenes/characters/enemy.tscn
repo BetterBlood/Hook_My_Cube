@@ -1,0 +1,41 @@
+[gd_scene load_steps=7 format=3 uid="uid://bualks0wajs8i"]
+
+[ext_resource type="Script" uid="uid://dh50j32wmvwii" path="res://scripts/characters/health_component.gd" id="1_bmiyw"]
+[ext_resource type="Script" uid="uid://veoyspye5l5q" path="res://scripts/characters/enemy.gd" id="1_fulqv"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fulqv"]
+radius = 0.6
+height = 2.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uql5s"]
+albedo_color = Color(0.121569, 0.564706, 0.188235, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_j7qbc"]
+material = SubResource("StandardMaterial3D_uql5s")
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_f2e6v"]
+radius = 0.4
+height = 1.8
+
+[node name="Enemy" type="CharacterBody3D"]
+collision_layer = 4
+script = ExtResource("1_fulqv")
+
+[node name="EnemyArea3D" type="Area3D" parent="."]
+collision_layer = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="EnemyArea3D"]
+shape = SubResource("CapsuleShape3D_fulqv")
+debug_color = Color(0.882208, 0.304611, 0.375487, 0.42)
+
+[node name="HealthComponent" type="Node3D" parent="."]
+script = ExtResource("1_bmiyw")
+metadata/_custom_type_script = "uid://dh50j32wmvwii"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_j7qbc")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_f2e6v")
+
+[connection signal="body_entered" from="EnemyArea3D" to="." method="_on_enemy_area_3d_body_entered"]

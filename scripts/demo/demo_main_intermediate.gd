@@ -10,10 +10,9 @@ func _ready() -> void:
 	
 	for line in logger.GetLines():
 		print(line)
-		
-	pass # Replace with function body.
+	print()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	pass

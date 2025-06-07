@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://br883pylmypa7"]
+[gd_scene load_steps=10 format=3 uid="uid://br883pylmypa7"]
 
 [ext_resource type="Script" uid="uid://wdhsttcv1ana" path="res://scripts/demo/demo_main_intermediate.gd" id="1_wehoa"]
-[ext_resource type="PackedScene" uid="uid://y1yw5naea0tu" path="res://scenes/player.tscn" id="3_4d0q1"]
-[ext_resource type="Script" uid="uid://cp0j2ml3yhrbt" path="res://scripts/player.gd" id="4_tp4il"]
+[ext_resource type="PackedScene" uid="uid://y1yw5naea0tu" path="res://scenes/characters/player.tscn" id="3_4d0q1"]
+[ext_resource type="PackedScene" uid="uid://bualks0wajs8i" path="res://scenes/characters/enemy.tscn" id="3_tp4il"]
+[ext_resource type="PackedScene" uid="uid://bseq03jqv66ql" path="res://scenes/fight/fire_projectile.tscn" id="4_tp4il"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_wehoa"]
 sky_top_color = Color(0.0970707, 0.463976, 0.749279, 1)
@@ -37,6 +38,7 @@ shadow_enabled = true
 environment = SubResource("Environment_4d0q1")
 
 [node name="Floor" type="StaticBody3D" parent="."]
+collision_mask = 30
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Floor"]
 mesh = SubResource("BoxMesh_wehoa")
@@ -46,4 +48,21 @@ shape = SubResource("ConcavePolygonShape3D_30cnl")
 
 [node name="Player" parent="." instance=ExtResource("3_4d0q1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7, 28)
-script = ExtResource("4_tp4il")
+
+[node name="Enemy" parent="." instance=ExtResource("3_tp4il")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 1, -15)
+
+[node name="Enemy2" parent="." instance=ExtResource("3_tp4il")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.3655, 1.54046, 0)
+
+[node name="Enemy3" parent="." instance=ExtResource("3_tp4il")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.42433, 0)
+
+[node name="FireProjectile" parent="." instance=ExtResource("4_tp4il")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.58641, 1.96609, 0)
+
+[node name="FireProjectile2" parent="." instance=ExtResource("4_tp4il")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.84867, 5.28285, 0)
+
+[node name="FireProjectile3" parent="." instance=ExtResource("4_tp4il")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 56.9969, 4.23981, 0)
