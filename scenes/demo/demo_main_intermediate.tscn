@@ -1,0 +1,49 @@
+[gd_scene load_steps=9 format=3 uid="uid://br883pylmypa7"]
+
+[ext_resource type="Script" uid="uid://wdhsttcv1ana" path="res://scripts/demo/demo_main_intermediate.gd" id="1_wehoa"]
+[ext_resource type="PackedScene" uid="uid://y1yw5naea0tu" path="res://scenes/player.tscn" id="3_4d0q1"]
+[ext_resource type="Script" uid="uid://cp0j2ml3yhrbt" path="res://scripts/player.gd" id="4_tp4il"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_wehoa"]
+sky_top_color = Color(0.0970707, 0.463976, 0.749279, 1)
+sky_horizon_color = Color(0.864113, 0.583237, 0.605194, 1)
+ground_bottom_color = Color(0.111278, 0.19951, 0.118981, 1)
+ground_horizon_color = Color(0.834261, 0.378337, 0.387769, 1)
+
+[sub_resource type="Sky" id="Sky_30cnl"]
+sky_material = SubResource("ProceduralSkyMaterial_wehoa")
+
+[sub_resource type="Environment" id="Environment_4d0q1"]
+background_mode = 2
+sky = SubResource("Sky_30cnl")
+tonemap_mode = 2
+
+[sub_resource type="BoxMesh" id="BoxMesh_wehoa"]
+size = Vector3(100, 0.2, 100)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_30cnl"]
+data = PackedVector3Array(-50, 0.1, 50, 50, 0.1, 50, -50, -0.1, 50, 50, 0.1, 50, 50, -0.1, 50, -50, -0.1, 50, 50, 0.1, -50, -50, 0.1, -50, 50, -0.1, -50, -50, 0.1, -50, -50, -0.1, -50, 50, -0.1, -50, 50, 0.1, 50, 50, 0.1, -50, 50, -0.1, 50, 50, 0.1, -50, 50, -0.1, -50, 50, -0.1, 50, -50, 0.1, -50, -50, 0.1, 50, -50, -0.1, -50, -50, 0.1, 50, -50, -0.1, 50, -50, -0.1, -50, 50, 0.1, 50, -50, 0.1, 50, 50, 0.1, -50, -50, 0.1, 50, -50, 0.1, -50, 50, 0.1, -50, -50, -0.1, 50, 50, -0.1, 50, -50, -0.1, -50, 50, -0.1, 50, 50, -0.1, -50, -50, -0.1, -50)
+
+[node name="Demo Main Intermediate" type="Node3D"]
+script = ExtResource("1_wehoa")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866024, -0.433016, 0.250001, 0, 0.499998, 0.866026, -0.500003, 0.749999, -0.43301, 0, -38.9527, 59.7878)
+light_color = Color(0.999999, 0.994363, 0.41895, 1)
+light_energy = 2.0
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_4d0q1")
+
+[node name="Floor" type="StaticBody3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor"]
+mesh = SubResource("BoxMesh_wehoa")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
+shape = SubResource("ConcavePolygonShape3D_30cnl")
+
+[node name="Player" parent="." instance=ExtResource("3_4d0q1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7, 28)
+script = ExtResource("4_tp4il")
