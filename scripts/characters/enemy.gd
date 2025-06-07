@@ -2,34 +2,52 @@ extends Creature
 
 class_name Enemy
 
-const SPEED = 5.0
+const SPEED = 3.0
 const JUMP_VELOCITY = 4.5
+@onready var navigation_agent_3d: NavigationAgent3D = $Navigation/NavigationAgent3D
+var target: Creature
+var base_position
 
 func _ready() -> void:
 	super._ready()
+	
 
 func _physics_process(delta: float) -> void:
+	
+	var direction = Vector3()
+	if target or not navigation_agent_3d.is_navigation_finished():
+		direction = (navigation_agent_3d.get_next_path_position() - global_position).normalized()
+	velocity = velocity.lerp(direction * SPEED, delta * 10)
+	
 	# Add the gravity.
 	if not is_on_floor():
 		velocity += get_gravity() * delta
-
-	# Handle jump. TODO: enemy behavior
-	#if Input.is_action_just_pressed("ui_accept") and is_on_floor():
-		#velocity.y = JUMP_VELOCITY
-
-	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
-	var input_dir := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down") # DEBUG: arrow, TODO: remove after pathing works
-	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	if direction:
-		velocity.x = direction.x * SPEED
-		velocity.z = direction.z * SPEED
-	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
-		velocity.z = move_toward(velocity.z, 0, SPEED)
-
+	
 	move_and_slide()
 
+func compute_path() -> void:
+	if target:
+		print(target)
+		navigation_agent_3d.target_position = target.global_position
+	else:
+		navigation_agent_3d.target_position = base_position
 
 func _on_enemy_area_3d_body_entered(body: Node3D) -> void:
 	print("enemy collide with: ", body)
+	if not base_position:
+		base_position = global_position
+
+
+func _on_update_navigation_timeout() -> void:
+	compute_path()
+
+
+func _on_chase_area_area_entered(area: Area3D) -> void:
+	print("_on_chease_area_area_entered")
+	target = area.get_parent()
+
+
+func _on_release_chase_area_area_exited(area: Area3D) -> void:
+	print("_on_release_chase_area_area_exited")
+	if target == area.get_parent():
+		target = null

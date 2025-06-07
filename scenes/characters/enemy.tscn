@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bualks0wajs8i"]
+[gd_scene load_steps=9 format=3 uid="uid://bualks0wajs8i"]
 
 [ext_resource type="Script" uid="uid://dh50j32wmvwii" path="res://scripts/characters/health_component.gd" id="1_bmiyw"]
 [ext_resource type="Script" uid="uid://veoyspye5l5q" path="res://scripts/characters/enemy.gd" id="1_fulqv"]
@@ -17,8 +17,15 @@ material = SubResource("StandardMaterial3D_uql5s")
 radius = 0.4
 height = 1.8
 
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_fulqv"]
+radius = 10.0
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_f2e6v"]
+radius = 20.0
+
 [node name="Enemy" type="CharacterBody3D"]
 collision_layer = 4
+motion_mode = 1
 script = ExtResource("1_fulqv")
 
 [node name="EnemyArea3D" type="Area3D" parent="."]
@@ -38,4 +45,32 @@ mesh = SubResource("CapsuleMesh_j7qbc")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_f2e6v")
 
+[node name="Navigation" type="Node3D" parent="."]
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="Navigation"]
+debug_enabled = true
+debug_path_custom_color = Color(1, 0, 0, 1)
+
+[node name="UpdateNavigation" type="Timer" parent="Navigation"]
+wait_time = 0.5
+autostart = true
+
+[node name="ChaseArea" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ChaseArea"]
+shape = SubResource("CylinderShape3D_fulqv")
+debug_color = Color(0.811437, 0.406932, 0.149797, 0.42)
+
+[node name="ReleaseChaseArea" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="ReleaseChaseArea"]
+shape = SubResource("CylinderShape3D_f2e6v")
+
 [connection signal="body_entered" from="EnemyArea3D" to="." method="_on_enemy_area_3d_body_entered"]
+[connection signal="timeout" from="Navigation/UpdateNavigation" to="." method="_on_update_navigation_timeout"]
+[connection signal="area_entered" from="ChaseArea" to="." method="_on_chase_area_area_entered"]
+[connection signal="area_exited" from="ReleaseChaseArea" to="." method="_on_release_chase_area_area_exited"]

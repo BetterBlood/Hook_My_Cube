@@ -2,7 +2,7 @@ extends Creature
 
 class_name Player
 
-const SPEED = 5.0
+const SPEED = 7.0
 const JUMP_VELOCITY = 4.5
 @onready var head := $Head
 @onready var camera := $Head/Camera3D
@@ -52,7 +52,6 @@ func _physics_process(delta):
 		else :
 			collisionShape.disabled = false
 	
-	
 	if joystick_h_event:
 		if abs(joystick_h_event.get_axis_value()) > JOY_DEADZONE:
 			rotate_y(deg_to_rad(-joystick_h_event.get_axis_value() * right_stick_sensitivity_h))
@@ -101,4 +100,4 @@ func _physics_process(delta):
 
 
 func _on_player_area_3d_body_entered(body: Node3D) -> void:
-	print("player collide with: ", body)
+	print("_on_player_area_3d_body_entered: ", body)
