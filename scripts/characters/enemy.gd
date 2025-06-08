@@ -29,7 +29,7 @@ func compute_path() -> void:
 	if target:
 		print(target)
 		navigation_agent_3d.target_position = target.global_position
-	else:
+	elif base_position:
 		navigation_agent_3d.target_position = base_position
 
 func _on_enemy_area_3d_body_entered(body: Node3D) -> void:

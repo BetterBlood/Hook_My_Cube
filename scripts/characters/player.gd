@@ -3,9 +3,13 @@ extends Creature
 class_name Player
 
 const SPEED = 7.0
+const PROJECTILE_SPEED = 10
 const JUMP_VELOCITY = 4.5
 @onready var head := $Head
 @onready var camera := $Head/Camera3D
+@onready var elbow: Marker3D = $Head/Elbow
+@onready var rune_spot: Marker3D = $Head/RuneSpot
+
 const SENSITIVITY = 0.07
 var right_stick_sensitivity_h = 4
 var right_stick_sensitivity_v = 4
@@ -22,6 +26,8 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 var joystick_v_event: InputEventJoypadMotion
 var joystick_h_event: InputEventJoypadMotion
+
+const FIRE_PROJECTILE = preload("res://scenes/fight/fire_projectile.tscn")
 
 func _input(event):
 	# Checking right analog stick input for "mouse look"
@@ -43,7 +49,14 @@ func _unhandled_input(event):
 		head.rotate_x(deg_to_rad(-event.relative.y * SENSITIVITY))
 		head.rotation.x = clamp(head.rotation.x, deg_to_rad(-89), deg_to_rad(89))
 
+
 func _physics_process(delta):
+	
+	if Input.is_action_just_pressed("attack"):
+		var fire_projectile = FIRE_PROJECTILE.instantiate()
+		get_parent().add_child(fire_projectile)
+		fire_projectile.global_position = rune_spot.global_position
+		fire_projectile.apply_impulse((rune_spot.global_position - elbow.global_position) * PROJECTILE_SPEED, Vector3())
 	
 	if Input.is_action_just_pressed("godMod"):
 		godMode = !godMode

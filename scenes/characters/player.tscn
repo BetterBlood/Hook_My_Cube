@@ -37,6 +37,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.782, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Head"]
 
+[node name="Elbow" type="Marker3D" parent="Head"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.651438, -0.212219, -0.732916)
+
+[node name="RuneSpot" type="Marker3D" parent="Head"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.53377, -0.212219, -1.59209)
+
 [node name="PlayerArea3D" type="Area3D" parent="."]
 collision_layer = 2
 collision_mask = 0
