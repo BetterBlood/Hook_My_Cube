@@ -1,8 +1,10 @@
-[gd_scene load_steps=12 format=4 uid="uid://canga3dhywbr3"]
+[gd_scene load_steps=14 format=4 uid="uid://canga3dhywbr3"]
 
 [ext_resource type="Script" uid="uid://cw1r4c1d7beyv" path="res://addons/portals/scripts/portal_3d.gd" id="1_l7oo2"]
 [ext_resource type="Material" uid="uid://dcfkcyddxkglf" path="res://addons/portals/materials/editor-preview-portal-material.tres" id="2_83gfp"]
 [ext_resource type="Script" uid="uid://bxcel82b180o3" path="res://addons/portals/scripts/portal_boxmesh.gd" id="3_rpqfb"]
+[ext_resource type="Material" uid="uid://llqdeyixmjnv" path="res://materials/debug/StandardMatWIP.tres" id="4_rpqfb"]
+[ext_resource type="Material" uid="uid://c615rqkdy3ie" path="res://materials/debug/Black_Debug.tres" id="5_aom6g"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_aom6g"]
 _surfaces = [{
@@ -23,6 +25,7 @@ size = Vector3(2, 2.5, 1)
 size = Vector3(2, 2.5, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_fcbeq"]
+material = ExtResource("4_rpqfb")
 size = Vector3(0.1, 2.4, 0.2)
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_l7oo2"]
@@ -32,6 +35,7 @@ data = PackedVector3Array(-0.05, 1.2, 0.1, 0.05, 1.2, 0.1, -0.05, -1.2, 0.1, 0.0
 data = PackedVector3Array(-0.05, 1.2, 0.1, 0.05, 1.2, 0.1, -0.05, -1.2, 0.1, 0.05, 1.2, 0.1, 0.05, -1.2, 0.1, -0.05, -1.2, 0.1, 0.05, 1.2, -0.1, -0.05, 1.2, -0.1, 0.05, -1.2, -0.1, -0.05, 1.2, -0.1, -0.05, -1.2, -0.1, 0.05, -1.2, -0.1, 0.05, 1.2, 0.1, 0.05, 1.2, -0.1, 0.05, -1.2, 0.1, 0.05, 1.2, -0.1, 0.05, -1.2, -0.1, 0.05, -1.2, 0.1, -0.05, 1.2, -0.1, -0.05, 1.2, 0.1, -0.05, -1.2, -0.1, -0.05, 1.2, 0.1, -0.05, -1.2, 0.1, -0.05, -1.2, -0.1, 0.05, 1.2, 0.1, -0.05, 1.2, 0.1, 0.05, 1.2, -0.1, -0.05, 1.2, 0.1, -0.05, 1.2, -0.1, 0.05, 1.2, -0.1, -0.05, -1.2, 0.1, 0.05, -1.2, 0.1, -0.05, -1.2, -0.1, 0.05, -1.2, 0.1, 0.05, -1.2, -0.1, -0.05, -1.2, -0.1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_l7oo2"]
+material = ExtResource("5_aom6g")
 size = Vector3(2.1, 0.1, 0.2)
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_rpqfb"]
