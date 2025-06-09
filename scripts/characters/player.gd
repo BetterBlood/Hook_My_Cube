@@ -3,7 +3,7 @@ extends Creature
 class_name Player
 
 const SPEED = 7.0
-const PROJECTILE_SPEED = 10
+const PROJECTILE_SPEED = 10 # TODO: get from projectile
 const JUMP_VELOCITY = 4.5
 @onready var head := $Head
 @onready var camera := $Head/Camera3D
@@ -18,7 +18,7 @@ var directionnalInputs = Vector3(0,0,0)
 var JOY_DEADZONE:= 0.1
 
 var godMode : bool
-@export var godModeSpeedMultiplier = 15
+@export var godModeSpeedMultiplier = 5
 @onready var collisionShape := $CollisionShape3D
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
@@ -56,7 +56,8 @@ func _physics_process(delta):
 		var fire_projectile = FIRE_PROJECTILE.instantiate()
 		get_parent().add_child(fire_projectile)
 		fire_projectile.global_position = rune_spot.global_position
-		fire_projectile.apply_impulse((rune_spot.global_position - elbow.global_position) * PROJECTILE_SPEED, Vector3())
+		#fire_projectile.set_layers_to_hit(5)
+		fire_projectile.apply_impulse((rune_spot.global_position - elbow.global_position).normalized() * PROJECTILE_SPEED, Vector3())
 	
 	if Input.is_action_just_pressed("godMod"):
 		godMode = !godMode
