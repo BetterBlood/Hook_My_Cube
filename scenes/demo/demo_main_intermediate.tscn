@@ -164,6 +164,9 @@ mesh = SubResource("BoxMesh_dcxnu")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/obstacle4"]
 shape = SubResource("ConcavePolygonShape3D_wkq0h")
 
+[connection signal="generation" from="." to="Torch2" method="_on_generation"]
+[connection signal="generation" from="." to="Torch3" method="_on_generation"]
+
 [editable path="Player"]
 [editable path="NavigationRegion3D/Floor/P1 -> Fight Room"]
 [editable path="NavigationRegion3D/Floor/P3 -> Lab Entrance"]
