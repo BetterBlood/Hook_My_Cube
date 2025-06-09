@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://y1yw5naea0tu" path="res://scenes/characters/player.tscn" id="3_4d0q1"]
 [ext_resource type="PackedScene" uid="uid://bualks0wajs8i" path="res://scenes/characters/enemy.tscn" id="3_tp4il"]
 [ext_resource type="PackedScene" uid="uid://dvkq4hwixk2m8" path="res://scenes/decorations/torch.tscn" id="5_dcxnu"]
-[ext_resource type="Material" uid="uid://llqdeyixmjnv" path="res://materials/debug/StandardMatWIP.tres" id="6_dcxnu"]
+[ext_resource type="Material" uid="uid://llqdeyixmjnv" path="res://materials/workInProgress/StandardMatWIP.tres" id="6_dcxnu"]
 [ext_resource type="PackedScene" uid="uid://canga3dhywbr3" path="res://scenes/portal_with_frame.tscn" id="8_6728e"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_wehoa"]

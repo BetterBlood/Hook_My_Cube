@@ -30,7 +30,7 @@ folder_colors={
 "res://addons/portals/": "purple",
 "res://images/": "gray",
 "res://materials/": "teal",
-"res://materials/debug/": "pink",
+"res://materials/workInProgress/": "pink",
 "res://scenes/": "teal",
 "res://scenes/decorations/": "orange",
 "res://scenes/demo/": "yellow",
