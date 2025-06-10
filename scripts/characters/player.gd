@@ -56,7 +56,7 @@ func _physics_process(delta):
 		var fire_projectile = FIRE_PROJECTILE.instantiate()
 		get_parent().add_child(fire_projectile)
 		fire_projectile.global_position = rune_spot.global_position
-		#fire_projectile.set_layers_to_hit(5)
+		fire_projectile.set_layers_to_hit(5)
 		fire_projectile.apply_impulse((rune_spot.global_position - elbow.global_position).normalized() * PROJECTILE_SPEED, Vector3())
 	
 	if Input.is_action_just_pressed("godMod"):

@@ -1,10 +1,11 @@
-[gd_scene load_steps=15 format=3 uid="uid://br883pylmypa7"]
+[gd_scene load_steps=16 format=3 uid="uid://br883pylmypa7"]
 
 [ext_resource type="Script" uid="uid://wdhsttcv1ana" path="res://scripts/demo/demo_main_intermediate.gd" id="1_wehoa"]
 [ext_resource type="PackedScene" uid="uid://y1yw5naea0tu" path="res://scenes/characters/player.tscn" id="3_4d0q1"]
 [ext_resource type="PackedScene" uid="uid://bualks0wajs8i" path="res://scenes/characters/enemy.tscn" id="3_tp4il"]
 [ext_resource type="PackedScene" uid="uid://dvkq4hwixk2m8" path="res://scenes/decorations/torch.tscn" id="5_dcxnu"]
 [ext_resource type="Material" uid="uid://llqdeyixmjnv" path="res://materials/workInProgress/StandardMatWIP.tres" id="6_dcxnu"]
+[ext_resource type="Script" uid="uid://dn77lcjlugkqt" path="res://addons/polyrinthe/polyrintheGenerator.gd" id="7_wkq0h"]
 [ext_resource type="PackedScene" uid="uid://canga3dhywbr3" path="res://scenes/portal_with_frame.tscn" id="8_6728e"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_wehoa"]
@@ -103,6 +104,15 @@ exit_portal = NodePath("../../P3 -> Lab Entrance/Portal3D")
 view_direction = 1
 teleport_direction = 0
 
+[node name="SpotLight3D" type="SpotLight3D" parent="NavigationRegion3D/Floor/P4 -> Main Room"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 1.5, 0)
+light_energy = 16.0
+light_indirect_energy = 16.0
+shadow_enabled = true
+shadow_caster_mask = 4294966279
+spot_range = 10.0
+spot_angle = 120.0
+
 [node name="Floor2" type="StaticBody3D" parent="NavigationRegion3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19, -41, 15)
 collision_mask = 31
@@ -164,8 +174,26 @@ mesh = SubResource("BoxMesh_dcxnu")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/obstacle4"]
 shape = SubResource("ConcavePolygonShape3D_wkq0h")
 
+[node name="Polyrinthe" type="Node3D" parent="." node_paths=PackedStringArray("coord_first", "coord_right", "coord_up")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.2, -60)
+script = ExtResource("7_wkq0h")
+algo = 9
+coord_first = NodePath("Marker3D")
+coord_right = NodePath("Marker3D2")
+coord_up = NodePath("Marker3D3")
+metadata/_custom_type_script = "uid://dn77lcjlugkqt"
+
+[node name="Marker3D" type="Marker3D" parent="Polyrinthe"]
+
+[node name="Marker3D2" type="Marker3D" parent="Polyrinthe"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
+
+[node name="Marker3D3" type="Marker3D" parent="Polyrinthe"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
 [connection signal="generation" from="." to="Torch2" method="_on_generation"]
 [connection signal="generation" from="." to="Torch3" method="_on_generation"]
+[connection signal="generation" from="." to="Polyrinthe" method="_on_menu_generation"]
 
 [editable path="Player"]
 [editable path="NavigationRegion3D/Floor/P1 -> Fight Room"]

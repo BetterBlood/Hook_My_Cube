@@ -21,7 +21,7 @@ project/assembly_name="Hook_My_Cube"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/portals/plugin.cfg")
+enabled=PackedStringArray("res://addons/polyrinthe/plugin.cfg", "res://addons/portals/plugin.cfg")
 
 [file_customization]
 
