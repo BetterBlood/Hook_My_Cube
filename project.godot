@@ -27,6 +27,7 @@ enabled=PackedStringArray("res://addons/polyrinthe/plugin.cfg", "res://addons/po
 
 folder_colors={
 "res://addons/": "teal",
+"res://addons/polyrinthe/": "red",
 "res://addons/portals/": "purple",
 "res://images/": "gray",
 "res://materials/": "teal",
