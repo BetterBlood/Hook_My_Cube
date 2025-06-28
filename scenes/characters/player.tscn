@@ -1,7 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://y1yw5naea0tu"]
+[gd_scene load_steps=9 format=3 uid="uid://y1yw5naea0tu"]
 
 [ext_resource type="Script" uid="uid://dh50j32wmvwii" path="res://scripts/characters/health_component.gd" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://cp0j2ml3yhrbt" path="res://scripts/characters/player.gd" id="1_yewv4"]
+[ext_resource type="PackedScene" uid="uid://dpx68uy1u0wsw" path="res://scenes/wip/debug_infos.tscn" id="3_76oj4"]
+[ext_resource type="PackedScene" uid="uid://bg58p3le6eq0l" path="res://scenes/fight/ui.tscn" id="4_dyp2m"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u8vuu"]
 albedo_color = Color(0.784314, 0.133333, 0, 1)
@@ -24,6 +26,7 @@ health_component = NodePath("HealthComponent")
 
 [node name="HealthComponent" type="Node3D" parent="."]
 script = ExtResource("1_3vyb7")
+max_speed = 7.0
 metadata/_custom_type_script = "uid://dh50j32wmvwii"
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
@@ -43,6 +46,15 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.651438, -0.212219, -0.73291
 [node name="RuneSpot" type="Marker3D" parent="Head"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.53377, -0.212219, -1.59209)
 
+[node name="RayCast3D" type="RayCast3D" parent="Head"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.97041)
+target_position = Vector3(0, 0, -100)
+debug_shape_custom_color = Color(0, 1, 0, 1)
+debug_shape_thickness = 1
+
+[node name="Marker3D" type="Marker3D" parent="Head/RayCast3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -100)
+
 [node name="PlayerArea3D" type="Area3D" parent="."]
 collision_layer = 2
 collision_mask = 0
@@ -50,5 +62,12 @@ collision_mask = 0
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerArea3D"]
 shape = SubResource("CapsuleShape3D_yewv4")
 debug_color = Color(0.78148, 0.41709, 0.350172, 0.42)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="DEBUG_INFOS" parent="CanvasLayer" instance=ExtResource("3_76oj4")]
+mouse_filter = 1
+
+[node name="UI" parent="CanvasLayer" instance=ExtResource("4_dyp2m")]
 
 [connection signal="body_entered" from="PlayerArea3D" to="." method="_on_player_area_3d_body_entered"]

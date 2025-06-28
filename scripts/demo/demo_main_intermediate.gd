@@ -1,6 +1,8 @@
 extends Node3D
 
 signal generation(size: int) # DEBUG
+signal generation_3x3x3(size:int, new_seed:String) # DEBUG
+signal display_3x3x3()
 var ok: bool = true # DEBUG
 @export var size: int = 7 # DEBUG
 
@@ -16,7 +18,47 @@ func _ready() -> void:
 	for line in logger.GetLines():
 		print(line)
 	print()
+	
+	generation_3x3x3.emit(3, "DEBUG")
+	display_3x3x3.emit()
+	
+	var config = ConfigFile.new()
+	var err = config.load("user://damageGrid.cfg")
+	
+	if err != OK:
+		_save_grid_damage_type()
+	for damage_type in config.get_sections():
+		if (	!Enums.damage_type_grid.has(damage_type)) && \
+				len(config.get_value(damage_type, "grid")) == len(config.get_sections()):
+			Enums.damage_type_grid[damage_type] = config.get_value(damage_type, "grid")
+		else:
+			push_error("Error while reading 'damageGrid.cfg'. File integrity compromised, reset to default !")
+			_save_grid_damage_type()
+			Enums.damage_type_grid.clear()
+			_load_grid_damage_type()
+			break
 
+func _save_grid_damage_type() -> void:
+	var config = ConfigFile.new()
+	config.set_value("NORMAL", "grid", [1, 0.5, 0.5, 0.5])
+	config.set_value("FIRE", "grid", [1.5, 1, 2, 0.5])
+	config.set_value("PLANT", "grid", [1.5, 0.5, 1, 2])
+	config.set_value("ELEC", "grid", [1.5, 2, 0.5, 1])
+	config.save("user://damageGrid.cfg")
+
+func _load_grid_damage_type() -> void:
+	var config = ConfigFile.new()
+	var err = config.load("user://damageGrid.cfg")
+	if err != OK:
+		for damage_type in config.get_sections():
+			if (	!Enums.damage_type_grid.has(damage_type)) && \
+					len(config.get_value(damage_type, "grid")) == len(config.get_sections()):
+				Enums.damage_type_grid[damage_type] = config.get_value(damage_type, "grid")
+			else:
+				push_error("Error while reading 'damageGrid.cfg'. damage_type_grid may not correctly be initialised. Please verify file content !")
+				break
+	else:
+		push_error("Error while opening 'damageGrid.cfg'. damage_type_grid is not correctly initialised. Please verify file access !")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:

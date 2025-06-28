@@ -11,9 +11,12 @@ var base_position
 func _ready() -> void:
 	super._ready()
 	
+	health_component.health_regen_per_sec = 1.0
+	health_component.armor = 2.0
+	health_component.penetration_resistance = 0.5
+	health_component.max_speed = 3.0
 
 func _physics_process(delta: float) -> void:
-	
 	var direction = Vector3()
 	if target or not navigation_agent_3d.is_navigation_finished():
 		direction = (navigation_agent_3d.get_next_path_position() - global_position).normalized()

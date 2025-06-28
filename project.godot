@@ -35,10 +35,12 @@ folder_colors={
 "res://scenes/": "teal",
 "res://scenes/decorations/": "orange",
 "res://scenes/demo/": "yellow",
+"res://scenes/wip/": "pink",
 "res://scripts/": "teal",
 "res://scripts/CSharp/": "blue",
 "res://scripts/decorations/": "orange",
-"res://scripts/demo/": "yellow"
+"res://scripts/demo/": "yellow",
+"res://scripts/wip/": "pink"
 }
 
 [input]

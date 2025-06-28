@@ -3,12 +3,13 @@ extends Creature
 class_name Player
 
 const SPEED = 7.0
-const PROJECTILE_SPEED = 10 # TODO: get from projectile
+const PROJECTILE_SPEED = 10 # TODO: get from rune
 const JUMP_VELOCITY = 4.5
 @onready var head := $Head
 @onready var camera := $Head/Camera3D
 @onready var elbow: Marker3D = $Head/Elbow
 @onready var rune_spot: Marker3D = $Head/RuneSpot
+@onready var ray_cast_3d: RayCast3D = $Head/RayCast3D
 
 const SENSITIVITY = 0.07
 var right_stick_sensitivity_h = 4
@@ -27,7 +28,8 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 var joystick_v_event: InputEventJoypadMotion
 var joystick_h_event: InputEventJoypadMotion
 
-const FIRE_PROJECTILE = preload("res://scenes/fight/fire_projectile.tscn")
+const FIRE_PROJECTILE = preload("res://scenes/fight/fire_projectile.tscn") # DEBUG
+const SPHERE = preload("res://addons/polyrinthe/sphere.tscn") # DEBUG
 
 func _input(event):
 	# Checking right analog stick input for "mouse look"
@@ -51,13 +53,31 @@ func _unhandled_input(event):
 
 
 func _physics_process(delta):
-	
 	if Input.is_action_just_pressed("attack"):
+		print_orphan_nodes() # DEBUG
+		
+		ray_cast_3d.collision_mask = 7
+		ray_cast_3d.force_raycast_update()
+		var destination = Vector3()
+		
+		if ray_cast_3d.is_colliding():
+			destination = ray_cast_3d.get_collision_point()
+		else:
+			destination = $Head/RayCast3D/Marker3D.global_position
+		
+		#var sphere = SPHERE.instantiate()
+		#get_parent().add_child(sphere)
+		#sphere.position = destination
+		#sphere.scale = Vector3(0.2, 0.2, 0.2)
+		
 		var fire_projectile = FIRE_PROJECTILE.instantiate()
+		
 		get_parent().add_child(fire_projectile)
+		fire_projectile.source = self
 		fire_projectile.global_position = rune_spot.global_position
 		fire_projectile.set_layers_to_hit(5)
-		fire_projectile.apply_impulse((rune_spot.global_position - elbow.global_position).normalized() * PROJECTILE_SPEED, Vector3())
+		fire_projectile.speed = PROJECTILE_SPEED
+		fire_projectile.apply_impulse((destination - rune_spot.global_position).normalized() * PROJECTILE_SPEED, Vector3())
 	
 	if Input.is_action_just_pressed("godMod"):
 		godMode = !godMode
@@ -115,3 +135,7 @@ func _physics_process(delta):
 
 func _on_player_area_3d_body_entered(body: Node3D) -> void:
 	print("_on_player_area_3d_body_entered: ", body)
+
+
+func get_type() -> Enums.DamageType:
+	return Enums.DamageType.FIRE # TODO : get active rune type
