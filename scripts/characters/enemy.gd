@@ -30,7 +30,7 @@ func _physics_process(delta: float) -> void:
 
 func compute_path() -> void:
 	if target:
-		print(target)
+		#print(target)
 		navigation_agent_3d.target_position = target.global_position
 	elif base_position:
 		navigation_agent_3d.target_position = base_position
@@ -46,7 +46,7 @@ func _on_update_navigation_timeout() -> void:
 
 
 func _on_chase_area_area_entered(area: Area3D) -> void:
-	print("_on_chease_area_area_entered")
+	print("_on_chase_area_area_entered")
 	target = area.get_parent()
 
 

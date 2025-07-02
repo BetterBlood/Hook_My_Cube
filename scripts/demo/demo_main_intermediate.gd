@@ -27,16 +27,8 @@ func _ready() -> void:
 	
 	if err != OK:
 		_save_grid_damage_type()
-	for damage_type in config.get_sections():
-		if (	!Enums.damage_type_grid.has(damage_type)) && \
-				len(config.get_value(damage_type, "grid")) == len(config.get_sections()):
-			Enums.damage_type_grid[damage_type] = config.get_value(damage_type, "grid")
-		else:
-			push_error("Error while reading 'damageGrid.cfg'. File integrity compromised, reset to default !")
-			_save_grid_damage_type()
-			Enums.damage_type_grid.clear()
-			_load_grid_damage_type()
-			break
+	else:
+		_load_grid_damage_type(config, true)
 
 func _save_grid_damage_type() -> void:
 	var config = ConfigFile.new()
@@ -45,20 +37,26 @@ func _save_grid_damage_type() -> void:
 	config.set_value("PLANT", "grid", [1.5, 0.5, 1, 2])
 	config.set_value("ELEC", "grid", [1.5, 2, 0.5, 1])
 	config.save("user://damageGrid.cfg")
+	
+	for damage_type in config.get_sections():
+		print(damage_type)
+		if (	!Enums.damage_type_grid.has(damage_type)) && \
+				len(config.get_value(damage_type, "grid")) == len(config.get_sections()):
+			Enums.damage_type_grid[damage_type] = config.get_value(damage_type, "grid")
 
-func _load_grid_damage_type() -> void:
-	var config = ConfigFile.new()
-	var err = config.load("user://damageGrid.cfg")
-	if err != OK:
-		for damage_type in config.get_sections():
-			if (	!Enums.damage_type_grid.has(damage_type)) && \
-					len(config.get_value(damage_type, "grid")) == len(config.get_sections()):
-				Enums.damage_type_grid[damage_type] = config.get_value(damage_type, "grid")
+func _load_grid_damage_type(config: ConfigFile, erase: bool = false) -> void:
+	for damage_type in config.get_sections():
+		if (	!Enums.damage_type_grid.has(damage_type)) && \
+				len(config.get_value(damage_type, "grid")) == len(config.get_sections()):
+			Enums.damage_type_grid[damage_type] = config.get_value(damage_type, "grid")
+		else:
+			push_error("Error while reading 'damageGrid.cfg'. damage_type_grid may not correctly be initialised. Please verify file content !")
+			config.clear()
+			if erase:
+				_save_grid_damage_type()
 			else:
-				push_error("Error while reading 'damageGrid.cfg'. damage_type_grid may not correctly be initialised. Please verify file content !")
-				break
-	else:
-		push_error("Error while opening 'damageGrid.cfg'. damage_type_grid is not correctly initialised. Please verify file access !")
+				print("#TODO : close the application without erasing the file")
+			break
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:

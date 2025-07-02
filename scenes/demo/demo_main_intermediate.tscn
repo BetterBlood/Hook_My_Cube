@@ -49,7 +49,7 @@ data = PackedVector3Array(-25, 0.1, 25, 25, 0.1, 25, -25, -0.1, 25, 25, 0.1, 25,
 script = ExtResource("1_wehoa")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.866024, -0.433016, 0.250001, 0, 0.499998, 0.866026, -0.500003, 0.749999, -0.43301, 0, -38.9527, 59.7878)
+transform = Transform3D(-0.866024, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.75, -0.43301, 0, 52.1937, 3.85321)
 visible = false
 light_energy = 15.0
 shadow_enabled = true
