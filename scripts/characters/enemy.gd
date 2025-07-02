@@ -15,12 +15,13 @@ func _ready() -> void:
 	health_component.armor = 2.0
 	health_component.penetration_resistance = 0.5
 	health_component.max_speed = 3.0
+	health_component.speed = 3.0
 
 func _physics_process(delta: float) -> void:
 	var direction = Vector3()
 	if target or not navigation_agent_3d.is_navigation_finished():
 		direction = (navigation_agent_3d.get_next_path_position() - global_position).normalized()
-	velocity = velocity.lerp(direction * SPEED, delta * 10)
+	velocity = velocity.lerp(direction * health_component.speed, delta * 10)
 	
 	# Add the gravity.
 	if not is_on_floor():
