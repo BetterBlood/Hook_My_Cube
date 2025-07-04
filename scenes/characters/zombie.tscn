@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=3 uid="uid://bualks0wajs8i"]
 
 [ext_resource type="Script" uid="uid://dh50j32wmvwii" path="res://scripts/characters/health_component.gd" id="1_bmiyw"]
-[ext_resource type="Script" uid="uid://veoyspye5l5q" path="res://scripts/characters/enemy.gd" id="1_fulqv"]
+[ext_resource type="Script" uid="uid://veoyspye5l5q" path="res://scripts/characters/zombie.gd" id="1_fulqv"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fulqv"]
 radius = 0.6
@@ -23,7 +23,7 @@ radius = 10.0
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_f2e6v"]
 radius = 20.0
 
-[node name="Enemy" type="CharacterBody3D"]
+[node name="Zombie" type="CharacterBody3D"]
 collision_layer = 0
 motion_mode = 1
 script = ExtResource("1_fulqv")

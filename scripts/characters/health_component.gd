@@ -24,23 +24,16 @@ func _ready() -> void:
 	add_child(health_regen_timer)
 
 
-#func _process(delta: float) -> void:
-	#if health_regen_per_sec > 0.0:
-		#health_regen_timer -= delta
-		#if health_regen_timer <= 0:
-			#health_regen_timer = health_regen_timer_reset
-			#health = min(health + health_regen_per_sec / (1.0 / health_regen_timer_reset), max_health)
-
-
 func _passive_heal() -> void:
 	if health_regen_per_sec > 0.0 && health < max_health:
 		health = min(health + health_regen_per_sec / (1.0 / health_regen_timer_reset), max_health)
 		#print("health: ", health)
 	health_regen_timer.start(health_regen_timer_reset)
 
+
 func take_fire_effect(value: float) -> float:
-	print(get_parent(), ": I'm literally on fire.... taking ", value, " damages.")
 	var damage: float = value * _get_grid_modifier(Enums.DamageType.FIRE, get_parent().get_type())
+	#print(get_parent(), "::HealthComponent: I'm literally on fire.... taking (", value, ") -> ", damage, " damages.")
 	
 	health = max(health - damage, 0.0)
 	damage_taken.emit()

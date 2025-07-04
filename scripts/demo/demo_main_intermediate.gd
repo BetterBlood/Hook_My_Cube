@@ -11,7 +11,7 @@ var logger:Logger = Logger.new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	
+	add_child(logger)
 	logger.Info("An informational message: " + self.to_string());
 	logger.Debug("A Debug message: " + self.to_string());
 	
