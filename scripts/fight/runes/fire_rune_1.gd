@@ -12,6 +12,7 @@ func _init(parent: Node3D) -> void:
 	
 	cooldown = 2.0
 	
+	# TODO: load from file for rune with id 1 or name FireRune1
 	rune_resource.cooldown_reduction = 0.0
 	rune_resource.projectile_perforation_count = 0
 	rune_resource.projectile_bounce_count = 0

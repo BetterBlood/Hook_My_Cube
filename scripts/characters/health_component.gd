@@ -17,6 +17,8 @@ var speed: float = max_speed
 signal damage_taken()
 var health_regen_timer: Timer = Timer.new()
 
+var speed_effects = {}
+
 func _ready() -> void:
 	health_regen_timer.wait_time = health_regen_timer_reset
 	health_regen_timer.autostart = true
@@ -39,6 +41,26 @@ func take_fire_effect(value: float) -> float:
 	damage_taken.emit()
 	
 	return damage
+
+
+func take_speed_effect(id: int, value: float) -> float:
+	if !speed_effects.has(id):
+		speed_effects[id] = value
+		speed = max_speed * _compute_speed_mult()
+		#print(get_parent(), "::HealthComponent: Speed modifier -> taking (", value, ") ", max_speed, " -> ", speed, " speed.")
+	return speed
+
+
+func remove_speed_effect(id: int) -> void:
+	speed = max_speed * _compute_speed_mult()
+	speed_effects.erase(id)
+
+
+func _compute_speed_mult() -> float:
+	var mult: float = 1.0
+	for val in speed_effects.values():
+		mult *= val #TODO : check if addition is more interesting
+	return mult
 
 func get_icons_path() -> String:
 	return "icon.svg"

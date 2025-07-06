@@ -3,12 +3,11 @@ extends Creature
 class_name Player
 
 const SPEED = 7.0
-const PROJECTILE_SPEED = 10 # TODO: get from rune
-const JUMP_VELOCITY = 4.5
+const JUMP_VELOCITY = 9
 @onready var head := $Head
 @onready var camera := $Head/Camera3D
-@onready var elbow: Marker3D = $Head/Elbow
-@onready var rune_spot: Marker3D = $Head/RuneSpot
+@onready var elbow: Marker3D = $Elbow
+@onready var rune_spot: Marker3D = $RuneSpot
 @onready var ray_cast_3d: RayCast3D = $Head/RayCast3D
 
 const SENSITIVITY = 0.07
@@ -34,6 +33,8 @@ var xp_to_lvl_up:float = 10
 
 var rune: Rune
 
+var grapple: Grapple
+
 func _ready():
 	super._ready()
 	godMode = true
@@ -47,6 +48,11 @@ func _ready():
 	rune = RuneUpgradeStatusEffectChance.new(rune, 1.0)
 	
 	layer = 2
+	
+	grapple = Grapple.new()
+	grapple.set_creature_owner(self)
+	grapple.position = $GrapplinPosition.position
+	add_child(grapple)
 
 
 func _input(event):
@@ -72,12 +78,14 @@ func _physics_process(delta):
 		#print("---")
 		
 		ray_cast_3d.collision_mask = 7
+		ray_cast_3d.target_position = Vector3(0, 0, -100)
 		ray_cast_3d.force_raycast_update()
 		var destination = Vector3()
 		
 		if ray_cast_3d.is_colliding():
 			destination = ray_cast_3d.get_collision_point()
 		else:
+			$Head/RayCast3D/Marker3D.position = ray_cast_3d.target_position
 			destination = $Head/RayCast3D/Marker3D.global_position
 		
 		#print(rune.get_data_to_performe_attaque().projectile_damage)
@@ -90,7 +98,27 @@ func _physics_process(delta):
 		#get_parent().add_child(sphere)
 		#sphere.position = destination
 		#sphere.scale = Vector3(0.2, 0.2, 0.2)
+	
+	if Input.is_action_just_pressed("grapple"):
+		ray_cast_3d.collision_mask = grapple.mask
+		ray_cast_3d.target_position = Vector3(0, 0, -grapple.distance)
+		ray_cast_3d.force_raycast_update()
+		var destination = Vector3()
+		var hit: bool
 		
+		if ray_cast_3d.is_colliding():
+			destination = ray_cast_3d.get_collision_point()
+			hit = true
+		else:
+			$Head/RayCast3D/Marker3D.position = ray_cast_3d.target_position
+			destination = $Head/RayCast3D/Marker3D.global_position
+			hit = false
+		
+		grapple.shoot(destination, hit)
+	
+	if Input.is_action_just_released("grapple"):
+		grapple.cancel_grab()
+	
 	if Input.is_action_just_pressed("godMod"):
 		godMode = !godMode
 		if godMode:
@@ -108,18 +136,18 @@ func _physics_process(delta):
 	
 	# Add the gravity.
 	if not is_on_floor() && !godMode:
-		velocity.y -= gravity * delta
+		velocity.y -= gravity * delta * 2
 
 	directionnalInputs = Vector3(0,0,0)
 	
 	# Handle Jump.
 	if Input.is_action_just_pressed("jump") && is_on_floor():
-		velocity.y = JUMP_VELOCITY
+		velocity.y += JUMP_VELOCITY
 	
 	# Get the input direction and handle the movement/deceleration.
 	var input_dir = Input.get_vector("left", "right", "forward", "backward")
 	directionnalInputs.x = input_dir.x
-	directionnalInputs.z = input_dir.y # oui c'est bien z qui correspond à y
+	directionnalInputs.z = input_dir.y
 	
 	var vertical = Input.get_axis("down", "up")
 	directionnalInputs.y = vertical
@@ -127,21 +155,27 @@ func _physics_process(delta):
 	var direction = (get_global_transform().basis * directionnalInputs).normalized()
 	
 	if direction.x:
-		velocity.x = direction.x * SPEED * (godModeSpeedMultiplier if godMode else 1)
+		if grapple.is_dragging:
+			velocity.x += direction.x * (health_component.speed/2) * (godModeSpeedMultiplier if godMode else 1)
+		else:
+			velocity.x = direction.x * health_component.speed * (godModeSpeedMultiplier if godMode else 1)
 	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
+		velocity.x = move_toward(velocity.x, 0, health_component.speed)
 		
 	if direction.z:
-		velocity.z = direction.z * SPEED * (godModeSpeedMultiplier if godMode else 1)
+		if grapple.is_dragging:
+			velocity.z += direction.z * (health_component.speed/2) * (godModeSpeedMultiplier if godMode else 1)
+		else:
+			velocity.z = direction.z * health_component.speed * (godModeSpeedMultiplier if godMode else 1)
 	else:
-		velocity.z = move_toward(velocity.z, 0, SPEED)
+		velocity.z = move_toward(velocity.z, 0, health_component.speed)
 	
 	if godMode:
 		if direction.y:
-			velocity.y = direction.y * SPEED * godModeSpeedMultiplier
+			velocity.y = direction.y * health_component.speed * godModeSpeedMultiplier
 		else:
-			velocity.y = move_toward(velocity.y, 0, SPEED)
-
+			velocity.y = move_toward(velocity.y, 0, health_component.speed)
+	
 	move_and_slide()
 
 

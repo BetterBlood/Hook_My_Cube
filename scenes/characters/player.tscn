@@ -26,7 +26,7 @@ health_component = NodePath("HealthComponent")
 
 [node name="HealthComponent" type="Node3D" parent="."]
 script = ExtResource("1_3vyb7")
-max_speed = 7.0
+max_speed = 10.0
 metadata/_custom_type_script = "uid://dh50j32wmvwii"
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
@@ -40,15 +40,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.782, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Head"]
 
-[node name="Elbow" type="Marker3D" parent="Head"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.651438, -0.212219, -0.732916)
-
-[node name="RuneSpot" type="Marker3D" parent="Head"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.53377, -0.212219, -1.59209)
-
 [node name="RayCast3D" type="RayCast3D" parent="Head"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.97041)
 target_position = Vector3(0, 0, -100)
+collide_with_areas = true
 debug_shape_custom_color = Color(0, 1, 0, 1)
 debug_shape_thickness = 1
 
@@ -69,5 +64,14 @@ debug_color = Color(0.78148, 0.41709, 0.350172, 0.42)
 mouse_filter = 1
 
 [node name="UI" parent="CanvasLayer" instance=ExtResource("4_dyp2m")]
+
+[node name="GrapplinPosition" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7, 0.35, -1.5)
+
+[node name="Elbow" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.651, 0.282, -0.733)
+
+[node name="RuneSpot" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.7, 0.332, -1.5)
 
 [connection signal="body_entered" from="PlayerArea3D" to="." method="_on_player_area_3d_body_entered"]

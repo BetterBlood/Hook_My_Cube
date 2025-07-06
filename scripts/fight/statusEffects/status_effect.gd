@@ -32,6 +32,8 @@ func _ready() -> void:
 	
 	if target != null && target.get_health_component() != null:
 		real_target = target.get_health_component()
+		if real_target != null:
+			_apply_effect()
 
 
 func _on_cooldown_timeout() -> void:
@@ -43,6 +45,7 @@ func _on_cooldown_timeout() -> void:
 		if total_duration > 0.0:
 			cooldown_timer.start()
 		else:
+			_clean_effect()
 			queue_free()
 	else:
 		queue_free()
@@ -53,8 +56,15 @@ func _apply_effect() -> void:
 	assert(false, "Override of `_apply_effect()` needed in " + str(self))
 
 
+func _clean_effect() -> void:
+	push_warning("_clean_effect not implemented in ", self)
+
 func _try_propagate_effect() -> void:
 	#print("_try_propagate_effect:start")
+	if same_effect == null:
+		#print("_try_propagate_effect::aborted same_effect is null")
+		return
+	
 	var propagateArea = Area3D.new()
 	var collision_shape = CollisionShape3D.new()
 	propagateArea.add_child(collision_shape)
@@ -72,23 +82,19 @@ func _try_propagate_effect() -> void:
 				return
 			
 			if target_tmp.has_method("can_host_status_effect"):
-				if !target_tmp.can_host_status_effect(effect_id):
-					#print("_try_propagate_effect::area_entered:return:already have this status effect")
-					return
-				else:
+				if target_tmp.can_host_status_effect(effect_id):
 					target_tmp.add_effect_id(effect_id)
-				
-				#print("_try_propagate_effect::area_entered:propagate")
-				var effect = same_effect.instantiate()
-				effect.same_effect = same_effect
-				effect.effect_id = effect_id
-				effect.target = target_tmp
-				effect.total_duration_fixe = total_duration_fixe
-				effect.total_duration = total_duration_fixe # no duration reduction
-				# reduction of effect duration after transmission :
-				#effect.total_duration = total_duration
-				effect.effect_area_range_transmission = effect_area_range_transmission
-				effect.target.add_child(effect)
+					#print("_try_propagate_effect::area_entered:propagate")
+					var effect = same_effect.instantiate()
+					effect.same_effect = same_effect
+					effect.effect_id = effect_id
+					effect.target = target_tmp
+					effect.total_duration_fixe = total_duration_fixe
+					effect.total_duration = total_duration_fixe # no duration reduction
+					# reduction of effect duration after transmission :
+					#effect.total_duration = total_duration
+					effect.effect_area_range_transmission = effect_area_range_transmission
+					effect.target.add_child(effect)
 	)
 	add_child(propagateArea)
 	propagateArea.global_position = target.global_position

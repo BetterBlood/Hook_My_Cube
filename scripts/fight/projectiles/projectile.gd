@@ -54,18 +54,16 @@ func _apply_effect(target: Creature) -> void:
 	if 		target.has_method("can_host_status_effect") && \
 			status_effect_chance > randf_range(0,1):
 		var new_id = StatusEffectId.get_next_id() # TODO : be carefull that the id doen't grow too quickly, maybe release if not used 
-		if !target.can_host_status_effect(new_id): # TODO: check if really usefull
-			return
-		else:
+		if target.can_host_status_effect(new_id): # TODO: check if really usefull
 			target.add_effect_id(new_id)
-		var effect_instance = effect.instantiate()
-		effect_instance.same_effect = effect
-		effect_instance.effect_id = new_id
-		effect_instance.target = target
-		effect_instance.total_duration = effect_duration
-		effect_instance.total_duration_fixe = effect_duration
-		effect_instance.effect_area_range_transmission = effect_area_range_transmission
-		target.add_child(effect_instance)
+			var effect_instance = effect.instantiate()
+			effect_instance.same_effect = effect
+			effect_instance.effect_id = new_id
+			effect_instance.target = target
+			effect_instance.total_duration = effect_duration
+			effect_instance.total_duration_fixe = effect_duration
+			effect_instance.effect_area_range_transmission = effect_area_range_transmission
+			target.add_child(effect_instance)
 
 
 func _on_interaction_area_body_entered(_body: Node3D) -> void:
@@ -102,4 +100,4 @@ func _set_radius(radius: float) -> void:
 	$CollisionShape3D.shape.radius = radius
 	$MeshInstance3D.mesh.radius = radius
 	$MeshInstance3D.mesh.height = radius * 2
-	interaction_area.CollisionShape3D.shape.radius = radius
+	interaction_area.get_child(0).shape.radius = radius

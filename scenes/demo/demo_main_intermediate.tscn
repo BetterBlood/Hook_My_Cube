@@ -1,11 +1,10 @@
-[gd_scene load_steps=18 format=3 uid="uid://br883pylmypa7"]
+[gd_scene load_steps=24 format=3 uid="uid://br883pylmypa7"]
 
 [ext_resource type="Script" uid="uid://wdhsttcv1ana" path="res://scripts/demo/demo_main_intermediate.gd" id="1_wehoa"]
 [ext_resource type="PackedScene" uid="uid://y1yw5naea0tu" path="res://scenes/characters/player.tscn" id="3_4d0q1"]
 [ext_resource type="PackedScene" uid="uid://bualks0wajs8i" path="res://scenes/characters/zombie.tscn" id="3_tp4il"]
 [ext_resource type="PackedScene" uid="uid://dvkq4hwixk2m8" path="res://scenes/decorations/torch.tscn" id="5_dcxnu"]
 [ext_resource type="Material" uid="uid://llqdeyixmjnv" path="res://materials/workInProgress/StandardMatWIP.tres" id="6_dcxnu"]
-[ext_resource type="PackedScene" uid="uid://chhmtv4ldgf1g" path="res://addons/polyrinthe/wall_white.tscn" id="7_6728e"]
 [ext_resource type="Script" uid="uid://dn77lcjlugkqt" path="res://addons/polyrinthe/polyrintheGenerator.gd" id="7_wkq0h"]
 [ext_resource type="PackedScene" uid="uid://canga3dhywbr3" path="res://scenes/portal_with_frame.tscn" id="8_6728e"]
 
@@ -37,13 +36,36 @@ material = ExtResource("6_dcxnu")
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_wkq0h"]
 data = PackedVector3Array(-0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5)
 
+[sub_resource type="BoxMesh" id="BoxMesh_6728e"]
+size = Vector3(50, 30, 0.3)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_8d4em"]
+data = PackedVector3Array(-25, 15, 0.15, 25, 15, 0.15, -25, -15, 0.15, 25, 15, 0.15, 25, -15, 0.15, -25, -15, 0.15, 25, 15, -0.15, -25, 15, -0.15, 25, -15, -0.15, -25, 15, -0.15, -25, -15, -0.15, 25, -15, -0.15, 25, 15, 0.15, 25, 15, -0.15, 25, -15, 0.15, 25, 15, -0.15, 25, -15, -0.15, 25, -15, 0.15, -25, 15, -0.15, -25, 15, 0.15, -25, -15, -0.15, -25, 15, 0.15, -25, -15, 0.15, -25, -15, -0.15, 25, 15, 0.15, -25, 15, 0.15, 25, 15, -0.15, -25, 15, 0.15, -25, 15, -0.15, 25, 15, -0.15, -25, -15, 0.15, 25, -15, 0.15, -25, -15, -0.15, 25, -15, 0.15, 25, -15, -0.15, -25, -15, -0.15)
+
 [sub_resource type="NavigationMesh" id="NavigationMesh_br7h5"]
-vertices = PackedVector3Array(-24.2625, -19.6, 8.7375, -2.0125, -19.6, 8.7375, -2.0125, -19.6, 7.9875, -1.5125, -19.6, 7.7375, -1.5125, -19.6, -24.2625, -24.2625, -19.6, -24.2625, -0.0125008, -19.6, 7.7375, 0.237499, -19.6, 8.7375, 0.987499, -19.6, 8.7375, 1.2375, -19.6, 7.7375, 3.9875, -19.6, 7.7375, 3.9875, -19.6, -24.2625, 23.2375, -19.6, 13.2375, 23.4875, -19.6, 14.4875, 24.2375, -19.6, 14.4875, 24.2375, -19.6, -24.2625, 4.4875, -19.6, 7.9875, 4.4875, -19.6, 9.4875, 4.7375, -19.6, 9.7375, 21.9875, -19.6, 13.2375, -2.2625, -19.6, 24.2375, -2.0125, -19.6, 9.4875, -24.2625, -19.6, 24.2375, 4.2375, -19.6, 9.9875, 4.7375, -19.6, 24.2375, 1.2375, -19.6, 9.9875, -0.0125008, -19.6, 9.9875, -1.7625, -19.6, 9.9875, 22.9875, -19.6, 14.7375, 23.4875, -19.6, 16.4875, 24.2375, -19.6, 24.2375, 21.7375, -19.6, 16.7375, 21.4875, -19.6, 13.4875)
-polygons = [PackedInt32Array(2, 1, 0), PackedInt32Array(2, 0, 3), PackedInt32Array(3, 0, 4), PackedInt32Array(4, 0, 5), PackedInt32Array(7, 6, 8), PackedInt32Array(8, 6, 9), PackedInt32Array(9, 6, 4), PackedInt32Array(10, 9, 11), PackedInt32Array(11, 9, 4), PackedInt32Array(6, 3, 4), PackedInt32Array(13, 12, 14), PackedInt32Array(14, 12, 15), PackedInt32Array(17, 16, 18), PackedInt32Array(18, 16, 19), PackedInt32Array(16, 10, 19), PackedInt32Array(19, 10, 12), PackedInt32Array(12, 10, 11), PackedInt32Array(12, 11, 15), PackedInt32Array(21, 20, 1), PackedInt32Array(1, 20, 22), PackedInt32Array(1, 22, 0), PackedInt32Array(17, 18, 23), PackedInt32Array(23, 18, 24), PackedInt32Array(8, 25, 7), PackedInt32Array(7, 25, 26), PackedInt32Array(26, 25, 20), PackedInt32Array(23, 24, 25), PackedInt32Array(25, 24, 20), PackedInt32Array(20, 27, 26), PackedInt32Array(20, 21, 27), PackedInt32Array(13, 14, 28), PackedInt32Array(28, 14, 29), PackedInt32Array(30, 24, 31), PackedInt32Array(31, 24, 18), PackedInt32Array(29, 14, 30), PackedInt32Array(31, 29, 30), PackedInt32Array(18, 19, 32), PackedInt32Array(31, 18, 32)]
+vertices = PackedVector3Array(-0.650002, -19.6, -1.15, 0.0999985, -19.6, -1.15, 0.0999985, -19.6, -24.15, -24.15, -19.6, -0.150002, -1.15, -19.6, -0.150002, -24.15, -19.6, -24.15, 1.1, -19.6, -0.650002, 1.1, -19.6, 0.599998, 24.35, -19.6, 0.599998, 24.35, -19.6, -24.15, -1.65, -19.6, 7.6, -0.150002, -19.6, 7.6, -0.150002, -19.6, 1.1, -1.15, -19.6, 0.599998, -24.15, -19.6, 8.6, -1.9, -19.6, 8.6, 0.349998, -19.6, 7.85, 0.349998, -19.6, 8.6, 1.1, -19.6, 8.6, 1.35, -19.6, 7.6, 0.849998, -19.6, 1.1, 4.1, -19.6, 7.6, 24.35, -19.6, 9.1, 4.35, -19.6, 9.1, -1.4, -19.6, 24.35, -1.4, -19.6, 9.85, -1.9, -19.6, 9.6, -24.15, -19.6, 24.35, 1.35, -19.6, 9.85, 0.0999985, -19.6, 9.85, 3.85, -19.6, 24.35, 3.85, -19.6, 9.85, 23.35, -19.6, 14.6, 22.85, -19.6, 14.85, 23.35, -19.6, 16.35, 21.6, -19.6, 13.6, 23.35, -19.6, 13.6, 24.35, -19.6, 24.35, 21.6, -19.6, 16.35)
+polygons = [PackedInt32Array(2, 1, 0), PackedInt32Array(4, 3, 0), PackedInt32Array(0, 3, 5), PackedInt32Array(0, 5, 2), PackedInt32Array(8, 7, 6), PackedInt32Array(1, 2, 6), PackedInt32Array(6, 2, 9), PackedInt32Array(6, 9, 8), PackedInt32Array(11, 10, 12), PackedInt32Array(12, 10, 13), PackedInt32Array(13, 10, 4), PackedInt32Array(4, 10, 15), PackedInt32Array(4, 15, 14), PackedInt32Array(4, 14, 3), PackedInt32Array(17, 16, 18), PackedInt32Array(18, 16, 19), PackedInt32Array(20, 7, 19), PackedInt32Array(19, 7, 21), PackedInt32Array(16, 11, 19), PackedInt32Array(19, 11, 20), PackedInt32Array(20, 11, 12), PackedInt32Array(22, 21, 8), PackedInt32Array(8, 21, 7), PackedInt32Array(22, 23, 21), PackedInt32Array(25, 24, 26), PackedInt32Array(26, 24, 27), PackedInt32Array(26, 27, 14), PackedInt32Array(14, 15, 26), PackedInt32Array(18, 28, 17), PackedInt32Array(17, 28, 29), PackedInt32Array(29, 28, 24), PackedInt32Array(24, 28, 30), PackedInt32Array(28, 31, 30), PackedInt32Array(24, 25, 29), PackedInt32Array(34, 33, 32), PackedInt32Array(36, 35, 22), PackedInt32Array(22, 35, 23), PackedInt32Array(32, 36, 22), PackedInt32Array(32, 22, 34), PackedInt32Array(34, 22, 37), PackedInt32Array(23, 35, 38), PackedInt32Array(38, 34, 37), PackedInt32Array(31, 23, 30), PackedInt32Array(30, 23, 38), PackedInt32Array(30, 38, 37)]
 agent_height = 2.0
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_7x35k"]
 data = PackedVector3Array(-25, 0.1, 25, 25, 0.1, 25, -25, -0.1, 25, 25, 0.1, 25, 25, -0.1, 25, -25, -0.1, 25, 25, 0.1, -25, -25, 0.1, -25, 25, -0.1, -25, -25, 0.1, -25, -25, -0.1, -25, 25, -0.1, -25, 25, 0.1, 25, 25, 0.1, -25, 25, -0.1, 25, 25, 0.1, -25, 25, -0.1, -25, 25, -0.1, 25, -25, 0.1, -25, -25, 0.1, 25, -25, -0.1, -25, -25, 0.1, 25, -25, -0.1, 25, -25, -0.1, -25, 25, 0.1, 25, -25, 0.1, 25, 25, 0.1, -25, -25, 0.1, 25, -25, 0.1, -25, 25, 0.1, -25, -25, -0.1, 25, 25, -0.1, 25, -25, -0.1, -25, 25, -0.1, 25, 25, -0.1, -25, -25, -0.1, -25)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wkq0h"]
+size = Vector3(50, 20, 0.3)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_267vg"]
+data = PackedVector3Array(-25, 10, 0.15, 25, 10, 0.15, -25, -10, 0.15, 25, 10, 0.15, 25, -10, 0.15, -25, -10, 0.15, 25, 10, -0.15, -25, 10, -0.15, 25, -10, -0.15, -25, 10, -0.15, -25, -10, -0.15, 25, -10, -0.15, 25, 10, 0.15, 25, 10, -0.15, 25, -10, 0.15, 25, 10, -0.15, 25, -10, -0.15, 25, -10, 0.15, -25, 10, -0.15, -25, 10, 0.15, -25, -10, -0.15, -25, 10, 0.15, -25, -10, 0.15, -25, -10, -0.15, 25, 10, 0.15, -25, 10, 0.15, 25, 10, -0.15, -25, 10, 0.15, -25, 10, -0.15, 25, 10, -0.15, -25, -10, 0.15, 25, -10, 0.15, -25, -10, -0.15, 25, -10, 0.15, 25, -10, -0.15, -25, -10, -0.15)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wkq0h"]
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_wkq0h"]
+material = SubResource("StandardMaterial3D_wkq0h")
+height = 50.0
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_6728e"]
+height = 50.0
 
 [node name="Demo Main Intermediate" type="Node3D"]
 script = ExtResource("1_wehoa")
@@ -146,7 +168,8 @@ mesh = SubResource("BoxMesh_dcxnu")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MainFloor/Real Lab/obstacle5"]
 shape = SubResource("ConcavePolygonShape3D_wkq0h")
 
-[node name="Debug Lab" type="Node" parent="MainFloor"]
+[node name="Debug Lab" type="Node3D" parent="MainFloor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 45.3371, 0, 0)
 
 [node name="Lab3x3x3" type="Node3D" parent="MainFloor/Debug Lab" node_paths=PackedStringArray("coord_first", "coord_right", "coord_up")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.3, 0)
@@ -166,7 +189,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
 [node name="P5 -> Lab 3x3x3 Entrance" parent="MainFloor/Debug Lab" instance=ExtResource("8_6728e")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -10, 1.25, -1.306)
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -22.9297, 1.25, -1.306)
 
 [node name="Portal3D" parent="MainFloor/Debug Lab/P5 -> Lab 3x3x3 Entrance" index="0" node_paths=PackedStringArray("exit_portal")]
 exit_portal = NodePath("../../P6 -> Main Room/Portal3D")
@@ -190,7 +213,7 @@ view_direction = 1
 teleport_direction = 0
 
 [node name="P8 -> LastRoom 3x3x3" parent="MainFloor/Debug Lab" instance=ExtResource("8_6728e")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -10, 3.8125, -1.306)
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -22.9297, 1.25, 16.911)
 
 [node name="Portal3D" parent="MainFloor/Debug Lab/P8 -> LastRoom 3x3x3" index="0" node_paths=PackedStringArray("exit_portal")]
 exit_portal = NodePath("../../P7 -> Return to Lobby/Portal3D")
@@ -199,150 +222,50 @@ teleport_direction = 0
 
 [node name="Walls" type="Node3D" parent="MainFloor"]
 
-[node name="LobbyWalls1" type="Node3D" parent="MainFloor/Walls"]
+[node name="Wall1" type="StaticBody3D" parent="MainFloor/Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 15, 25)
 
-[node name="Wall" parent="MainFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 5.3, 25)
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MainFloor/Walls/Wall1"]
+mesh = SubResource("BoxMesh_6728e")
 
-[node name="Wall2" parent="MainFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.5, 5.3, 25)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MainFloor/Walls/Wall1"]
+shape = SubResource("ConcavePolygonShape3D_8d4em")
 
-[node name="Wall3" parent="MainFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 5.3, 20)
+[node name="Wall2" type="StaticBody3D" parent="MainFloor/Walls"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 15, 0)
 
-[node name="Wall4" parent="MainFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 5.3, 10)
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MainFloor/Walls/Wall2"]
+mesh = SubResource("BoxMesh_6728e")
 
-[node name="Wall5" parent="MainFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 5.3, 0)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MainFloor/Walls/Wall2"]
+shape = SubResource("ConcavePolygonShape3D_8d4em")
 
-[node name="Wall6" parent="MainFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 5.3, -10)
+[node name="Wall3" type="StaticBody3D" parent="MainFloor/Walls"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 15, -25)
 
-[node name="Wall7" parent="MainFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 5.3, -20)
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MainFloor/Walls/Wall3"]
+mesh = SubResource("BoxMesh_6728e")
 
-[node name="Wall8" parent="MainFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -20, 5.3, -25)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MainFloor/Walls/Wall3"]
+shape = SubResource("ConcavePolygonShape3D_8d4em")
 
-[node name="Wall9" parent="MainFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -10, 5.3, -25)
+[node name="Wall4" type="StaticBody3D" parent="MainFloor/Walls"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 25, 15, 0)
 
-[node name="Wall10" parent="MainFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 5.3, -25)
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MainFloor/Walls/Wall4"]
+mesh = SubResource("BoxMesh_6728e")
 
-[node name="Wall11" parent="MainFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 10, 5.3, -25)
-
-[node name="Wall12" parent="MainFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 20, 5.3, -25)
-
-[node name="Wall13" parent="MainFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 25, 5.3, -20)
-
-[node name="Wall14" parent="MainFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 25, 5.3, -10.5)
-
-[node name="LobbyWalls2" type="Node3D" parent="MainFloor/Walls"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0)
-
-[node name="Wall" parent="MainFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 5.3, 25)
-
-[node name="Wall2" parent="MainFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.5, 5.3, 25)
-
-[node name="Wall3" parent="MainFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 5.3, 20)
-
-[node name="Wall4" parent="MainFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 5.3, 10)
-
-[node name="Wall5" parent="MainFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 5.3, 0)
-
-[node name="Wall6" parent="MainFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 5.3, -10)
-
-[node name="Wall7" parent="MainFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 5.3, -20)
-
-[node name="Wall8" parent="MainFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -20, 5.3, -25)
-
-[node name="Wall9" parent="MainFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -10, 5.3, -25)
-
-[node name="Wall10" parent="MainFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 5.3, -25)
-
-[node name="Wall11" parent="MainFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 10, 5.3, -25)
-
-[node name="Wall12" parent="MainFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 20, 5.3, -25)
-
-[node name="Wall13" parent="MainFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 25, 5.3, -20)
-
-[node name="Wall14" parent="MainFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 25, 5.3, -10.5)
-
-[node name="LobbyWalls3" type="Node3D" parent="MainFloor/Walls"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, 0)
-
-[node name="Wall" parent="MainFloor/Walls/LobbyWalls3" instance=ExtResource("7_6728e")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 5.3, 25)
-
-[node name="Wall2" parent="MainFloor/Walls/LobbyWalls3" instance=ExtResource("7_6728e")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.5, 5.3, 25)
-
-[node name="Wall3" parent="MainFloor/Walls/LobbyWalls3" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 5.3, 20)
-
-[node name="Wall4" parent="MainFloor/Walls/LobbyWalls3" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 5.3, 10)
-
-[node name="Wall5" parent="MainFloor/Walls/LobbyWalls3" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 5.3, 0)
-
-[node name="Wall6" parent="MainFloor/Walls/LobbyWalls3" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 5.3, -10)
-
-[node name="Wall7" parent="MainFloor/Walls/LobbyWalls3" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 5.3, -20)
-
-[node name="Wall8" parent="MainFloor/Walls/LobbyWalls3" instance=ExtResource("7_6728e")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -20, 5.3, -25)
-
-[node name="Wall9" parent="MainFloor/Walls/LobbyWalls3" instance=ExtResource("7_6728e")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -10, 5.3, -25)
-
-[node name="Wall10" parent="MainFloor/Walls/LobbyWalls3" instance=ExtResource("7_6728e")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 5.3, -25)
-
-[node name="Wall11" parent="MainFloor/Walls/LobbyWalls3" instance=ExtResource("7_6728e")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 10, 5.3, -25)
-
-[node name="Wall12" parent="MainFloor/Walls/LobbyWalls3" instance=ExtResource("7_6728e")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 20, 5.3, -25)
-
-[node name="Wall13" parent="MainFloor/Walls/LobbyWalls3" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 25, 5.3, -20)
-
-[node name="Wall14" parent="MainFloor/Walls/LobbyWalls3" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 25, 5.3, -10.5)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MainFloor/Walls/Wall4"]
+shape = SubResource("ConcavePolygonShape3D_8d4em")
 
 [node name="MainLobbyLight" type="OmniLight3D" parent="MainFloor"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.2235, 14.6485, -10.0942)
-light_color = Color(1, 0.839216, 0.32549, 1)
-light_energy = 8.0
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, 0)
+light_energy = 16.0
 light_bake_mode = 1
 light_cull_mask = 4293918721
-shadow_enabled = true
 shadow_caster_mask = 4293918721
 distance_fade_begin = 50.0
-omni_range = 60.0
+omni_range = 45.0
 
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
 navigation_mesh = SubResource("NavigationMesh_br7h5")
@@ -404,141 +327,62 @@ shape = SubResource("ConcavePolygonShape3D_wkq0h")
 
 [node name="Walls" type="Node3D" parent="NavigationRegion3D/TrainingFloor"]
 
-[node name="LobbyWalls1" type="Node3D" parent="NavigationRegion3D/TrainingFloor/Walls"]
+[node name="Wall5" type="StaticBody3D" parent="NavigationRegion3D/TrainingFloor/Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 25)
 
-[node name="Wall" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 5.3, 25)
+[node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D/TrainingFloor/Walls/Wall5"]
+mesh = SubResource("BoxMesh_wkq0h")
 
-[node name="Wall2" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.5, 5.3, 25)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/TrainingFloor/Walls/Wall5"]
+shape = SubResource("ConcavePolygonShape3D_267vg")
 
-[node name="Wall15" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.3, 25)
+[node name="Wall6" type="StaticBody3D" parent="NavigationRegion3D/TrainingFloor/Walls"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 10, 0)
 
-[node name="Wall16" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 5.3, 25)
+[node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D/TrainingFloor/Walls/Wall6"]
+mesh = SubResource("BoxMesh_wkq0h")
 
-[node name="Wall17" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 5.3, 25)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/TrainingFloor/Walls/Wall6"]
+shape = SubResource("ConcavePolygonShape3D_267vg")
 
-[node name="Wall3" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 5.3, 20)
+[node name="Wall7" type="StaticBody3D" parent="NavigationRegion3D/TrainingFloor/Walls"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 10, -25)
 
-[node name="Wall4" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 5.3, 10)
+[node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D/TrainingFloor/Walls/Wall7"]
+mesh = SubResource("BoxMesh_wkq0h")
 
-[node name="Wall5" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 5.3, 0)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/TrainingFloor/Walls/Wall7"]
+shape = SubResource("ConcavePolygonShape3D_267vg")
 
-[node name="Wall6" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 5.3, -10)
+[node name="Wall8" type="StaticBody3D" parent="NavigationRegion3D/TrainingFloor/Walls"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 25, 10, 0)
 
-[node name="Wall7" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 5.3, -20)
+[node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D/TrainingFloor/Walls/Wall8"]
+mesh = SubResource("BoxMesh_wkq0h")
 
-[node name="Wall8" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -20, 5.3, -25)
-
-[node name="Wall9" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -10, 5.3, -25)
-
-[node name="Wall10" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 5.3, -25)
-
-[node name="Wall11" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 10, 5.3, -25)
-
-[node name="Wall12" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 20, 5.3, -25)
-
-[node name="Wall13" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 25, 5.3, -20)
-
-[node name="Wall14" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 25, 5.3, -10.5)
-
-[node name="Wall18" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 25, 5.3, 0)
-
-[node name="Wall19" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 25, 5.3, 10)
-
-[node name="Wall20" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls1" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 25, 5.3, 20)
-
-[node name="LobbyWalls2" type="Node3D" parent="NavigationRegion3D/TrainingFloor/Walls"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9.5, 0)
-
-[node name="Wall" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 5.3, 25)
-
-[node name="Wall2" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.5, 5.3, 25)
-
-[node name="Wall15" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.3, 25)
-
-[node name="Wall16" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 5.3, 25)
-
-[node name="Wall17" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 5.3, 25)
-
-[node name="Wall3" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 5.3, 20)
-
-[node name="Wall4" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 5.3, 10)
-
-[node name="Wall5" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 5.3, 0)
-
-[node name="Wall6" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 5.3, -10)
-
-[node name="Wall7" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 5.3, -20)
-
-[node name="Wall8" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -20, 5.3, -25)
-
-[node name="Wall9" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -10, 5.3, -25)
-
-[node name="Wall10" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 5.3, -25)
-
-[node name="Wall11" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 10, 5.3, -25)
-
-[node name="Wall12" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 20, 5.3, -25)
-
-[node name="Wall13" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 25, 5.3, -20)
-
-[node name="Wall14" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 25, 5.3, -10.5)
-
-[node name="Wall18" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 25, 5.3, 0)
-
-[node name="Wall19" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 25, 5.3, 10)
-
-[node name="Wall20" parent="NavigationRegion3D/TrainingFloor/Walls/LobbyWalls2" instance=ExtResource("7_6728e")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 25, 5.3, 20)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/TrainingFloor/Walls/Wall8"]
+shape = SubResource("ConcavePolygonShape3D_267vg")
 
 [node name="TrainningFloorLight" type="OmniLight3D" parent="NavigationRegion3D/TrainingFloor"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0)
-light_color = Color(1, 0.839216, 0.32549, 1)
 light_energy = 8.0
 light_bake_mode = 1
 light_cull_mask = 4293918721
-shadow_enabled = true
 shadow_caster_mask = 4293918721
 distance_fade_begin = 50.0
-omni_range = 60.0
+omni_range = 35.0
+
+[node name="Columns" type="Node3D" parent="NavigationRegion3D/TrainingFloor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, 0)
+
+[node name="Column" type="StaticBody3D" parent="NavigationRegion3D/TrainingFloor/Columns"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D/TrainingFloor/Columns/Column"]
+mesh = SubResource("CylinderMesh_wkq0h")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/TrainingFloor/Columns/Column"]
+shape = SubResource("CylinderShape3D_6728e")
 
 [connection signal="display_3x3x3" from="." to="MainFloor/Debug Lab/Lab3x3x3" method="display"]
 [connection signal="generation" from="." to="Torch2" method="_on_generation"]
