@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://br883pylmypa7"]
+[gd_scene load_steps=26 format=3 uid="uid://br883pylmypa7"]
 
 [ext_resource type="Script" uid="uid://wdhsttcv1ana" path="res://scripts/demo/demo_main_intermediate.gd" id="1_wehoa"]
 [ext_resource type="PackedScene" uid="uid://y1yw5naea0tu" path="res://scenes/characters/player.tscn" id="3_4d0q1"]
@@ -41,6 +41,13 @@ size = Vector3(50, 30, 0.3)
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_8d4em"]
 data = PackedVector3Array(-25, 15, 0.15, 25, 15, 0.15, -25, -15, 0.15, 25, 15, 0.15, 25, -15, 0.15, -25, -15, 0.15, 25, 15, -0.15, -25, 15, -0.15, 25, -15, -0.15, -25, 15, -0.15, -25, -15, -0.15, 25, -15, -0.15, 25, 15, 0.15, 25, 15, -0.15, 25, -15, 0.15, 25, 15, -0.15, 25, -15, -0.15, 25, -15, 0.15, -25, 15, -0.15, -25, 15, 0.15, -25, -15, -0.15, -25, 15, 0.15, -25, -15, 0.15, -25, -15, -0.15, 25, 15, 0.15, -25, 15, 0.15, 25, 15, -0.15, -25, 15, 0.15, -25, 15, -0.15, 25, 15, -0.15, -25, -15, 0.15, 25, -15, 0.15, -25, -15, -0.15, 25, -15, 0.15, 25, -15, -0.15, -25, -15, -0.15)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6728e"]
+albedo_color = Color(0.341176, 0.870588, 0.913725, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7x35k"]
+material = SubResource("StandardMaterial3D_6728e")
+size = Vector3(50, 30, 0.3)
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_br7h5"]
 vertices = PackedVector3Array(-0.650002, -19.6, -1.15, 0.0999985, -19.6, -1.15, 0.0999985, -19.6, -24.15, -24.15, -19.6, -0.150002, -1.15, -19.6, -0.150002, -24.15, -19.6, -24.15, 1.1, -19.6, -0.650002, 1.1, -19.6, 0.599998, 24.35, -19.6, 0.599998, 24.35, -19.6, -24.15, -1.65, -19.6, 7.6, -0.150002, -19.6, 7.6, -0.150002, -19.6, 1.1, -1.15, -19.6, 0.599998, -24.15, -19.6, 8.6, -1.9, -19.6, 8.6, 0.349998, -19.6, 7.85, 0.349998, -19.6, 8.6, 1.1, -19.6, 8.6, 1.35, -19.6, 7.6, 0.849998, -19.6, 1.1, 4.1, -19.6, 7.6, 24.35, -19.6, 9.1, 4.35, -19.6, 9.1, -1.4, -19.6, 24.35, -1.4, -19.6, 9.85, -1.9, -19.6, 9.6, -24.15, -19.6, 24.35, 1.35, -19.6, 9.85, 0.0999985, -19.6, 9.85, 3.85, -19.6, 24.35, 3.85, -19.6, 9.85, 23.35, -19.6, 14.6, 22.85, -19.6, 14.85, 23.35, -19.6, 16.35, 21.6, -19.6, 13.6, 23.35, -19.6, 13.6, 24.35, -19.6, 24.35, 21.6, -19.6, 16.35)
@@ -98,6 +105,7 @@ transform = Transform3D(0.653288, 0.757109, 0, -0.757109, 0.653288, 0, 0, 0, 1, 
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.0937, 0.688972, -0.0301046)
 
 [node name="MainFloor" type="StaticBody3D" parent="."]
+collision_layer = 17
 collision_mask = 31
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="MainFloor"]
@@ -161,6 +169,7 @@ spot_angle_attenuation = 0.267944
 
 [node name="obstacle5" type="StaticBody3D" parent="MainFloor/Real Lab"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1, -40)
+collision_layer = 17
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="MainFloor/Real Lab/obstacle5"]
 mesh = SubResource("BoxMesh_dcxnu")
@@ -224,6 +233,7 @@ teleport_direction = 0
 
 [node name="Wall1" type="StaticBody3D" parent="MainFloor/Walls"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 15, 25)
+collision_layer = 17
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="MainFloor/Walls/Wall1"]
 mesh = SubResource("BoxMesh_6728e")
@@ -233,6 +243,7 @@ shape = SubResource("ConcavePolygonShape3D_8d4em")
 
 [node name="Wall2" type="StaticBody3D" parent="MainFloor/Walls"]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 15, 0)
+collision_layer = 17
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="MainFloor/Walls/Wall2"]
 mesh = SubResource("BoxMesh_6728e")
@@ -242,6 +253,7 @@ shape = SubResource("ConcavePolygonShape3D_8d4em")
 
 [node name="Wall3" type="StaticBody3D" parent="MainFloor/Walls"]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 15, -25)
+collision_layer = 17
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="MainFloor/Walls/Wall3"]
 mesh = SubResource("BoxMesh_6728e")
@@ -251,11 +263,22 @@ shape = SubResource("ConcavePolygonShape3D_8d4em")
 
 [node name="Wall4" type="StaticBody3D" parent="MainFloor/Walls"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 25, 15, 0)
+collision_layer = 17
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="MainFloor/Walls/Wall4"]
 mesh = SubResource("BoxMesh_6728e")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MainFloor/Walls/Wall4"]
+shape = SubResource("ConcavePolygonShape3D_8d4em")
+
+[node name="Wall5" type="StaticBody3D" parent="MainFloor/Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 45, 25)
+collision_layer = 33
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MainFloor/Walls/Wall5"]
+mesh = SubResource("BoxMesh_7x35k")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MainFloor/Walls/Wall5"]
 shape = SubResource("ConcavePolygonShape3D_8d4em")
 
 [node name="MainLobbyLight" type="OmniLight3D" parent="MainFloor"]
@@ -272,6 +295,7 @@ navigation_mesh = SubResource("NavigationMesh_br7h5")
 
 [node name="TrainingFloor" type="StaticBody3D" parent="NavigationRegion3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -20, 0)
+collision_layer = 17
 collision_mask = 31
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D/TrainingFloor"]
@@ -291,6 +315,7 @@ teleport_direction = 0
 
 [node name="obstacle" type="StaticBody3D" parent="NavigationRegion3D/TrainingFloor"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.859699, 0.598289, 8.7731)
+collision_layer = 17
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D/TrainingFloor/obstacle"]
 mesh = SubResource("BoxMesh_dcxnu")
@@ -300,6 +325,7 @@ shape = SubResource("ConcavePolygonShape3D_wkq0h")
 
 [node name="obstacle2" type="StaticBody3D" parent="NavigationRegion3D/TrainingFloor"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.143, 0.598289, 8.7731)
+collision_layer = 17
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D/TrainingFloor/obstacle2"]
 mesh = SubResource("BoxMesh_dcxnu")
@@ -309,6 +335,7 @@ shape = SubResource("ConcavePolygonShape3D_wkq0h")
 
 [node name="obstacle3" type="StaticBody3D" parent="NavigationRegion3D/TrainingFloor"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2522, 0.598289, 8.7731)
+collision_layer = 17
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D/TrainingFloor/obstacle3"]
 mesh = SubResource("BoxMesh_dcxnu")
@@ -318,6 +345,7 @@ shape = SubResource("ConcavePolygonShape3D_wkq0h")
 
 [node name="obstacle4" type="StaticBody3D" parent="NavigationRegion3D/TrainingFloor"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1981, 2.73489, 8.7731)
+collision_layer = 33
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D/TrainingFloor/obstacle4"]
 mesh = SubResource("BoxMesh_dcxnu")
@@ -329,6 +357,7 @@ shape = SubResource("ConcavePolygonShape3D_wkq0h")
 
 [node name="Wall5" type="StaticBody3D" parent="NavigationRegion3D/TrainingFloor/Walls"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 25)
+collision_layer = 17
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D/TrainingFloor/Walls/Wall5"]
 mesh = SubResource("BoxMesh_wkq0h")
@@ -338,6 +367,7 @@ shape = SubResource("ConcavePolygonShape3D_267vg")
 
 [node name="Wall6" type="StaticBody3D" parent="NavigationRegion3D/TrainingFloor/Walls"]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 10, 0)
+collision_layer = 17
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D/TrainingFloor/Walls/Wall6"]
 mesh = SubResource("BoxMesh_wkq0h")
@@ -347,6 +377,7 @@ shape = SubResource("ConcavePolygonShape3D_267vg")
 
 [node name="Wall7" type="StaticBody3D" parent="NavigationRegion3D/TrainingFloor/Walls"]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 10, -25)
+collision_layer = 17
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D/TrainingFloor/Walls/Wall7"]
 mesh = SubResource("BoxMesh_wkq0h")
@@ -356,6 +387,7 @@ shape = SubResource("ConcavePolygonShape3D_267vg")
 
 [node name="Wall8" type="StaticBody3D" parent="NavigationRegion3D/TrainingFloor/Walls"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 25, 10, 0)
+collision_layer = 17
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D/TrainingFloor/Walls/Wall8"]
 mesh = SubResource("BoxMesh_wkq0h")
@@ -377,6 +409,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, 0)
 
 [node name="Column" type="StaticBody3D" parent="NavigationRegion3D/TrainingFloor/Columns"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+collision_layer = 17
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D/TrainingFloor/Columns/Column"]
 mesh = SubResource("CylinderMesh_wkq0h")

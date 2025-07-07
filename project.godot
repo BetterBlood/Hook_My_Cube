@@ -122,7 +122,8 @@ grapple={
 3d_physics/layer_2="Player"
 3d_physics/layer_3="Enemy"
 3d_physics/layer_4="Projectile"
-3d_physics/layer_5="Grapple"
+3d_physics/layer_5="GrappleLVL1"
+3d_physics/layer_6="GrappleLVL2"
 3d_physics/layer_16="Portal"
 
 [rendering]

@@ -100,8 +100,8 @@ func _physics_process(delta):
 		#sphere.scale = Vector3(0.2, 0.2, 0.2)
 	
 	if Input.is_action_just_pressed("grapple"):
-		ray_cast_3d.collision_mask = grapple.mask
-		ray_cast_3d.target_position = Vector3(0, 0, -grapple.distance)
+		ray_cast_3d.collision_mask = grapple.get_collision_mask()
+		ray_cast_3d.target_position = Vector3(0, 0, -grapple.get_distance())
 		ray_cast_3d.force_raycast_update()
 		var destination = Vector3()
 		var hit: bool

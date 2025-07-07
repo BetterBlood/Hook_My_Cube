@@ -29,21 +29,25 @@ func set_layers_to_hit(layers: int) -> int:
 
 func _on_interaction_area_area_entered(area: Area3D) -> void:
 	#print("In Projectile detect collision with: ", area)
-	if area.get_parent().has_method("get_health_component"):
-		var target = area.get_parent()
-		if target.has_method("take_damage"):
-			#print("On: ", target, " damage dealed: ", damage)
-			var damage_taken = target.take_damage(damage, get_type(), armor_penetration)
-			#print("On: ", target, " damage taken: ", damage_taken)
-		
-		_apply_effect(target)
-		
-		if target.has_method("get_health_component"):
-			print("Projectile: ", self, ": perforation_count: ", perforation_count)
-			if perforation_count <= 0:
-				#print("Projectile: ", self , ": perforating destroy reached")
-				queue_free()
-			perforation_count -= 1
+	var target = area.get_parent()
+	if target and target.has_method("get_health_component"):
+		_impact_health_component_user(target)
+
+
+func _impact_health_component_user(target: Node):
+	if target.has_method("take_damage"):
+		#print("On: ", target, " damage dealed: ", damage)
+		#var damage_taken = \
+		target.take_damage(damage, get_type(), armor_penetration)
+		#print("On: ", target, " damage taken: ", damage_taken)
+	
+	_apply_effect(target)
+	
+	print("Projectile: ", self, ": perforation_count: ", perforation_count)
+	if perforation_count <= 0:
+		#print("Projectile: ", self , ": perforating destroy reached")
+		queue_free()
+	perforation_count -= 1
 
 
 func _apply_effect(target: Creature) -> void:
