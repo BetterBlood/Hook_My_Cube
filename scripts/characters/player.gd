@@ -105,6 +105,7 @@ func _physics_process(delta):
 		ray_cast_3d.force_raycast_update()
 		var destination = Vector3()
 		var hit: bool
+		var hit2: bool = false
 		
 		if ray_cast_3d.is_colliding():
 			destination = ray_cast_3d.get_collision_point()
@@ -114,7 +115,19 @@ func _physics_process(delta):
 			destination = $Head/RayCast3D/Marker3D.global_position
 			hit = false
 		
-		grapple.shoot(destination, hit)
+		ray_cast_3d.collision_mask = 32768 - 1
+		ray_cast_3d.target_position = Vector3(0, 0, -grapple.get_distance() - 1)
+		ray_cast_3d.force_raycast_update()
+		
+		var dist_to_first_surface = Vector3()
+		if ray_cast_3d.is_colliding():
+			dist_to_first_surface = ray_cast_3d.get_collision_point() - position
+			if dist_to_first_surface.length() + 0.0001 < (destination - position).length():
+				destination = ray_cast_3d.get_collision_point()
+				hit2 = true
+				hit = false
+		
+		grapple.shoot(destination, hit, hit2)
 	
 	if Input.is_action_just_released("grapple"):
 		grapple.cancel_grab()

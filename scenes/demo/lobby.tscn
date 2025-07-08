@@ -1,12 +1,13 @@
-[gd_scene load_steps=26 format=3 uid="uid://br883pylmypa7"]
+[gd_scene load_steps=27 format=3 uid="uid://br883pylmypa7"]
 
-[ext_resource type="Script" uid="uid://wdhsttcv1ana" path="res://scripts/demo/demo_main_intermediate.gd" id="1_wehoa"]
-[ext_resource type="PackedScene" uid="uid://y1yw5naea0tu" path="res://scenes/characters/player.tscn" id="3_4d0q1"]
-[ext_resource type="PackedScene" uid="uid://bualks0wajs8i" path="res://scenes/characters/zombie.tscn" id="3_tp4il"]
-[ext_resource type="PackedScene" uid="uid://dvkq4hwixk2m8" path="res://scenes/decorations/torch.tscn" id="5_dcxnu"]
-[ext_resource type="Material" uid="uid://llqdeyixmjnv" path="res://materials/workInProgress/StandardMatWIP.tres" id="6_dcxnu"]
-[ext_resource type="Script" uid="uid://dn77lcjlugkqt" path="res://addons/polyrinthe/polyrintheGenerator.gd" id="7_wkq0h"]
-[ext_resource type="PackedScene" uid="uid://canga3dhywbr3" path="res://scenes/portal_with_frame.tscn" id="8_6728e"]
+[ext_resource type="Script" uid="uid://wdhsttcv1ana" path="res://scripts/demo/lobby.gd" id="1_yr8w2"]
+[ext_resource type="PackedScene" uid="uid://y1yw5naea0tu" path="res://scenes/characters/player.tscn" id="2_pdx53"]
+[ext_resource type="PackedScene" uid="uid://bualks0wajs8i" path="res://scenes/characters/zombie.tscn" id="3_d1p01"]
+[ext_resource type="PackedScene" uid="uid://dvkq4hwixk2m8" path="res://scenes/decorations/torch.tscn" id="4_u1smo"]
+[ext_resource type="PackedScene" uid="uid://canga3dhywbr3" path="res://scenes/portal_with_frame.tscn" id="5_4of2y"]
+[ext_resource type="Material" uid="uid://llqdeyixmjnv" path="res://materials/workInProgress/StandardMatWIP.tres" id="6_f5ty6"]
+[ext_resource type="Material" uid="uid://penbwn0i2in" path="res://materials/ice.tres" id="6_yr8w2"]
+[ext_resource type="Script" uid="uid://cqopmol50hbe6" path="res://addons/polyrinthe/polyrintheGenerator.gd" id="7_iojra"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_wehoa"]
 sky_top_color = Color(0.0970707, 0.463976, 0.749279, 1)
@@ -31,7 +32,7 @@ size = Vector3(50, 0.2, 50)
 data = PackedVector3Array(-25, 0.1, 25, 25, 0.1, 25, -25, -0.1, 25, 25, 0.1, 25, 25, -0.1, 25, -25, -0.1, 25, 25, 0.1, -25, -25, 0.1, -25, 25, -0.1, -25, -25, 0.1, -25, -25, -0.1, -25, 25, -0.1, -25, 25, 0.1, 25, 25, 0.1, -25, 25, -0.1, 25, 25, 0.1, -25, 25, -0.1, -25, 25, -0.1, 25, -25, 0.1, -25, -25, 0.1, 25, -25, -0.1, -25, -25, 0.1, 25, -25, -0.1, 25, -25, -0.1, -25, 25, 0.1, 25, -25, 0.1, 25, 25, 0.1, -25, -25, 0.1, 25, -25, 0.1, -25, 25, 0.1, -25, -25, -0.1, 25, 25, -0.1, 25, -25, -0.1, -25, 25, -0.1, 25, 25, -0.1, -25, -25, -0.1, -25)
 
 [sub_resource type="BoxMesh" id="BoxMesh_dcxnu"]
-material = ExtResource("6_dcxnu")
+material = ExtResource("6_f5ty6")
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_wkq0h"]
 data = PackedVector3Array(-0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5)
@@ -42,11 +43,11 @@ size = Vector3(50, 30, 0.3)
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_8d4em"]
 data = PackedVector3Array(-25, 15, 0.15, 25, 15, 0.15, -25, -15, 0.15, 25, 15, 0.15, 25, -15, 0.15, -25, -15, 0.15, 25, 15, -0.15, -25, 15, -0.15, 25, -15, -0.15, -25, 15, -0.15, -25, -15, -0.15, 25, -15, -0.15, 25, 15, 0.15, 25, 15, -0.15, 25, -15, 0.15, 25, 15, -0.15, 25, -15, -0.15, 25, -15, 0.15, -25, 15, -0.15, -25, 15, 0.15, -25, -15, -0.15, -25, 15, 0.15, -25, -15, 0.15, -25, -15, -0.15, 25, 15, 0.15, -25, 15, 0.15, 25, 15, -0.15, -25, 15, 0.15, -25, 15, -0.15, 25, 15, -0.15, -25, -15, 0.15, 25, -15, 0.15, -25, -15, -0.15, 25, -15, 0.15, 25, -15, -0.15, -25, -15, -0.15)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6728e"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yr8w2"]
 albedo_color = Color(0.341176, 0.870588, 0.913725, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_7x35k"]
-material = SubResource("StandardMaterial3D_6728e")
+material = SubResource("StandardMaterial3D_yr8w2")
 size = Vector3(50, 30, 0.3)
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_br7h5"]
@@ -74,8 +75,8 @@ height = 50.0
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_6728e"]
 height = 50.0
 
-[node name="Demo Main Intermediate" type="Node3D"]
-script = ExtResource("1_wehoa")
+[node name="Lobby" type="Node3D"]
+script = ExtResource("1_yr8w2")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.866024, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.75, -0.43301, 0, 52.1937, 3.85321)
@@ -86,22 +87,22 @@ shadow_enabled = true
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_4d0q1")
 
-[node name="Player" parent="." instance=ExtResource("3_4d0q1")]
+[node name="Player" parent="." instance=ExtResource("2_pdx53")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.4171, 1.85073, 12.2011)
 
-[node name="Enemy" parent="." instance=ExtResource("3_tp4il")]
+[node name="Enemy" parent="." instance=ExtResource("3_d1p01")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.1958, -17.7606, -19.4407)
 
-[node name="Enemy2" parent="." instance=ExtResource("3_tp4il")]
+[node name="Enemy2" parent="." instance=ExtResource("3_d1p01")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.2531, -17.2201, -4.26082)
 
-[node name="Enemy3" parent="." instance=ExtResource("3_tp4il")]
+[node name="Enemy3" parent="." instance=ExtResource("3_d1p01")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.25537, -17.3363, 2.54891)
 
-[node name="Torch2" parent="." instance=ExtResource("5_dcxnu")]
+[node name="Torch2" parent="." instance=ExtResource("4_u1smo")]
 transform = Transform3D(0.653288, 0.757109, 0, -0.757109, 0.653288, 0, 0, 0, 1, -24.7571, 2.20074, -0.0301046)
 
-[node name="Torch3" parent="." instance=ExtResource("5_dcxnu")]
+[node name="Torch3" parent="." instance=ExtResource("4_u1smo")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.0937, 0.688972, -0.0301046)
 
 [node name="MainFloor" type="StaticBody3D" parent="."]
@@ -114,7 +115,7 @@ mesh = SubResource("BoxMesh_wehoa")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MainFloor"]
 shape = SubResource("ConcavePolygonShape3D_6728e")
 
-[node name="P1 -> Fight Room" parent="MainFloor" instance=ExtResource("8_6728e")]
+[node name="P1 -> Fight Room" parent="MainFloor" instance=ExtResource("5_4of2y")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -22.5, 1.25, 15)
 
 [node name="Portal3D" parent="MainFloor/P1 -> Fight Room" index="0" node_paths=PackedStringArray("exit_portal")]
@@ -124,24 +125,7 @@ teleport_direction = 0
 
 [node name="Real Lab" type="Node" parent="MainFloor"]
 
-[node name="Polyrinthe" type="Node3D" parent="MainFloor/Real Lab" node_paths=PackedStringArray("coord_first", "coord_right", "coord_up")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.2, -35)
-script = ExtResource("7_wkq0h")
-algo = 9
-coord_first = NodePath("Marker3D")
-coord_right = NodePath("Marker3D2")
-coord_up = NodePath("Marker3D3")
-metadata/_custom_type_script = "uid://dn77lcjlugkqt"
-
-[node name="Marker3D" type="Marker3D" parent="MainFloor/Real Lab/Polyrinthe"]
-
-[node name="Marker3D2" type="Marker3D" parent="MainFloor/Real Lab/Polyrinthe"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
-
-[node name="Marker3D3" type="Marker3D" parent="MainFloor/Real Lab/Polyrinthe"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-
-[node name="P3 -> Lab Entrance" parent="MainFloor/Real Lab" instance=ExtResource("8_6728e")]
+[node name="P3 -> Lab Entrance" parent="MainFloor/Real Lab" instance=ExtResource("5_4of2y")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, -22.5)
 
 [node name="Portal3D" parent="MainFloor/Real Lab/P3 -> Lab Entrance" index="0" node_paths=PackedStringArray("exit_portal")]
@@ -149,7 +133,7 @@ exit_portal = NodePath("../../P4 -> Main Room/Portal3D")
 view_direction = 1
 teleport_direction = 0
 
-[node name="P4 -> Main Room" parent="MainFloor/Real Lab" instance=ExtResource("8_6728e")]
+[node name="P4 -> Main Room" parent="MainFloor/Real Lab" instance=ExtResource("5_4of2y")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 1.25, -35)
 
 [node name="Portal3D" parent="MainFloor/Real Lab/P4 -> Main Room" index="0" node_paths=PackedStringArray("exit_portal")]
@@ -180,24 +164,32 @@ shape = SubResource("ConcavePolygonShape3D_wkq0h")
 [node name="Debug Lab" type="Node3D" parent="MainFloor"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 45.3371, 0, 0)
 
-[node name="Lab3x3x3" type="Node3D" parent="MainFloor/Debug Lab" node_paths=PackedStringArray("coord_first", "coord_right", "coord_up")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.3, 0)
-script = ExtResource("7_wkq0h")
+[node name="Polyrinthe" type="Node3D" parent="MainFloor/Debug Lab" node_paths=PackedStringArray("coord_first", "coord_right", "coord_up")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 3.54, 5.24, 0)
+script = ExtResource("7_iojra")
 algo = 9
-coord_first = NodePath("Marker3D")
-coord_right = NodePath("Marker3D2")
-coord_up = NodePath("Marker3D3")
-metadata/_custom_type_script = "uid://dn77lcjlugkqt"
+coord_first = NodePath("Marker3D4")
+coord_right = NodePath("Marker3D5")
+coord_up = NodePath("Marker3D6")
+metadata/_custom_type_script = "uid://cqopmol50hbe6"
 
-[node name="Marker3D" type="Marker3D" parent="MainFloor/Debug Lab/Lab3x3x3"]
+[node name="Marker3D" type="Marker3D" parent="MainFloor/Debug Lab/Polyrinthe"]
 
-[node name="Marker3D2" type="Marker3D" parent="MainFloor/Debug Lab/Lab3x3x3"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
+[node name="Marker3D2" type="Marker3D" parent="MainFloor/Debug Lab/Polyrinthe"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
 
-[node name="Marker3D3" type="Marker3D" parent="MainFloor/Debug Lab/Lab3x3x3"]
+[node name="Marker3D3" type="Marker3D" parent="MainFloor/Debug Lab/Polyrinthe"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
-[node name="P5 -> Lab 3x3x3 Entrance" parent="MainFloor/Debug Lab" instance=ExtResource("8_6728e")]
+[node name="Marker3D4" type="Marker3D" parent="MainFloor/Debug Lab/Polyrinthe"]
+
+[node name="Marker3D5" type="Marker3D" parent="MainFloor/Debug Lab/Polyrinthe"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
+
+[node name="Marker3D6" type="Marker3D" parent="MainFloor/Debug Lab/Polyrinthe"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="P5 -> Lab 3x3x3 Entrance" parent="MainFloor/Debug Lab" instance=ExtResource("5_4of2y")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -22.9297, 1.25, -1.306)
 
 [node name="Portal3D" parent="MainFloor/Debug Lab/P5 -> Lab 3x3x3 Entrance" index="0" node_paths=PackedStringArray("exit_portal")]
@@ -205,7 +197,7 @@ exit_portal = NodePath("../../P6 -> Main Room/Portal3D")
 view_direction = 1
 teleport_direction = 0
 
-[node name="P6 -> Main Room" parent="MainFloor/Debug Lab" instance=ExtResource("8_6728e")]
+[node name="P6 -> Main Room" parent="MainFloor/Debug Lab" instance=ExtResource("5_4of2y")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 1.25, -1.306)
 
 [node name="Portal3D" parent="MainFloor/Debug Lab/P6 -> Main Room" index="0" node_paths=PackedStringArray("exit_portal")]
@@ -213,7 +205,7 @@ exit_portal = NodePath("../../P5 -> Lab 3x3x3 Entrance/Portal3D")
 view_direction = 1
 teleport_direction = 0
 
-[node name="P7 -> Return to Lobby" parent="MainFloor/Debug Lab" instance=ExtResource("8_6728e")]
+[node name="P7 -> Return to Lobby" parent="MainFloor/Debug Lab" instance=ExtResource("5_4of2y")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 22.25, 19.5)
 
 [node name="Portal3D" parent="MainFloor/Debug Lab/P7 -> Return to Lobby" index="0" node_paths=PackedStringArray("exit_portal")]
@@ -221,7 +213,7 @@ exit_portal = NodePath("../../P8 -> LastRoom 3x3x3/Portal3D")
 view_direction = 1
 teleport_direction = 0
 
-[node name="P8 -> LastRoom 3x3x3" parent="MainFloor/Debug Lab" instance=ExtResource("8_6728e")]
+[node name="P8 -> LastRoom 3x3x3" parent="MainFloor/Debug Lab" instance=ExtResource("5_4of2y")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -22.9297, 1.25, 16.911)
 
 [node name="Portal3D" parent="MainFloor/Debug Lab/P8 -> LastRoom 3x3x3" index="0" node_paths=PackedStringArray("exit_portal")]
@@ -304,7 +296,7 @@ mesh = SubResource("BoxMesh_wehoa")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/TrainingFloor"]
 shape = SubResource("ConcavePolygonShape3D_7x35k")
 
-[node name="P2 -> Main Lobby" parent="NavigationRegion3D/TrainingFloor" instance=ExtResource("8_6728e")]
+[node name="P2 -> Main Lobby" parent="NavigationRegion3D/TrainingFloor" instance=ExtResource("5_4of2y")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 22.5, 1.29, 15)
 
 [node name="Portal3D" parent="NavigationRegion3D/TrainingFloor/P2 -> Main Lobby" index="0" node_paths=PackedStringArray("exit_portal")]
@@ -348,6 +340,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1981, 2.73489, 8.7731)
 collision_layer = 33
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D/TrainingFloor/obstacle4"]
+material_override = ExtResource("6_yr8w2")
 mesh = SubResource("BoxMesh_dcxnu")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/TrainingFloor/obstacle4"]
@@ -417,11 +410,10 @@ mesh = SubResource("CylinderMesh_wkq0h")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/TrainingFloor/Columns/Column"]
 shape = SubResource("CylinderShape3D_6728e")
 
-[connection signal="display_3x3x3" from="." to="MainFloor/Debug Lab/Lab3x3x3" method="display"]
+[connection signal="display_3x3x3" from="." to="MainFloor/Debug Lab/Polyrinthe" method="display"]
 [connection signal="generation" from="." to="Torch2" method="_on_generation"]
 [connection signal="generation" from="." to="Torch3" method="_on_generation"]
-[connection signal="generation" from="." to="MainFloor/Real Lab/Polyrinthe" method="_on_menu_generation"]
-[connection signal="generation_3x3x3" from="." to="MainFloor/Debug Lab/Lab3x3x3" method="generate"]
+[connection signal="generation_3x3x3" from="." to="MainFloor/Debug Lab/Polyrinthe" method="generate"]
 
 [editable path="Player"]
 [editable path="MainFloor/P1 -> Fight Room"]

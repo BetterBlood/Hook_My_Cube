@@ -19,8 +19,10 @@ func _ready() -> void:
 		print(line)
 	print()
 	
-	generation_3x3x3.emit(3, "DEBUG")
+	generation_3x3x3.emit(3, "DEBUG", [-1, -1, 1])
+	Maze.set_tag_for_collision_layer($"MainFloor/Debug Lab/Polyrinthe")
 	display_3x3x3.emit()
+	Maze.apply_collision_layer($"MainFloor/Debug Lab/Polyrinthe")
 	
 	var config = ConfigFile.new()
 	var err = config.load("user://damageGrid.cfg")

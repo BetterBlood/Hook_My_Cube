@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Hook_My_Cube"
-run/main_scene="res://scenes/demo/demo_main_intermediate.tscn"
+run/main_scene="res://scenes/demo/lobby.tscn"
 config/features=PackedStringArray("4.4", "C#", "GL Compatibility")
 config/icon="res://icon.svg"
 
@@ -40,7 +40,8 @@ folder_colors={
 "res://scripts/CSharp/": "blue",
 "res://scripts/decorations/": "orange",
 "res://scripts/demo/": "yellow",
-"res://scripts/wip/": "pink"
+"res://scripts/wip/": "pink",
+"res://texture/": "teal"
 }
 
 [input]

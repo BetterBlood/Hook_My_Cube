@@ -22,6 +22,7 @@ var upgrades: Array[int] = [0, 0, 0, 0] # [range, boost, enemy, ice wall]
 var grapple_owner: Creature
 
 const SPHERE = preload("res://addons/polyrinthe/sphere.tscn") # DEBUG
+const IMPACT = preload("res://scenes/decorations/impact.tscn")
 var grappling_hook: Node
 var tween: Tween
 var _grapple_speed: float = 40.0
@@ -33,6 +34,7 @@ func _ready() -> void:
 	grappling_hook = SPHERE.instantiate() # TODO: real grappling hook
 	grappling_hook.scale = Vector3(0.05, 0.05, 0.05)
 	add_child(grappling_hook)
+	grappling_hook.add_child(IMPACT.instantiate())
 
 
 func _process(delta: float) -> void:
@@ -91,7 +93,7 @@ func upgrade_wall() -> int:
 
 #	TODO ?: for being usable on moving target, need to pass the entity hited to reparent 
 #	hook on the target (the raycast should provide this information) 
-func shoot(destination: Vector3, hit: bool) -> void:
+func shoot(destination: Vector3, hit: bool, hit2: bool = false) -> void:
 	if !_is_abble_to_shoot():
 		return
 	
@@ -111,7 +113,7 @@ func shoot(destination: Vector3, hit: bool) -> void:
 	#sphere.position = destination
 	#sphere.scale = Vector3(0.2, 0.2, 0.2)
 	
-	_begin_shoot(hit)
+	_begin_shoot(hit, hit2)
 
 
 func _is_abble_to_shoot() -> bool:
@@ -119,7 +121,7 @@ func _is_abble_to_shoot() -> bool:
 	return !(is_dragging or is_returning or is_shooting)
 
 
-func _begin_shoot(hit: bool) -> void:
+func _begin_shoot(hit: bool, hit2: bool = false) -> void:
 	#print("_begin_shoot hit: ", hit)
 	is_shooting = true
 	
@@ -130,15 +132,18 @@ func _begin_shoot(hit: bool) -> void:
 	tween.tween_property(
 		grappling_hook, "position", tmp_destination, 
 		abs((tmp_destination - global_position).length()) / _grapple_speed)
-	tween.finished.connect(_begin_traction.bind(hit))
+	tween.finished.connect(_begin_traction.bind(hit, hit2))
 
 
-func _begin_traction(hit: bool) -> void:
+func _begin_traction(hit: bool, hit2: bool = false) -> void:
 	#print("_begin_traction")
 	is_shooting = false
 	
 	if !hit or is_returning:
 		if !is_returning:
+			# TODO: animation ricochet
+			if hit2:
+				grappling_hook.get_child(1).emitting = true
 			_begin_returning()
 		#print("_begin_traction::aborted")
 		return
