@@ -899,7 +899,7 @@ func clean_tag_wide_way(begin_id: int = 0, tag_id: int = 0, max_depth: int = 5, 
 				neighbors.append(i)
 				cubeGraph.setVisited(i)
 
-func tag_spreads_wide_way(begin_id:int, tag_id:int, max_depth:int, values:Array) -> void:
+func tag_spreads_wide_way(begin_id:int, tag_id:int, max_depth:int, values:Array, cumulativ: bool = false) -> void:
 	if not cubeGraph.isInRange(begin_id):
 		push_error("begin_id out of range, aborted ! For current graph, should be lower than:", cubeGraph.getNbrRoom())
 		return
@@ -928,14 +928,14 @@ func tag_spreads_wide_way(begin_id:int, tag_id:int, max_depth:int, values:Array)
 	
 	var neighborsNext: Array[int]
 	
-	while(!neighbors.is_empty() && depth <= max_depth):
+	while(!neighbors.is_empty() && depth < max_depth):
 		neighborsNext = neighbors.duplicate()
 		neighbors.clear()
 		depth += 1
 		
 		while(!neighborsNext.is_empty()):
 			var currentNeighbor:int = neighborsNext.pop_back()
-			cubeGraph.set_tag(currentNeighbor, tag_id, values[depth])
+			cubeGraph.set_tag(currentNeighbor, tag_id, values[depth] if not cumulativ else values[depth] + get_tag(currentNeighbor, tag_id))
 			for i in cubeGraph.getNeighborsConnectionNotVisited(currentNeighbor):
 				neighbors.append(i)
 				cubeGraph.setVisited(i)
