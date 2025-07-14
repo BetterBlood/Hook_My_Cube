@@ -32,5 +32,5 @@ func get_rune_id() -> int:
 func get_damage_type() -> Enums.DamageType:
 	return Enums.DamageType.FIRE
 
-func get_save_infos() -> String:
-	return "FireRune1, id:" + str(get_rune_id())
+func get_save_infos() -> Dictionary:
+	return {"rune_id": get_rune_id(), "rune_upgrades" : []}

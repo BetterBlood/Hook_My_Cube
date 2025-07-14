@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://br883pylmypa7"]
+[gd_scene load_steps=26 format=3 uid="uid://br883pylmypa7"]
 
 [ext_resource type="Script" uid="uid://wdhsttcv1ana" path="res://scripts/demo/lobby.gd" id="1_yr8w2"]
 [ext_resource type="PackedScene" uid="uid://y1yw5naea0tu" path="res://scenes/characters/player.tscn" id="2_pdx53"]
@@ -7,7 +7,6 @@
 [ext_resource type="PackedScene" uid="uid://canga3dhywbr3" path="res://scenes/portal_with_frame.tscn" id="5_4of2y"]
 [ext_resource type="Material" uid="uid://llqdeyixmjnv" path="res://materials/workInProgress/StandardMatWIP.tres" id="6_f5ty6"]
 [ext_resource type="Material" uid="uid://penbwn0i2in" path="res://materials/ice.tres" id="6_yr8w2"]
-[ext_resource type="Script" uid="uid://cqopmol50hbe6" path="res://addons/polyrinthe/polyrintheGenerator.gd" id="7_iojra"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_wehoa"]
 sky_top_color = Color(0.0970707, 0.463976, 0.749279, 1)
@@ -78,6 +77,9 @@ height = 50.0
 [node name="Lobby" type="Node3D"]
 script = ExtResource("1_yr8w2")
 
+[node name="Player" parent="." instance=ExtResource("2_pdx53")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.085, 2, -5.849)
+
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.866024, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.75, -0.43301, 0, 52.1937, 3.85321)
 visible = false
@@ -86,9 +88,6 @@ shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_4d0q1")
-
-[node name="Player" parent="." instance=ExtResource("2_pdx53")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.4171, 1.85073, 12.2011)
 
 [node name="Enemy" parent="." instance=ExtResource("3_d1p01")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.1958, -17.7606, -19.4407)
@@ -163,31 +162,6 @@ shape = SubResource("ConcavePolygonShape3D_wkq0h")
 
 [node name="Debug Lab" type="Node3D" parent="MainFloor"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 45.3371, 0, 0)
-
-[node name="Polyrinthe" type="Node3D" parent="MainFloor/Debug Lab" node_paths=PackedStringArray("coord_first", "coord_right", "coord_up")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 3.54, 5.24, 0)
-script = ExtResource("7_iojra")
-algo = 9
-coord_first = NodePath("Marker3D4")
-coord_right = NodePath("Marker3D5")
-coord_up = NodePath("Marker3D6")
-metadata/_custom_type_script = "uid://cqopmol50hbe6"
-
-[node name="Marker3D" type="Marker3D" parent="MainFloor/Debug Lab/Polyrinthe"]
-
-[node name="Marker3D2" type="Marker3D" parent="MainFloor/Debug Lab/Polyrinthe"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
-
-[node name="Marker3D3" type="Marker3D" parent="MainFloor/Debug Lab/Polyrinthe"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-
-[node name="Marker3D4" type="Marker3D" parent="MainFloor/Debug Lab/Polyrinthe"]
-
-[node name="Marker3D5" type="Marker3D" parent="MainFloor/Debug Lab/Polyrinthe"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
-
-[node name="Marker3D6" type="Marker3D" parent="MainFloor/Debug Lab/Polyrinthe"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
 [node name="P5 -> Lab 3x3x3 Entrance" parent="MainFloor/Debug Lab" instance=ExtResource("5_4of2y")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -22.9297, 1.25, -1.306)
@@ -410,12 +384,6 @@ mesh = SubResource("CylinderMesh_wkq0h")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/TrainingFloor/Columns/Column"]
 shape = SubResource("CylinderShape3D_6728e")
 
-[connection signal="display_3x3x3" from="." to="MainFloor/Debug Lab/Polyrinthe" method="display"]
-[connection signal="generation" from="." to="Torch2" method="_on_generation"]
-[connection signal="generation" from="." to="Torch3" method="_on_generation"]
-[connection signal="generation_3x3x3" from="." to="MainFloor/Debug Lab/Polyrinthe" method="generate"]
-
-[editable path="Player"]
 [editable path="MainFloor/P1 -> Fight Room"]
 [editable path="MainFloor/Real Lab/P3 -> Lab Entrance"]
 [editable path="MainFloor/Real Lab/P4 -> Main Room"]

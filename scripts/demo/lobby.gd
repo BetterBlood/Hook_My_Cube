@@ -1,16 +1,37 @@
 extends Node3D
 
-signal generation(size: int) # DEBUG
-signal generation_3x3x3(size:int, new_seed:String) # DEBUG
-signal display_3x3x3()
-var ok: bool = true # DEBUG
+class_name Lobby
+
+signal launch_game(player_name: String)
+
 @export var size: int = 7 # DEBUG
+
+var unlocked_runes: Array[int] = [0, 1] #TODO: default [0]
+var gold: int = 0
 
 const Logger = preload("res://scripts/CSharp/Logger.cs")
 var logger:Logger = Logger.new()
 
-# Called when the node enters the scene tree for the first time.
+var debug_size: int = 3 # DEBUG
+var polyrinthe: Polyrinthe = Polyrinthe.new()
+var player_scene: PackedScene = preload("res://scenes/characters/player.tscn")
+@onready var player: Player = $Player
+
+var maze_scene: PackedScene = preload("res://scenes/maze.tscn")
+
+
+#func _init() -> void:
+	#player_name = new_player_name
+	#print("lobby::_init player_name: " + player_name)
+	#player = Player.new(player_name)
+	#player._init(player_name)
+	#player.current_player_name = player_name
+	
+	#add_child(player)
+
+
 func _ready() -> void:
+	player.current_player_name = SceneFade.player_name
 	add_child(logger)
 	logger.Info("An informational message: " + self.to_string());
 	logger.Debug("A Debug message: " + self.to_string());
@@ -19,63 +40,131 @@ func _ready() -> void:
 		print(line)
 	print()
 	
-	generation_3x3x3.emit(3, "DEBUG", [-1, -1, 1])
-	Maze.set_tag_for_collision_layer($"MainFloor/Debug Lab/Polyrinthe")
-	display_3x3x3.emit()
-	Maze.apply_collision_layer($"MainFloor/Debug Lab/Polyrinthe")
+	add_child(polyrinthe)
+	#TODO: set position
+	polyrinthe.position = Vector3(48.841, 5.24, 0)
+	polyrinthe.rotation = Vector3(0, -PI/2, 0)
+	polyrinthe.clean()
+	polyrinthe.algo = polyrinthe.GENERATION_ALGORITHME.DFS_LBL_ALT_6
+	polyrinthe.generate(debug_size, "DEBUG", [-1, -1, 1])
+	Maze.set_tag_for_collision_layer(polyrinthe)
+	polyrinthe.display()
+	Maze.apply_collision_layer(polyrinthe)
 	
-	var config = ConfigFile.new()
-	var err = config.load("user://damageGrid.cfg")
-	
-	if err != OK:
-		_save_grid_damage_type()
-	else:
-		_load_grid_damage_type(config, true)
-
-func _save_grid_damage_type() -> void:
-	var config = ConfigFile.new()
-	config.set_value("NORMAL", "grid", [1, 0.5, 0.5, 0.5])
-	config.set_value("FIRE", "grid", [1.5, 1, 2, 0.5])
-	config.set_value("PLANT", "grid", [1.5, 0.5, 1, 2])
-	config.set_value("ELEC", "grid", [1.5, 2, 0.5, 1])
-	config.save("user://damageGrid.cfg")
-	
-	for damage_type in config.get_sections():
-		print(damage_type)
-		if (	!Enums.damage_type_grid.has(damage_type)) && \
-				len(config.get_value(damage_type, "grid")) == len(config.get_sections()):
-			Enums.damage_type_grid[damage_type] = config.get_value(damage_type, "grid")
-
-func _load_grid_damage_type(config: ConfigFile, erase: bool = false) -> void:
-	for damage_type in config.get_sections():
-		if (	!Enums.damage_type_grid.has(damage_type)) && \
-				len(config.get_value(damage_type, "grid")) == len(config.get_sections()):
-			Enums.damage_type_grid[damage_type] = config.get_value(damage_type, "grid")
+	if !Enums.damage_type_loaded:
+		var config = ConfigFile.new()
+		var err = config.load("user://damageGrid.cfg")
+		if err != OK:
+			Enums.save_grid_damage_type()
 		else:
-			push_error("Error while reading 'damageGrid.cfg'. damage_type_grid may not correctly be initialised. Please verify file content !")
-			config.clear()
-			if erase:
-				_save_grid_damage_type()
-			else:
-				print("#TODO : close the application without erasing the file")
-			break
+			Enums.load_grid_damage_type(config, true)
+	
+	if not FileAccess.file_exists("user://" + player.get_player_name() + "/meta.save"):
+		save_meta() # initialise the save on first time with this username
+	
+	#call_deferred("load_meta")
+	load_meta()
+	SceneFade.emit_signal("lobby_loaded")
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
+
 func _process(_delta: float) -> void:
-	if Input.is_action_just_pressed("launch_generation") and ok:
+	if Input.is_action_just_pressed("launch_generation"):
 		print("pressed")
-		ok = false # DEBUG
-		generation.emit(size)
 		
 		# DEBUG
-		var timer = Timer.new()
-		timer.one_shot = true
-		add_child(timer)
-		timer.timeout.connect(set_ok)
-		timer.start(5)
+		player.health_component.add_perm_upgrade(0, 2)
+		save_meta()
+		print("player.health_component.get_max_life(): ", player.health_component.get_max_health())
 		# DEBUG
+		
+		launch_game.emit(player.get_player_name())
+		#TODO: initialise the file containing maze info
+		_initialize_new_maze_file_save()
+		SceneFade.change_scene(maze_scene, SceneFade.maze_loaded)
+		#get_tree().change_scene_to_packed(maze_scene)
 
-# DEBUG
-func set_ok():
-	print("test")
-	ok = true
+
+func _initialize_new_maze_file_save() -> void:
+	var save_file = FileAccess.open("user://" + player.get_player_name() + "/maze.save", FileAccess.WRITE)
+	if save_file == null:
+		push_error("Cannot save maze data. FileAccess error: " + str(save_file.get_error()))
+		return
+	
+	#TODO: get real data from the room of maze selection in lobby
+	var save_dict = {
+		"seed" : "",
+		"size" : 7,
+		"begin_id" : 0,
+		"generation_used" : Polyrinthe.GENERATION_ALGORITHME.DFS_LBL_ALT_6,
+		"difficulty" : 0,
+		"default_tags": [ # TODO: other tags needed !! # [int]
+			1, # wall default collision layers 
+		],
+		"updated_tags": [# [[int]]
+			[]
+		],
+		"updated_chests": [], # [int]
+		"updated_spawners": [] # [{"spawner_id": int, "id_mob_dead" : [int]}]
+	}
+	
+	var json_string = JSON.stringify(save_dict)
+	
+	save_file.store_line(json_string)
+
+# TODO: use this to save meta data about player (on health_component upgrade bought and rune unlocked)
+func save_meta() -> void:
+	var save_file = FileAccess.open("user://" + player.get_player_name() + "/meta.save", FileAccess.WRITE)
+	if save_file == null:
+		print("Meta Data: first save for user: " + player.get_player_name())
+		
+		# directory creation with user name
+		DirAccess.make_dir_absolute("user://" + player.get_player_name())
+		save_file = FileAccess.open("user://" + player.get_player_name() + "/meta.save", FileAccess.WRITE)
+		if save_file == null:
+			push_error("Cannot save meta data. FileAccess error: " + str(save_file.get_error()))
+			return
+	
+	var save_dict = {
+		"current_player_name" : player.get_player_name(),
+		"unlocked_runes" : unlocked_runes,
+		"equiped_rune_lobby" : player.active_rune.get_rune_id(),
+		"gold" : gold,
+		"health_component_upgrades" : player.health_component.get_perm_data(),
+	}
+	
+	var json_string = JSON.stringify(save_dict)
+	
+	save_file.store_line(json_string)
+
+
+func load_meta() -> void:
+	if not FileAccess.file_exists("user://" + player.get_player_name() + "/meta.save"):
+		push_error("player: " + player.get_player_name() + " does not exist. Player meta load failed")
+		return
+		
+	var save_file = FileAccess.open(
+		"user://" + player.get_player_name() + "/meta.save", 
+		FileAccess.READ)
+	
+	var meta_data = null
+	
+	while save_file.get_position() < save_file.get_length():
+		var json_string = save_file.get_line()
+		
+		var json = JSON.new()
+		
+		var parse_result = json.parse(json_string)
+		if not parse_result == OK:
+			push_warning("JSON Parse Error: " + json.get_error_message() + " in " + json_string + " at line " + json.get_error_line())
+			continue
+		
+		meta_data = json.data
+	
+	gold = meta_data["gold"]
+	unlocked_runes.clear()
+	for rune_id in meta_data["unlocked_runes"]:
+		unlocked_runes.append(int(rune_id))
+	#TODO: probably call here the methode to display selection and other stuff about runes in lobby
+	
+	#player.call_deferred("initialize_player").bind(meta_data, null, null)
+	player.initialize_player(meta_data, null, null)

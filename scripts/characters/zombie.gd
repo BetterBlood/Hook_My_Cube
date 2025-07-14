@@ -10,10 +10,10 @@ var base_position
 func _ready() -> void:
 	super._ready()
 	
-	health_component.health_regen_per_sec = 1.0
-	health_component.armor = 2.0
-	health_component.penetration_resistance = 0.5
-	health_component.max_speed = SPEED
+	health_component._health_regen_per_sec = 1.0
+	health_component._armor = 2.0
+	health_component._penetration_resistance = 0.5
+	health_component._max_speed = SPEED
 	health_component.speed = SPEED
 
 func _physics_process(delta: float) -> void:

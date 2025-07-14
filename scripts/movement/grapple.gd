@@ -16,7 +16,7 @@ var _defaul_mask: int = 16
 var _enemy_mask: int = 4 # 4 means enemy, enemy need to defined it as 2 to catch the player
 var _speed_boost: float = 1.2
 
-var upgrades: Array[int] = [0, 0, 0, 0] # [range, boost, enemy, ice wall]
+var upgrades: Array[int] = [0, 0, 0, 0] # [0:range, 1:boost, 2:enemy, 3:ice_wall]
 
 
 var grapple_owner: Creature
@@ -38,23 +38,39 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	if is_dragging:
+	if is_dragging: # apply movement on the owner
 		#print("is_dragging")
+		
 		# compute direction
 		var direction: Vector3 = grappling_hook.global_position - grapple_owner.global_position
+		# compute & apply velocity
 		grapple_owner.velocity = direction.normalized() * delta * 1500
-		# compute force
-		# apply force to player
-		# (redraw grapple line based in player position)
-	elif is_returning:
+		
+		# TODO: GRAPHICS : redraw grapple line based on owner position
+	elif is_returning: # grapplpe is ununasble during this time
 		var dist = abs((grappling_hook.global_position - global_position).length())
-		# TODO: set the return speed proportionnaly of the player speed cause the hook is too slow to return to user having hight speed
+		# TODO: set the return speed proportionnaly of the owner speed cause the hook is too slow to return to user having hight speed
 		if dist > 1:
 			tween.stop()
 			tween = get_tree().create_tween()
 			cooldown_returning = dist / _grapple_speed * _grapple_return_modifier
 			tween.tween_property(grappling_hook, "position", global_position, cooldown_returning)
 			tween.finished.connect(_grapple_returned)
+
+
+func set_up_with_data(data) -> void:
+	for upgrade in data:
+		if int(upgrade["type"]) > len(upgrades):
+			push_warning("Grapple upgrade " + upgrade["type"] + " not recognized... skiped")
+			continue
+		upgrades[int(upgrade["type"])] += int(upgrade["value"])
+
+
+func get_data():
+	var data = []
+	for i in range(len(upgrades)):
+		data.append({"type": i, "value": upgrades[i]})
+	return data
 
 
 func get_distance() -> float:
@@ -82,12 +98,12 @@ func upgrade_boost() -> int:
 
 
 func upgrade_enemy() -> int:
-	upgrades[2] = 1
+	upgrades[2] += 1
 	return upgrades[2]
 
 
 func upgrade_wall() -> int:
-	upgrades[3] = 1
+	upgrades[3] += 1
 	return upgrades[3]
 
 
@@ -158,10 +174,21 @@ func cancel_grab() -> void:
 		return
 	
 	grapple_owner.motion_mode = CharacterBody3D.MOTION_MODE_GROUNDED 
-	if is_dragging && SPEED_EFFECT != null:
+	if is_dragging and SPEED_EFFECT != null:
 		#print("was dragging -> applying boost")
 		# apply boost
-		grapple_owner.velocity = Vector3.UP * 15
+		var vertical_force = 1
+		var dist = (grappling_hook.position - grapple_owner.global_position).length()
+		var y_diff = grappling_hook.position.y - grapple_owner.global_position.y
+		if y_diff > -0.5:
+			if dist >= 1:
+				if dist < get_distance()/10:
+					vertical_force *= 15
+				else:
+					vertical_force *= ((get_distance()/10)/dist) * 15
+			elif dist >= 0.1:
+				vertical_force *= dist * 15
+		grapple_owner.velocity.y = vertical_force
 		
 		#print(area.get_parent().has_method("can_host_status_effect"))
 		if 		grapple_owner.has_method("can_host_status_effect"):

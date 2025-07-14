@@ -22,6 +22,33 @@ func _init(parent: Node3D) -> void:
 		rune_spot.position = Vector3()
 		add_child(rune_spot)
 
+
+static func create_rune_with_id(id: int, parent: Node3D) -> Rune:
+	match(id): # TODO: add case for all runes
+		#-1:# TODO: debug rune
+		#0: # TODO: normal rune
+		1: return FireRune1.new(parent)
+		_: push_warning("Rune id " + str(id) + " not recognized: FireRune1 used by default")
+	
+	return FireRune1.new(parent)
+
+
+static func create_rune(rune_data, parent: Node3D) -> Rune:
+	if !rune_data: return null
+	 
+	var rune: Rune = create_rune_with_id(int(rune_data["rune_id"]), parent)
+	
+	var upgrades = rune_data["rune_upgrades"]
+	
+	for upgrade in upgrades:
+		match(upgrade["type"]): # TODO: add case for all types
+			"RuneUpgradeDamage": rune = RuneUpgradeDamage.new(rune, upgrade["value"])
+			"RuneUpgradeBounce": rune = RuneUpgradeBounce.new(rune, upgrade["value"])
+			"RuneUpgradePerforation": rune = RuneUpgradePerforation.new(rune, upgrade["value"])
+			"RuneUpgradeStatusEffectChance": rune = RuneUpgradeStatusEffectChance.new(rune, upgrade["value"])
+			_: push_warning("Rune upgrade " + upgrade["type"] + " not recognized")
+	return rune
+
 func light_attack(destination: Vector3, rune_resource_for_projectile: RuneResource) -> void:
 	#print(self, " ", rune_resource_for_projectile.projectile_damage)
 	var projectile = projectile_scene.instantiate()
@@ -54,5 +81,5 @@ func get_data_to_performe_attaque() -> RuneResource:
 	return rune_resource
 
 
-func get_save_infos() -> String:
-	return ""
+func get_save_infos() -> Dictionary:
+	return {}

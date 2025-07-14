@@ -29,23 +29,28 @@ var joystick_h_event: InputEventJoypadMotion
 
 const SPHERE = preload("res://addons/polyrinthe/sphere.tscn") # DEBUG
 
-var xp_to_lvl_up:float = 10
-
-var rune: Rune
+var active_rune: Rune
+var second_rune: Rune
 
 var grapple: Grapple
 
+var current_player_name: String = "Peter"
+var gold: int = 0
+var xp_to_lvl_up:float = 10 # TODO: compute in function of lvl
+
+
 func _ready():
 	super._ready()
+	#print("player::_ready current_player_name: " + current_player_name)
 	godMode = true
 	collisionShape.disabled = true
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	var fire_rune = FireRune1.new(self)
-	fire_rune.projectile_layer_to_hit = 5
-	rune = RuneUpgradeDamage.new(fire_rune, 2)
-	rune = RuneUpgradeBounce.new(rune)
-	rune = RuneUpgradePerforation.new(rune)
-	rune = RuneUpgradeStatusEffectChance.new(rune, 1.0)
+	active_rune = FireRune1.new(self) #TODO: init the player with the normal rune
+	active_rune.projectile_layer_to_hit = 5
+	active_rune = RuneUpgradeDamage.new(active_rune, 2) # DEBUG
+	active_rune = RuneUpgradeBounce.new(active_rune) # DEBUG
+	active_rune = RuneUpgradePerforation.new(active_rune) # DEBUG
+	active_rune = RuneUpgradeStatusEffectChance.new(active_rune, 1.0) # DEBUG
 	
 	layer = 2
 	
@@ -53,6 +58,69 @@ func _ready():
 	grapple.set_creature_owner(self)
 	grapple.position = $GrapplinPosition.position
 	add_child(grapple)
+
+
+func initialize_player(meta_data, game_data, current_maze: Maze) -> void:
+	if meta_data == null:
+		push_error("No meta data for player initialisation")
+		return 
+	current_player_name = meta_data["current_player_name"]
+	#TODO: meta data:
+	active_rune = Rune.create_rune_with_id(meta_data["equiped_rune_lobby"], self)
+	health_component.set_up_perm_with_data(meta_data["health_component_upgrades"])
+	
+	#progression data
+	if game_data == null:
+		print("while initialize_player: no game data")
+		return
+	
+	if current_maze == null:
+		push_error("while initialize_player: current_maze null, progression load failed")
+		return
+	
+	if meta_data["current_player_name"] != game_data["current_player_name"]:
+		push_warning("Player game progression initialisation may failed: player names are inconsistant")
+	
+	position = current_maze.get_position_for_player_save_point(int(game_data["save_spot_id"]))
+	gold = game_data["gold"]
+	health_component.health = game_data["hp"]
+	lvl = game_data["lvl"]
+	#TODO : initialise xp_to_lvl_up based on lvl
+	xp = game_data["xp"]
+	
+	var rune1_data = game_data["runes"][0]
+	var rune2_data = game_data["runes"][1] if len(game_data["runes"][1]) > 2 else null
+	
+	active_rune = Rune.create_rune(rune1_data, self) # this override meta_data active_rune
+	second_rune = Rune.create_rune(rune2_data, self)
+	
+	health_component.set_up_temp_with_data(game_data["health_component_upgrades"])
+	grapple.set_up_with_data(game_data["grappin_upgrades"])
+
+
+func save_progression(save_point_id: int = 0) -> void:
+	var save_file = FileAccess.open("user://" + current_player_name + "/progression.save", FileAccess.WRITE)
+	
+	var save_dict = {
+		"current_player_name" : current_player_name,
+		"save_spot_id" : save_point_id,
+		"gold" : gold,
+		"hp" : health_component.health,
+		"lvl" : lvl,
+		"xp" : xp,
+		"runes" : 
+			[
+				active_rune.get_save_infos(),
+				second_rune.get_save_infos() if second_rune else {}
+			],
+		"health_component_upgrades" : health_component.get_temp_data(),
+		"grappin_upgrades" : # [0:range, 1:boost, 2:enemy, 3:ice_wall]
+			grapple.get_data()
+	}
+	
+	var json_string = JSON.stringify(save_dict)
+	
+	save_file.store_line(json_string)
 
 
 func _input(event):
@@ -88,11 +156,12 @@ func _physics_process(delta):
 			$Head/RayCast3D/Marker3D.position = ray_cast_3d.target_position
 			destination = $Head/RayCast3D/Marker3D.global_position
 		
-		#print(rune.get_data_to_performe_attaque().projectile_damage)
-		rune.light_attack(destination, rune.get_data_to_performe_attaque())
-		#print("rune save infos: ", rune.get_save_infos())
-		rune = RuneUpgradeDamage.new(rune)
-		rune = RuneUpgradeSpeed.new(rune)
+		#print(active_rune.get_data_to_performe_attaque().projectile_damage)
+		active_rune.light_attack(destination, active_rune.get_data_to_performe_attaque())
+		
+		#print("active_rune save infos: ", active_rune.get_save_infos())
+		active_rune = RuneUpgradeDamage.new(active_rune)
+		#active_rune = RuneUpgradeSpeed.new(active_rune)
 	
 		#var sphere = SPHERE.instantiate()
 		#get_parent().add_child(sphere)
@@ -197,8 +266,19 @@ func _on_player_area_3d_body_entered(body: Node3D) -> void:
 
 
 func get_type() -> Enums.DamageType:
-	return Enums.DamageType.FIRE # TODO : get active rune type
+	return active_rune.get_damage_type()
+
+
+func _swap_runes() -> void:
+	if second_rune:
+		var tmp_rune = active_rune
+		active_rune = second_rune
+		second_rune = tmp_rune
 
 
 func get_fire_projectile_spot() -> Marker3D:
 	return rune_spot
+
+
+func get_player_name() -> String:
+	return current_player_name

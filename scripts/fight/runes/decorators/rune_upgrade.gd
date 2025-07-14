@@ -26,5 +26,5 @@ func get_data_to_performe_attaque() -> RuneResource:
 func get_rune_id() -> int:
 	return rune_upgraded.get_rune_id()
 
-func get_save_infos() -> String:
-	return rune_upgraded.get_save_infos() + " "
+func get_save_infos() -> Dictionary:
+	return rune_upgraded.get_save_infos()

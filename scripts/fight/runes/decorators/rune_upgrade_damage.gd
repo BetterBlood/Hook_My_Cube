@@ -9,6 +9,7 @@ func _init(rune: Rune, value: float = 1) -> void:
 	rune_resource.projectile_damage = value
 
 
-func get_save_infos() -> String:
-	return 	super.get_save_infos() + "RuneUpgradeDamage:" + \
-			str(rune_resource.projectile_damage)
+func get_save_infos() -> Dictionary:
+	var dico = super.get_save_infos()
+	dico["rune_upgrades"].append({"type" : "RuneUpgradeDamage", "value": rune_resource.projectile_damage})
+	return dico

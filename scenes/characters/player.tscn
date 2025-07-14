@@ -19,14 +19,12 @@ height = 1.8
 radius = 0.6
 height = 2.2
 
-[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("health_component")]
+[node name="Player" type="CharacterBody3D"]
 collision_layer = 32770
 script = ExtResource("1_yewv4")
-health_component = NodePath("HealthComponent")
 
 [node name="HealthComponent" type="Node3D" parent="."]
 script = ExtResource("1_3vyb7")
-max_speed = 10.0
 metadata/_custom_type_script = "uid://dh50j32wmvwii"
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]

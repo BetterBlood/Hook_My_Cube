@@ -2,7 +2,7 @@ extends CharacterBody3D
 
 class_name Creature
 
-@export var health_component: HealthComponent
+var health_component: HealthComponent
 var lvl:int = 1
 var xp:float = 0.0
 
@@ -12,8 +12,9 @@ var effect_ids: Dictionary = {}
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	#print("Creature::_ready")
 	if health_component == null:
-		push_warning("health component missing for: ", self, ", set to default")
+		#push_warning("health component missing for: ", self, ", set to default")
 		health_component = HealthComponent.new()
 		add_child(health_component)
 	
