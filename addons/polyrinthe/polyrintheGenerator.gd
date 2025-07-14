@@ -8,6 +8,7 @@ const CubeGraph := preload("res://addons/polyrinthe/cubeGraph.gd")
 
 @export_category("Polyrinthe")
 @export_group("Generation Properties")
+var begin_id: int = 0
 @export var algo:= GENERATION_ALGORITHME.DFS_3D_ALT_2
 ## for example: (0, 0, 0)
 @export var coord_first: Marker3D = Marker3D.new()
@@ -52,7 +53,7 @@ var gapBetweenCubeCenter = (CubeCustom.distFromCenter * 2 + 0.1) * \
 var rng = RandomNumberGenerator.new()
 var seed_human:String
 var seed_hashed:int
-var _characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+static var _characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 
 enum GENERATION_ALGORITHME { 
 	DFS_3D, 
@@ -66,6 +67,8 @@ enum GENERATION_ALGORITHME {
 	DFS_LBL_ALT_5, 
 	DFS_LBL_ALT_6 
 }
+
+var deepest_id: int  = 0
 
 func _ready(): # (backward, forward, left, right, down, up)
 	coord_first.position = Vector3()
@@ -101,7 +104,7 @@ func _generate_seeds(chars:String = _characters, length:int = 10) -> void:
 	print(seed_human, ": ", seed_hashed)
 
 func generate(sizeP:int, new_seed:String = "", default_tags: Array = [-1, -1]) -> void:
-	if len(new_seed) == 0:
+	if new_seed.is_empty():
 		_generate_seeds()
 	else:
 		seed_human = new_seed
@@ -109,53 +112,54 @@ func generate(sizeP:int, new_seed:String = "", default_tags: Array = [-1, -1]) -
 	
 	rng.seed = seed_hashed
 	
-	cubeGraph = CubeGraph.new(sizeP, wallV, outWallV, 6, default_tags)
+	size = sizeP
+	
+	cubeGraph = CubeGraph.new(size, wallV, outWallV, 6, default_tags)
 	
 	# only for normal generation : odd size, middle: cubeGraph.getNbrRoom()/2 
-	var beginId = 0
 	
 	var time_start = Time.get_ticks_msec()
 	match algo:
 		GENERATION_ALGORITHME.DFS_3D:
-			createPath_deepWay(beginId)
+			createPath_deepWay(begin_id)
 			
 		GENERATION_ALGORITHME.DFS_3D_ALT_1:
-			createPath_deepWay_alt_1(beginId)
+			createPath_deepWay_alt_1(begin_id)
 			
 		GENERATION_ALGORITHME.DFS_3D_ALT_2:
-			createPath_deepWay_alt_2(beginId)
+			createPath_deepWay_alt_2(begin_id)
 			
 		GENERATION_ALGORITHME.DFS_LBL:
-			createPath_deepWay_layer_by_layer(beginId)
+			createPath_deepWay_layer_by_layer(begin_id)
 			
 		GENERATION_ALGORITHME.DFS_LBL_ALT_1:
-			createPath_deepWay_layer_by_layer_alt_1(beginId)
+			createPath_deepWay_layer_by_layer_alt_1(begin_id)
 			
 		GENERATION_ALGORITHME.DFS_LBL_ALT_2:
-			createPath_deepWay_layer_by_layer_alt_2(beginId)
+			createPath_deepWay_layer_by_layer_alt_2(begin_id)
 			
 		GENERATION_ALGORITHME.DFS_LBL_ALT_3:
-			createPath_deepWay_layer_by_layer_alt_3(beginId)
+			createPath_deepWay_layer_by_layer_alt_3(begin_id)
 			
 		GENERATION_ALGORITHME.DFS_LBL_ALT_4:
-			createPath_deepWay_layer_by_layer_alt_4(beginId)
+			createPath_deepWay_layer_by_layer_alt_4(begin_id)
 			
 		GENERATION_ALGORITHME.DFS_LBL_ALT_5:
-			createPath_deepWay_layer_by_layer_alt_5(beginId)
+			createPath_deepWay_layer_by_layer_alt_5(begin_id)
 			
 		GENERATION_ALGORITHME.DFS_LBL_ALT_6:
-			createPath_deepWay_layer_by_layer_alt_6(beginId)
+			createPath_deepWay_layer_by_layer_alt_6(begin_id)
 			
 		_:
 			push_warning("gen_algo provided not matched: please have a look at GENERATION_ALGORITHME enum")
-			createPath_deepWay_layer_by_layer_alt_6(beginId)
+			createPath_deepWay_layer_by_layer_alt_6(begin_id)
 	var time_end = Time.get_ticks_msec()
 	
 	print("createPath in " + str((time_end - time_start)/1000) + "s " + \
 		str((time_end - time_start)%1000) + "ms.")
 	
 	time_start = Time.get_ticks_msec()
-	deepensPath_wideWay(beginId) # recompute connections from given id, by depth
+	deepensPath_wideWay(begin_id) # recompute connections from given id, by depth
 	time_end = Time.get_ticks_msec()
 	
 	print("deepensPath in " + str((time_end - time_start)/1000) + "s " + \
@@ -230,7 +234,7 @@ func display() -> void:
 		
 		var cube = CubeCustom.new(
 			curr_pos, 
-			cubeGraph.getNeighborsConnection(i), 
+			_reduce_connection_for_generation(i, cubeGraph.getNeighborsConnection(i), cubeGraph.getNeighbors(i)), 
 			cubeGraph.getColor(i), 
 			depthReached,
 			debug,
@@ -278,6 +282,17 @@ func _on_menu_generation(edgeSize) -> void:
 	clean()
 	generate(edgeSize)
 	display()
+
+# avoid double walls
+func _reduce_connection_for_generation(id: int, connected: Array[int], all: Array[int]) -> Array[int]:
+	var arr: Array[int] = []
+	for i in range(len(all)):
+		if connected[i] < 0 and all[i] > id: # if not connected but neighbourg higher id
+			arr.append(all[i])
+		else:
+			arr.append(connected[i])
+	
+	return arr
 
 func clean() -> void:
 	maze.clear()
@@ -844,7 +859,7 @@ func deepensPath_wideWay(beginId: int = 0):
 		cubeGraph.setVisited(i)
 	
 	var neighborsNext: Array[int]
-	
+	deepest_id = beginId
 	while(!neighbors.is_empty()) :
 		neighborsNext = neighbors.duplicate()
 		neighbors.clear()
@@ -855,6 +870,7 @@ func deepensPath_wideWay(beginId: int = 0):
 			for i in cubeGraph.getNeighborsConnectionNotVisited(currentNeighbor):
 				neighbors.append(i)
 				cubeGraph.setVisited(i)
+				deepest_id = i
 	
 	cubeGraph.setColorFromDepth()
 
