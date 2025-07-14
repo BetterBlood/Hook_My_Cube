@@ -14,20 +14,9 @@ var logger:Logger = Logger.new()
 
 var debug_size: int = 3 # DEBUG
 var polyrinthe: Polyrinthe = Polyrinthe.new()
-var player_scene: PackedScene = preload("res://scenes/characters/player.tscn")
 @onready var player: Player = $Player
 
 var maze_scene: PackedScene = preload("res://scenes/maze.tscn")
-
-
-#func _init() -> void:
-	#player_name = new_player_name
-	#print("lobby::_init player_name: " + player_name)
-	#player = Player.new(player_name)
-	#player._init(player_name)
-	#player.current_player_name = player_name
-	
-	#add_child(player)
 
 
 func _ready() -> void:
@@ -99,6 +88,7 @@ func _initialize_new_maze_file_save() -> void:
 		"difficulty" : 0,
 		"default_tags": [ # TODO: other tags needed !! # [int]
 			1, # wall default collision layers 
+			0, # color for room near chests
 		],
 		"updated_tags": [# [[int]]
 			[]
