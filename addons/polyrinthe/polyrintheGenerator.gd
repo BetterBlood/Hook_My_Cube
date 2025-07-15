@@ -921,7 +921,7 @@ func tag_spreads_wide_way(begin_id:int, tag_id:int, max_depth:int, values:Array,
 	var neighbors: Array[int]
 	var depth: int = 0
 	neighbors = cubeGraph.getNeighborsConnectionNotVisited(begin_id)
-	cubeGraph.set_tag(begin_id, tag_id, values[depth])
+	cubeGraph.set_tag(begin_id, tag_id, values[depth] if not cumulativ else values[depth] + get_tag(begin_id, tag_id))
 	cubeGraph.setVisited(begin_id)
 	for i in neighbors:
 		cubeGraph.setVisited(i)
