@@ -30,7 +30,6 @@ func _ready() -> void:
 	print()
 	
 	add_child(polyrinthe)
-	#TODO: set position
 	polyrinthe.position = Vector3(48.841, 5.24, 0)
 	polyrinthe.rotation = Vector3(0, -PI/2, 0)
 	polyrinthe.clean()
@@ -67,7 +66,8 @@ func _process(_delta: float) -> void:
 		# DEBUG
 		
 		launch_game.emit(player.get_player_name())
-		#TODO: initialise the file containing maze info
+		
+		#initialise the file containing maze info
 		_initialize_new_maze_file_save()
 		SceneFade.change_scene(maze_scene, SceneFade.maze_loaded)
 		#get_tree().change_scene_to_packed(maze_scene)
@@ -101,7 +101,7 @@ func _initialize_new_maze_file_save() -> void:
 	
 	save_file.store_line(json_string)
 
-# TODO: use this to save meta data about player (on health_component upgrade bought and rune unlocked)
+# use this to save meta data about player (on health_component upgrade bought and rune unlocked)
 func save_meta() -> void:
 	var save_file = FileAccess.open("user://" + player.get_player_name() + "/meta.save", FileAccess.WRITE)
 	if save_file == null:
@@ -154,7 +154,7 @@ func load_meta() -> void:
 	unlocked_runes.clear()
 	for rune_id in meta_data["unlocked_runes"]:
 		unlocked_runes.append(int(rune_id))
-	#TODO: probably call here the methode to display selection and other stuff about runes in lobby
+	#TODO: call here the methode to display selection and other stuff about runes in lobby
 	
 	#player.call_deferred("initialize_player").bind(meta_data, null, null)
 	player.initialize_player(meta_data, null, null)

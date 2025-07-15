@@ -4,7 +4,7 @@ class_name StatusEffect
 
 var effect_id: int
 
-var cooldown: float = 0.5 # all status Effect tick clock ! # TODO : move in status effect
+var cooldown: float = 0.5 # all status Effect tick clock !
 var cooldown_timer: Timer
 
 var target: Creature

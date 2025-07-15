@@ -48,5 +48,6 @@ static func load_grid_damage_type(config: ConfigFile, erase: bool = false) -> vo
 				save_grid_damage_type()
 			else:
 				print("#TODO : close the application without erasing the file")
+				#get_tree().quit(0)
 			return
 	damage_type_loaded = true

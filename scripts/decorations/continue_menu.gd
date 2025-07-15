@@ -8,7 +8,7 @@ signal return_to_main_menu()
 @onready var known_player: VBoxContainer = $MainPanel/KnownPlayer
 
 
-func _ready() -> void: # TODO display player names
+func _ready() -> void:
 	_init_focus()
 
 

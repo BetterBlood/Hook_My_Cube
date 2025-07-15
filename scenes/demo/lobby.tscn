@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://br883pylmypa7"]
+[gd_scene load_steps=27 format=3 uid="uid://br883pylmypa7"]
 
 [ext_resource type="Script" uid="uid://wdhsttcv1ana" path="res://scripts/demo/lobby.gd" id="1_yr8w2"]
 [ext_resource type="PackedScene" uid="uid://y1yw5naea0tu" path="res://scenes/characters/player.tscn" id="2_pdx53"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://canga3dhywbr3" path="res://scenes/portal_with_frame.tscn" id="5_4of2y"]
 [ext_resource type="Material" uid="uid://llqdeyixmjnv" path="res://materials/workInProgress/StandardMatWIP.tres" id="6_f5ty6"]
 [ext_resource type="Material" uid="uid://penbwn0i2in" path="res://materials/ice.tres" id="6_yr8w2"]
+[ext_resource type="PackedScene" uid="uid://tnoxj6xhwxrt" path="res://scenes/decorations/loot_orbe.tscn" id="8_pdx53"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_wehoa"]
 sky_top_color = Color(0.0970707, 0.463976, 0.749279, 1)
@@ -78,7 +79,7 @@ height = 50.0
 script = ExtResource("1_yr8w2")
 
 [node name="Player" parent="." instance=ExtResource("2_pdx53")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.085, 2, -5.849)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.9521, 2, 16.6666)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.866024, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.75, -0.43301, 0, 52.1937, 3.85321)
@@ -383,6 +384,9 @@ mesh = SubResource("CylinderMesh_wkq0h")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/TrainingFloor/Columns/Column"]
 shape = SubResource("CylinderShape3D_6728e")
+
+[node name="LootOrbe" parent="." instance=ExtResource("8_pdx53")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.719, 1, -16.9402)
 
 [editable path="MainFloor/P1 -> Fight Room"]
 [editable path="MainFloor/Real Lab/P3 -> Lab Entrance"]

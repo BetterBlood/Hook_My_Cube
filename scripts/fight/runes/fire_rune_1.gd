@@ -18,7 +18,7 @@ func _init(parent: Node3D) -> void:
 	rune_resource.projectile_bounce_count = 0
 	rune_resource.projectile_penetration = 0.0
 	rune_resource.projectile_damage = 5.0
-	rune_resource.projectile_speed = 7.0
+	rune_resource.projectile_speed = 14.0
 	rune_resource.projectile_status_effect_chance = 0.0
 	rune_resource.projectile_radius = 0.3
 	rune_resource.projectile_effect_duration = 2.0

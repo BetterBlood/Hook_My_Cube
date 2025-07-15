@@ -41,12 +41,23 @@ static func create_rune(rune_data, parent: Node3D) -> Rune:
 	var upgrades = rune_data["rune_upgrades"]
 	
 	for upgrade in upgrades:
-		match(upgrade["type"]): # TODO: add case for all types
-			"RuneUpgradeDamage": rune = RuneUpgradeDamage.new(rune, upgrade["value"])
-			"RuneUpgradeBounce": rune = RuneUpgradeBounce.new(rune, upgrade["value"])
-			"RuneUpgradePerforation": rune = RuneUpgradePerforation.new(rune, upgrade["value"])
-			"RuneUpgradeStatusEffectChance": rune = RuneUpgradeStatusEffectChance.new(rune, upgrade["value"])
-			_: push_warning("Rune upgrade " + upgrade["type"] + " not recognized")
+		rune = upgrade_rune(rune, upgrade["type"], upgrade["value"])
+	
+	return rune
+
+static func upgrade_rune(rune: Rune, upgrade_name: String, value: int) -> Rune:
+	match(upgrade_name):
+		"RuneUpgradeBounce": return RuneUpgradeBounce.new(rune, value)
+		"RuneUpgradeCooldownReduction": return RuneUpgradeCooldownReduction.new(rune, value)
+		"RuneUpgradeDamage": return RuneUpgradeDamage.new(rune, value)
+		"RuneUpgradeEffectDuration": return RuneUpgradeEffectDuration.new(rune, value)
+		"RuneUpgradeEffectRangeTransmission": return RuneUpgradeEffectRangeTransmission.new(rune, value)
+		"RuneUpgradePenetration": return RuneUpgradePenetration.new(rune, value)
+		"RuneUpgradePerforation": return RuneUpgradePerforation.new(rune, value)
+		"RuneUpgradeRadius": return RuneUpgradeRadius.new(rune, value)
+		"RuneUpgradeSpeed": return RuneUpgradeSpeed.new(rune, value)
+		"RuneUpgradeStatusEffectChance": return RuneUpgradeStatusEffectChance.new(rune, value)
+		_: push_warning("Rune upgrade " + upgrade_name + " not recognized")
 	return rune
 
 func light_attack(destination: Vector3, rune_resource_for_projectile: RuneResource) -> void:
@@ -59,7 +70,6 @@ func light_attack(destination: Vector3, rune_resource_for_projectile: RuneResour
 	projectile.set_layers_to_hit(projectile_layer_to_hit)
 	projectile.set_data(rune_resource_for_projectile)
 	
-	#TODO decorator for speed and other projectile parameter
 	projectile.apply_impulse(
 		(destination - rune_spot.global_position).normalized() * 
 		rune_resource_for_projectile.projectile_speed, Vector3())

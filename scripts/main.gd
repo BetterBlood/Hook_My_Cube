@@ -36,12 +36,12 @@ func _return_to_main_menu() -> void:
 
 
 func _start_new_game(player_name: String = "default") -> void:
-	#TODO: check if name is okey for file system and if 
+	#TODO: check if name is okey for file system
 	
 	# check that not already used
 	if _player_exist(player_name):
 		push_warning("Player name: '" + player_name + "' already exist !")
-		# TODO: instead of nothing call a function on new_menu that player name is already taken
+		# TODO: GRAPHICS: instead of nothing call a function on new_menu that player name is already taken
 		return
 	
 	SceneFade.player_name = player_name
@@ -53,7 +53,7 @@ func _continue_game(player_name: String = "default") -> void:
 	# check if name is already a known name
 	if player_name.is_empty() or !_player_exist(player_name):
 		push_warning("Player name: '" + player_name + "' does not exist !")
-		# TODO: instead of nothing call a function on continue_menu that player name is unknown
+		# TODO: GRAPHICS: instead of nothing call a function on continue_menu that player name is unknown
 		return
 	
 	SceneFade.player_name = player_name

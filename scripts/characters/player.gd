@@ -65,7 +65,8 @@ func initialize_player(meta_data, game_data, current_maze: Maze) -> void:
 		push_error("No meta data for player initialisation")
 		return 
 	current_player_name = meta_data["current_player_name"]
-	#TODO: meta data:
+	
+	# meta data:
 	active_rune = Rune.create_rune_with_id(meta_data["equiped_rune_lobby"], self)
 	health_component.set_up_perm_with_data(meta_data["health_component_upgrades"])
 	

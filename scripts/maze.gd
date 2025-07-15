@@ -32,6 +32,9 @@ static var normal_wall_proportion: float = 2.0/3.0
 
 const SPHERE = preload("res://addons/polyrinthe/sphere.tscn") # DEBUG
 const PEDESTRAL = preload("res://scenes/decorations/pedestral.tscn")
+var save_pedestral_position: Vector3 = Vector3(-5, 9.7, 5)
+var chest_pedestral_position: Vector3 = Vector3(5, 9.7, 5)
+
 #func _init(new_player_name: String = "DEBUG") -> void:
 	#player_name = new_player_name
 
@@ -139,7 +142,7 @@ func _generate_maze() -> void:
 		polyrinthe.seed_human = maze_data["seed"]
 		#polyrinthe.generate(int(maze_data["size"]), maze_data["seed"], [-1, -1] + default_tags)
 		
-		# TODO: use this for after generation
+		# used after polyrinthe.generate
 		var i = 0
 		for tab in maze_data["updated_tags"]:
 			updated_tags.append([])
@@ -237,7 +240,7 @@ func _find_last_dead_end_before_ice(maze: Polyrinthe) -> int:
 	return deepest_dead_end_id
 
 
-# TODO: on save point: call this to save maze and player progression with the current save point id
+# called on save point: save maze and player progression with the current save point id
 func _save_point_activated(save_point_id: int = 0) -> void:
 	player.save_progression(save_point_id)
 	_save_maze()
@@ -331,29 +334,32 @@ func _save_maze() -> void:
 func _apply_maze_modifications(maze: Polyrinthe) -> void: # TODO
 	
 	for save_point_id: int in save_points_room_ids:
-		var sphere = SPHERE.instantiate()
-		get_parent().add_child(sphere)
-		sphere.get_child(0).mesh.material.albedo_color = Color(0, 1, 0, 1)
-		sphere.position = maze.maze[save_point_id].position + Vector3(5, 5, 5)
+		var pedestral = PEDESTRAL.instantiate()
+		pedestral.maze = self
+		pedestral.is_save_pedestral = true
+		pedestral.id = save_point_id
+		get_parent().add_child(pedestral)
+		#pedestral.set_color(Color(0, 1, 0, 1))
+		pedestral.position = maze.maze[save_point_id].position - save_pedestral_position
 	
 	for chests_id: int in chests_room_ids: # chests_room_ids is correct, already cleaned
 		var pedestral = PEDESTRAL.instantiate()
+		pedestral.maze = self
+		pedestral.is_save_pedestral = false
+		pedestral.id = chests_id
+		#pedestral.set_color(Color(0, 0, 1, 1))
 		get_parent().add_child(pedestral)
-		pedestral.set_color(Color(0, 0, 1, 1))
-		pedestral.position = maze.maze[chests_id].position - Vector3(5, 5, 5)
-		
-		#var sphere = SPHERE.instantiate()
-		#get_parent().add_child(sphere)
-		#sphere.get_child(0).mesh.material.albedo_color = Color(0, 0, 1, 1)
-		#sphere.position = maze.maze[chests_id].position - Vector3(5, 5, 5)
+		pedestral.position = maze.maze[chests_id].position - chest_pedestral_position
 	
 	for spawner_id: int in spawners_room_ids:
+		var sphere = SPHERE.instantiate() # DEBUG
+		get_parent().add_child(sphere) # DEBUG
 		if spawner_id not in updated_spawners:
-			var sphere = SPHERE.instantiate()
-			get_parent().add_child(sphere)
-			sphere.get_child(0).mesh.material.albedo_color = Color(1, 0, 0, 1)
-			sphere.position = maze.maze[spawner_id].position
+			sphere.get_child(0).mesh.material.albedo_color = Color(1, 0, 0, 1) # DEBUG
+			sphere.position = maze.maze[spawner_id].position # DEBUG
 		else:
+			sphere.get_child(0).mesh.material.albedo_color = Color(1, 0, 1, 1) # DEBUG
+			sphere.position = maze.maze[spawner_id].position # DEBUG
 			#TODO: check updated_spawners to call the instantiation of the spawner correctly
 			# (need to do spawner before, probably take the list of dead mobs id as parameter to avoid creating them)
 			continue
@@ -365,23 +371,37 @@ func _apply_maze_modifications(maze: Polyrinthe) -> void: # TODO
 		sphere.get_child(0).mesh.material.albedo_color = Color(0, 0.8, 0.8, 1)
 		sphere.position = maze.maze[grapple_ice_upgrade_room_id].position - Vector3(0, 5, 0)
 	
-	
 	# TODO: add a portal in the last room to enter the boss fight
 	var sphere_end = SPHERE.instantiate()
 	get_parent().add_child(sphere_end)
 	sphere_end.get_child(0).mesh.material.albedo_color = Color(0, 0, 0, 1)
 	sphere_end.position = maze.maze[maze.deepest_id].position - Vector3(0, 0, 5)
 	
-	
 	for key in maze.maze.keys():
-		if maze.cubeGraph.get_tag(key, 3) > 0:
-			var rg_color = maze.cubeGraph.get_tag(key, 3) / 50.0
-			var chest_sphere = SPHERE.instantiate()
-			get_parent().add_child(chest_sphere)
-			chest_sphere.scale = Vector3(rg_color, rg_color, rg_color)
-			chest_sphere.get_child(0).mesh.material.albedo_color = Color(1, 1, 0, 1)
-			chest_sphere.position = maze.maze[key].position + Vector3(0, 5, 0)
-	
+		var chests_closure = maze.cubeGraph.get_tag(key, 3)
+		if chests_closure > 0:
+			var neighbors = maze.cubeGraph.getNeighborsConnection(key)
+			var higher: bool = false
+			for id in neighbors:
+				if chests_closure < maze.cubeGraph.get_tag(id, 3):
+					higher = true
+					var direction = (maze.maze[id].position - maze.maze[key].position)/2.5
+					
+					var rg_color = chests_closure / 1000.0
+					var chest_sphere = SPHERE.instantiate() # (TODO: GRAPHICS: some gold to show the way ?)
+					get_parent().add_child(chest_sphere)
+					chest_sphere.scale = Vector3(rg_color, rg_color, rg_color)
+					chest_sphere.get_child(0).mesh.material.albedo_color = Color(1, 1, 0, 1)
+					chest_sphere.position = maze.maze[key].position - Vector3(0, 10, 0) + direction - Vector3(0, rg_color, 0)/2
+			
+			if !higher: # spawn in center (TODO: GRAPHICS: some gold to show the way ?)
+				var rg_color = chests_closure / 1000.0
+				var chest_sphere = SPHERE.instantiate()
+				get_parent().add_child(chest_sphere)
+				chest_sphere.scale = Vector3(rg_color, rg_color, rg_color)
+				chest_sphere.get_child(0).mesh.material.albedo_color = Color(1, 1, 0, 1)
+				chest_sphere.position = maze.maze[key].position - Vector3(0, 10, 0) - Vector3(0, rg_color, 0)/2
+			
 
 
 func get_position_for_player_save_point(save_point_id: int) -> Vector3:

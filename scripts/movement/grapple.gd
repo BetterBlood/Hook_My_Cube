@@ -31,7 +31,7 @@ var _grapple_return_modifier: float = 1.0
 const SPEED_EFFECT: PackedScene = preload("res://scenes/fight/statusEffects/speed_effect.tscn")
 
 func _ready() -> void:
-	grappling_hook = SPHERE.instantiate() # TODO: real grappling hook
+	grappling_hook = SPHERE.instantiate() # TODO: GRAPHICS: real grappling hook
 	grappling_hook.scale = Vector3(0.05, 0.05, 0.05)
 	add_child(grappling_hook)
 	grappling_hook.add_child(IMPACT.instantiate())
@@ -107,7 +107,7 @@ func upgrade_wall() -> int:
 	return upgrades[3]
 
 
-#	TODO ?: for being usable on moving target, need to pass the entity hited to reparent 
+#	TODO: may be interesting: for being usable on moving target, need to pass the entity hited to reparent 
 #	hook on the target (the raycast should provide this information) 
 func shoot(destination: Vector3, hit: bool, hit2: bool = false) -> void:
 	if !_is_abble_to_shoot():

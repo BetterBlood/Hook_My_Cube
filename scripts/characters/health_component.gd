@@ -116,7 +116,7 @@ func remove_speed_effect(id: int) -> void:
 func _compute_speed_mult() -> float:
 	var mult: float = 1.0
 	for val in speed_effects.values():
-		mult *= val #TODO : check if addition is more interesting
+		mult *= val
 	return mult
 
 func get_icons_path() -> String:
@@ -144,4 +144,4 @@ func _get_grid_modifier(
 						att_type: Enums.DamageType,
 						def_type: Enums.DamageType
 						) -> float:
-	return Enums.get_grid_modifier(att_type, def_type) # TODO get grid damage modifier corresponding to types given
+	return Enums.get_grid_modifier(att_type, def_type)
