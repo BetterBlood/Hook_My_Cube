@@ -968,3 +968,11 @@ func instantiatePyramidConnection_allNeighbors(mazeUsed: Dictionary):
 						cubeGraph.computeColor(cubeGraph.getDepth(id), depthReached)
 					)
 				)
+
+
+static func is_id_on_first_floor(size:int, id: int) -> bool:
+	for i in range(size):
+		for j in range(size):
+			if i + j * size * size == id: return true
+	
+	return false
