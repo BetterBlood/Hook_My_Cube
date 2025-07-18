@@ -34,6 +34,7 @@ const SPHERE = preload("res://addons/polyrinthe/sphere.tscn") # DEBUG
 const PEDESTRAL = preload("res://scenes/decorations/pedestral.tscn")
 var save_pedestral_position: Vector3 = Vector3(-5, 9.7, 5)
 var chest_pedestral_position: Vector3 = Vector3(5, 9.7, 5)
+var last_save_id: int = 0
 
 #func _init(new_player_name: String = "DEBUG") -> void:
 	#player_name = new_player_name
@@ -135,6 +136,7 @@ func _generate_maze() -> void:
 		var maze_data = json.data
 		polyrinthe.begin_id = int(maze_data["begin_id"])
 		polyrinthe.algo = int(maze_data["generation_used"])
+		
 		difficulty = int(maze_data["difficulty"])
 		for val in maze_data["default_tags"]:
 			default_tags.append(int(val))
@@ -296,12 +298,15 @@ func _initialise_player():
 		
 		var parse_result = json.parse(json_string)
 		if not parse_result == OK:
-			push_warning("JSON Parse Error: " + json.get_error_message() + " in " + json_string + " at line " + json.get_error_line())
+			push_warning("JSON Parse Error: " + json.get_error_message() + " in " + json_string + " at line " + str(json.get_error_line()))
 			continue
 		
 		game_data = json.data
 	
+	last_save_id = int(game_data["save_spot_id"])
+	
 	player.initialize_player(meta_data, game_data, self)
+
 
 # save maze data
 func _save_maze() -> void:
@@ -338,9 +343,11 @@ func _apply_maze_modifications(maze: Polyrinthe) -> void: # TODO
 		pedestral.maze = self
 		pedestral.is_save_pedestral = true
 		pedestral.id = save_point_id
-		get_parent().add_child(pedestral)
+		add_child(pedestral)
 		#pedestral.set_color(Color(0, 1, 0, 1))
 		pedestral.position = maze.maze[save_point_id].position - save_pedestral_position
+	
+	SceneFade.emit_signal("save_id_changed", last_save_id)
 	
 	for chests_id: int in chests_room_ids: # chests_room_ids is correct, already cleaned
 		var pedestral = PEDESTRAL.instantiate()
@@ -348,12 +355,14 @@ func _apply_maze_modifications(maze: Polyrinthe) -> void: # TODO
 		pedestral.is_save_pedestral = false
 		pedestral.id = chests_id
 		#pedestral.set_color(Color(0, 0, 1, 1))
-		get_parent().add_child(pedestral)
+		#pedestral.is_rune = maze.maze[chests_id].position.y == 0
+		pedestral.is_rune = Polyrinthe.is_id_on_first_floor(size, chests_id)
+		add_child(pedestral)
 		pedestral.position = maze.maze[chests_id].position - chest_pedestral_position
 	
 	for spawner_id: int in spawners_room_ids:
 		var sphere = SPHERE.instantiate() # DEBUG
-		get_parent().add_child(sphere) # DEBUG
+		add_child(sphere) # DEBUG
 		if spawner_id not in updated_spawners:
 			sphere.get_child(0).mesh.material.albedo_color = Color(1, 0, 0, 1) # DEBUG
 			sphere.position = maze.maze[spawner_id].position # DEBUG
@@ -367,13 +376,13 @@ func _apply_maze_modifications(maze: Polyrinthe) -> void: # TODO
 	# check player grapple to know if it's needed to spawn this upgrade
 	if player.grapple.upgrades[3] == 0:
 		var sphere = SPHERE.instantiate()
-		get_parent().add_child(sphere)
+		add_child(sphere)
 		sphere.get_child(0).mesh.material.albedo_color = Color(0, 0.8, 0.8, 1)
 		sphere.position = maze.maze[grapple_ice_upgrade_room_id].position - Vector3(0, 5, 0)
 	
 	# TODO: add a portal in the last room to enter the boss fight
 	var sphere_end = SPHERE.instantiate()
-	get_parent().add_child(sphere_end)
+	add_child(sphere_end)
 	sphere_end.get_child(0).mesh.material.albedo_color = Color(0, 0, 0, 1)
 	sphere_end.position = maze.maze[maze.deepest_id].position - Vector3(0, 0, 5)
 	
@@ -389,7 +398,7 @@ func _apply_maze_modifications(maze: Polyrinthe) -> void: # TODO
 					
 					var rg_color = chests_closure / 1000.0
 					var chest_sphere = SPHERE.instantiate() # (TODO: GRAPHICS: some gold to show the way ?)
-					get_parent().add_child(chest_sphere)
+					add_child(chest_sphere)
 					chest_sphere.scale = Vector3(rg_color, rg_color, rg_color)
 					chest_sphere.get_child(0).mesh.material.albedo_color = Color(1, 1, 0, 1)
 					chest_sphere.position = maze.maze[key].position - Vector3(0, 10, 0) + direction - Vector3(0, rg_color, 0)/2
@@ -397,7 +406,7 @@ func _apply_maze_modifications(maze: Polyrinthe) -> void: # TODO
 			if !higher: # spawn in center (TODO: GRAPHICS: some gold to show the way ?)
 				var rg_color = chests_closure / 1000.0
 				var chest_sphere = SPHERE.instantiate()
-				get_parent().add_child(chest_sphere)
+				add_child(chest_sphere)
 				chest_sphere.scale = Vector3(rg_color, rg_color, rg_color)
 				chest_sphere.get_child(0).mesh.material.albedo_color = Color(1, 1, 0, 1)
 				chest_sphere.position = maze.maze[key].position - Vector3(0, 10, 0) - Vector3(0, rg_color, 0)/2

@@ -16,7 +16,7 @@ var real_target: HealthComponent
 var value: float = 1.0 # burn:damage/sec, slow:slow_penalty, shock:shock_duration
 
 var same_effect: PackedScene
-var total_duration_fixe: float 
+var total_duration_fixe: float
 
 # TODO
 var real_source: HealthComponent
@@ -38,7 +38,7 @@ func _ready() -> void:
 
 func _on_cooldown_timeout() -> void:
 	total_duration -= cooldown
-	#print("Trying to apply burn tick on target: ", target)
+	#print("Trying to apply effect tick on target: ", target)
 	if target != null && real_target != null:
 		_apply_effect()
 		_try_propagate_effect()
@@ -69,7 +69,7 @@ func _try_propagate_effect() -> void:
 	var collision_shape = CollisionShape3D.new()
 	propagateArea.add_child(collision_shape)
 	collision_shape.shape = SphereShape3D.new()
-	collision_shape.shape.radius = 0
+	collision_shape.shape.radius = 0.01
 	propagateArea.collision_mask = target.get_layer()
 	propagateArea.area_entered.connect(
 		func (area):
@@ -89,12 +89,13 @@ func _try_propagate_effect() -> void:
 					effect.same_effect = same_effect
 					effect.effect_id = effect_id
 					effect.target = target_tmp
+					effect.value = value
 					effect.total_duration_fixe = total_duration_fixe
 					effect.total_duration = total_duration_fixe # no duration reduction
 					# reduction of effect duration after transmission :
 					#effect.total_duration = total_duration
 					effect.effect_area_range_transmission = effect_area_range_transmission
-					effect.target.add_child(effect)
+					target_tmp.add_child(effect)
 	)
 	add_child(propagateArea)
 	propagateArea.global_position = target.global_position

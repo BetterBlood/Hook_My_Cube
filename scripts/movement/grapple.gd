@@ -17,6 +17,7 @@ var _enemy_mask: int = 4 # 4 means enemy, enemy need to defined it as 2 to catch
 var _speed_boost: float = 1.2
 
 var upgrades: Array[int] = [0, 0, 0, 0] # [0:range, 1:boost, 2:enemy, 3:ice_wall]
+static var NBR_UPGRADES: int = 2
 
 
 var grapple_owner: Creature

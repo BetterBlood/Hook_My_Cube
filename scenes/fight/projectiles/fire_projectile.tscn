@@ -42,17 +42,11 @@ debug_color = Color(0.734445, 0.463386, 0.226078, 0.42)
 [node name="TimeToLive" type="Timer" parent="."]
 
 [node name="Light" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
 light_color = Color(0.883495, 0.475407, 2.69532e-06, 1)
 light_energy = 2.0
 light_specular = 16.0
-light_bake_mode = 1
 light_cull_mask = 4293918721
 shadow_enabled = true
 shadow_caster_mask = 4293918721
 distance_fade_begin = 50.0
 omni_attenuation = 0.5
-
-[connection signal="area_entered" from="InteractionArea" to="." method="_on_interaction_area_area_entered"]
-[connection signal="body_entered" from="InteractionArea" to="." method="_on_interaction_area_body_entered"]
-[connection signal="timeout" from="TimeToLive" to="." method="_on_time_to_live_timeout"]

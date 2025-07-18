@@ -6,7 +6,7 @@ signal launch_game(player_name: String)
 
 @export var size: int = 7 # DEBUG
 
-var unlocked_runes: Array[int] = [0, 1] #TODO: default [0]
+var unlocked_runes: Array[int] = [0, 1, 2, 3] #TODO: default [0]
 var gold: int = 0
 
 const Logger = preload("res://scripts/CSharp/Logger.cs")
@@ -69,6 +69,8 @@ func _process(_delta: float) -> void:
 		
 		#initialise the file containing maze info
 		_initialize_new_maze_file_save()
+		# player initialisation needed to keep the lobby rune
+		player.save_progression(0) #TODO: get real begin_id from polyrinthe
 		SceneFade.change_scene(maze_scene, SceneFade.maze_loaded)
 		#get_tree().change_scene_to_packed(maze_scene)
 
@@ -81,11 +83,11 @@ func _initialize_new_maze_file_save() -> void:
 	
 	#TODO: get real data from the room of maze selection in lobby
 	var save_dict = {
-		"seed" : "",
+		"seed" : "DEBUG" if player.get_player_name() == "DEBUG" else "", # TODO get the seed choosen by the player !
 		"size" : 7,
 		"begin_id" : 0,
 		"generation_used" : Polyrinthe.GENERATION_ALGORITHME.DFS_LBL_ALT_6,
-		"difficulty" : 0,
+		"difficulty" : 0, # [-2; 2]
 		"default_tags": [ # TODO: other tags needed !! # [int]
 			1, # wall default collision layers 
 			0, # color for room near chests

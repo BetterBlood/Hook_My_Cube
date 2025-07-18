@@ -15,11 +15,16 @@ var damage: float = 0.0
 var source: Creature
 
 var effect: PackedScene = null
+var effect_value: float = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	$TimeToLive.timeout.connect(_on_time_to_live_timeout)
 	$TimeToLive.wait_time = 5
 	$TimeToLive.start()
+	
+	interaction_area.area_entered.connect(_on_interaction_area_area_entered)
+	interaction_area.body_entered.connect(_on_interaction_area_body_entered)
 
 
 func set_layers_to_hit(layers: int) -> int:
@@ -54,14 +59,15 @@ func _apply_effect(target: Creature) -> void:
 	if effect == null:
 		return
 	
-	#print(area.get_parent().has_method("can_host_status_effect"))
+	#print(target.has_method("can_host_status_effect"))
 	if 		target.has_method("can_host_status_effect") && \
 			status_effect_chance > randf_range(0,1):
-		var new_id = StatusEffectId.get_next_id() # TODO : be carefull that the id doen't grow too quickly, maybe release if not used 
+		var new_id = StatusEffectId.get_next_id() # TODO : be carefull that the id dosen't grow too quickly, maybe release if not used 
 		if target.can_host_status_effect(new_id): # TODO: check if really usefull
 			target.add_effect_id(new_id)
 			var effect_instance = effect.instantiate()
 			effect_instance.same_effect = effect
+			effect_instance.value = effect_value
 			effect_instance.effect_id = new_id
 			effect_instance.target = target
 			effect_instance.total_duration = effect_duration

@@ -1,0 +1,140 @@
+[gd_scene load_steps=9 format=3 uid="uid://c4o0dbwehamwl"]
+
+[ext_resource type="PackedScene" uid="uid://vkdb0nc6kpk7" path="res://scenes/decorations/menus/upgrade_proposition.tscn" id="1_kukgw"]
+[ext_resource type="Script" uid="uid://nlgvrrkwncy7" path="res://scripts/decorations/menus/upgrade_menu.gd" id="1_rff7d"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dddvd"]
+bg_color = Color(0.211765, 0.211765, 0.211765, 0.215686)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kukgw"]
+bg_color = Color(0.739831, 0.554448, 0.440939, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+expand_margin_left = 5.0
+expand_margin_right = 5.0
+shadow_size = 5
+shadow_offset = Vector2(0, 4)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rff7d"]
+bg_color = Color(0.133196, 0.133196, 0.133196, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+expand_margin_left = 5.0
+expand_margin_right = 5.0
+shadow_size = 5
+shadow_offset = Vector2(0, 4)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uq6u8"]
+bg_color = Color(0.318291, 0.652123, 0.749298, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+expand_margin_left = 5.0
+expand_margin_right = 5.0
+shadow_size = 5
+shadow_offset = Vector2(0, 4)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f5a42"]
+bg_color = Color(0.810192, 0.500608, 0.517061, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+expand_margin_left = 5.0
+expand_margin_right = 5.0
+shadow_size = 5
+shadow_offset = Vector2(0, 4)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gglya"]
+bg_color = Color(0.345646, 0.666641, 0.621584, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+expand_margin_left = 5.0
+expand_margin_right = 5.0
+shadow_size = 5
+shadow_offset = Vector2(0, 4)
+
+[node name="UpgradeMenu" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_rff7d")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_dddvd")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -470.0
+offset_top = -306.0
+offset_right = 470.0
+offset_bottom = 306.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 50
+text = "Upgrades"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 50
+
+[node name="UpgradeProposition" parent="VBoxContainer/HBoxContainer" instance=ExtResource("1_kukgw")]
+layout_mode = 2
+
+[node name="UpgradeProposition2" parent="VBoxContainer/HBoxContainer" instance=ExtResource("1_kukgw")]
+layout_mode = 2
+
+[node name="UpgradeProposition3" parent="VBoxContainer/HBoxContainer" instance=ExtResource("1_kukgw")]
+layout_mode = 2
+
+[node name="Close" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+focus_neighbor_bottom = NodePath("../MainMenu")
+focus_next = NodePath("../MainMenu")
+theme_override_colors/font_disabled_color = Color(0.688595, 0.688595, 0.688595, 1)
+theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
+theme_override_styles/focus = SubResource("StyleBoxFlat_kukgw")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_rff7d")
+theme_override_styles/hover = SubResource("StyleBoxFlat_uq6u8")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_f5a42")
+theme_override_styles/normal = SubResource("StyleBoxFlat_gglya")
+text = "Close"
+
+[connection signal="select_pressed" from="VBoxContainer/HBoxContainer/UpgradeProposition" to="." method="_on_upgrade_proposition_select_pressed"]
+[connection signal="select_pressed" from="VBoxContainer/HBoxContainer/UpgradeProposition2" to="." method="_on_upgrade_proposition_2_select_pressed"]
+[connection signal="select_pressed" from="VBoxContainer/HBoxContainer/UpgradeProposition3" to="." method="_on_upgrade_proposition_3_select_pressed"]
+[connection signal="pressed" from="VBoxContainer/Close" to="." method="_on_close_pressed"]

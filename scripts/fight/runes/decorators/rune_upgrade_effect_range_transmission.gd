@@ -3,12 +3,11 @@ extends RuneUpgrade
 class_name RuneUpgradeEffectRangeTransmission
 
 
-func _init(rune: Rune, value: float = 1) -> void:
+func _init(rune: Rune, lvl: RuneUpgrade.UpgradeLevel = RuneUpgrade.UpgradeLevel.ONE) -> void:
 	super._init(rune)
-	rune_resource.projectile_effect_area_range_transmission = value
+	upgrade_lvl = lvl
+	rune_resource.projectile_effect_area_range_transmission = VALUES_FOR_EFFECT_RANGE[lvl]
 
 
-func get_save_infos() -> Dictionary:
-	var dico = super.get_save_infos()
-	dico["rune_upgrades"].append({"type" : "RuneUpgradeEffectRangeTransmission", "value": rune_resource.projectile_effect_area_range_transmission})
-	return dico
+func _to_string() -> String:
+	return str(RuneUpgrade.RuneUpgradeType.keys()[4])

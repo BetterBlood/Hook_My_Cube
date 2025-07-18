@@ -8,7 +8,7 @@ func _init(parent: Node3D) -> void:
 	
 	#print("_init de FireRune1: ", self)
 	
-	projectile_scene = preload("res://scenes/fight/fire_projectile.tscn")
+	projectile_scene = preload("res://scenes/fight/projectiles/fire_projectile.tscn")
 	
 	cooldown = 2.0
 	
@@ -19,10 +19,10 @@ func _init(parent: Node3D) -> void:
 	rune_resource.projectile_penetration = 0.0
 	rune_resource.projectile_damage = 5.0
 	rune_resource.projectile_speed = 14.0
-	rune_resource.projectile_status_effect_chance = 0.0
-	rune_resource.projectile_radius = 0.3
+	rune_resource.projectile_status_effect_chance = 0.05
+	rune_resource.projectile_radius = 0.25
 	rune_resource.projectile_effect_duration = 2.0
-	rune_resource.projectile_effect_area_range_transmission = 27.5 # 27.5 for chain test
+	rune_resource.projectile_effect_area_range_transmission = 4
 
 
 func get_rune_id() -> int:
@@ -31,6 +31,3 @@ func get_rune_id() -> int:
 
 func get_damage_type() -> Enums.DamageType:
 	return Enums.DamageType.FIRE
-
-func get_save_infos() -> Dictionary:
-	return {"rune_id": get_rune_id(), "rune_upgrades" : []}

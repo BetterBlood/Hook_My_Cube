@@ -15,10 +15,10 @@ var health_regen_timer_reset: float = 0.25
 @export var _max_speed: float = 5
 var speed: float = _max_speed
 
-# [0:max_health, 1:health_regen_per_sec, 2:armor, 3:penetration_resistance, 4:max_speed]
+# [0:_max_health, 1:_health_regen_per_sec, 2:_armor, 3:_penetration_resistance, 4:_max_speed]
 var perm_upgrades: Array[float] = [0, 0, 0, 0, 0]
 var temp_upgrades: Array[float] = [0, 0, 0, 0, 0]
-
+static var NBR_UPGRADES: int = 5
 
 signal damage_taken()
 var health_regen_timer: Timer = Timer.new()
@@ -47,7 +47,6 @@ func get_perm_data():
 	for i in range(len(perm_upgrades)):
 		data.append({"type": i, "value": perm_upgrades[i]})
 	return data
-
 
 func set_up_temp_with_data(data) -> void:
 	for upgrade in data:
@@ -84,9 +83,9 @@ func get_max_speed() -> float:
 	return _max_speed + _get_upgrade_perm_and_temp_with_id(4)
 
 func _passive_heal() -> void:
-	if get_health_regen_per_sec() > 0.0 && health < get_max_health():
+	if get_health_regen_per_sec() > 0.0 and health < get_max_health():
 		health = min(health + get_health_regen_per_sec() / (1.0 / health_regen_timer_reset), get_max_health())
-		#print("health: ", health)
+		#print(self, "::_passive_heal::health: ", health)
 	health_regen_timer.start(health_regen_timer_reset)
 
 
@@ -101,16 +100,17 @@ func take_fire_effect(value: float) -> float:
 
 
 func take_speed_effect(id: int, value: float) -> float:
+	#print(get_parent(), "::HealthComponent: Speed modifier -> taking (", id, " ", value, ") , max: ", get_max_speed())
 	if !speed_effects.has(id):
 		speed_effects[id] = value
 		speed = get_max_speed() * _compute_speed_mult()
-		#print(get_parent(), "::HealthComponent: Speed modifier -> taking (", value, ") ", max_speed, " -> ", speed, " speed.")
+		#print(get_parent(), "::HealthComponent: Speed modifier max: ", get_max_speed(), " -> ", speed, " speed.")
 	return speed
 
 
 func remove_speed_effect(id: int) -> void:
-	speed = get_max_speed() * _compute_speed_mult()
 	speed_effects.erase(id)
+	speed = get_max_speed() * _compute_speed_mult()
 
 
 func _compute_speed_mult() -> float:
@@ -128,13 +128,14 @@ func take_damage(	value: float,
 					armor_pen: float
 				) -> float:
 	var damage: float = value * _get_grid_modifier(att_type, def_type)
+	#print("HealthComponent::take_damage (with grid modifier): ", damage)
 	damage -= max(get_armor() - max((1.0 - get_penetration_resistance()), 0.0) * armor_pen, 0.0)
-	#print("HealthComponent::take_damage() ", value, " ", att_type, " ", def_type, " ", armor_pen, " ", damage)
+	#print("HealthComponent::take_damage ", value, " ", att_type, " ", def_type, " ", armor_pen, " ", damage)
 	
 	if damage <= 0:
 		damage = 0.01 # <( not impossible to make damage, but really hard ) 
 	
-	#print("HealthComponent:: health: ", health, ", armor: ", armor)
+	#print("HealthComponent:: health: ", health, ", armor: ", _armor)
 	health = max(health - damage, 0.0)
 	damage_taken.emit()
 	#print("HealthComponent:: health: ", health)

@@ -3,12 +3,11 @@ extends RuneUpgrade
 class_name RuneUpgradeStatusEffectChance
 
 
-func _init(rune: Rune, value: float = 0.01) -> void:
+func _init(rune: Rune, lvl: RuneUpgrade.UpgradeLevel = RuneUpgrade.UpgradeLevel.ONE) -> void:
 	super._init(rune)
-	rune_resource.projectile_status_effect_chance = value
+	upgrade_lvl = lvl
+	rune_resource.projectile_status_effect_chance = VALUES_FOR_SATUS_EFFECT_CHANCE[lvl]
 
 
-func get_save_infos() -> Dictionary:
-	var dico = super.get_save_infos()
-	dico["rune_upgrades"].append({"type" : "RuneUpgradeStatusEffectChance", "value": rune_resource.projectile_status_effect_chance})
-	return dico
+func _to_string() -> String:
+	return str(RuneUpgrade.RuneUpgradeType.keys()[9])

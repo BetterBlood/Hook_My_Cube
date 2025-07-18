@@ -12,6 +12,9 @@ var projectile_layer_to_hit: int = 1
 var projectile_source: Creature
 var rune_spot: Marker3D
 
+static var NBR_UPGRADES: int = 10
+
+
 func _init(parent: Node3D) -> void:
 	#print("_init de Rune: ", self)
 	projectile_source = parent
@@ -20,14 +23,16 @@ func _init(parent: Node3D) -> void:
 		push_warning("Rune shooting position not set, set to (0, 0, 0)")
 		rune_spot = Marker3D.new()
 		rune_spot.position = Vector3()
-		add_child(rune_spot)
+		#get_parent().add_child(rune_spot)
 
 
 static func create_rune_with_id(id: int, parent: Node3D) -> Rune:
 	match(id): # TODO: add case for all runes
-		#-1:# TODO: debug rune
-		#0: # TODO: normal rune
+		-1: return DebugRune.new(parent)
+		0: return NormalRune1.new(parent)
 		1: return FireRune1.new(parent)
+		2: return PlantRune1.new(parent)
+		3: return ElectricRune1.new(parent)
 		_: push_warning("Rune id " + str(id) + " not recognized: FireRune1 used by default")
 	
 	return FireRune1.new(parent)
@@ -41,24 +46,37 @@ static func create_rune(rune_data, parent: Node3D) -> Rune:
 	var upgrades = rune_data["rune_upgrades"]
 	
 	for upgrade in upgrades:
-		rune = upgrade_rune(rune, upgrade["type"], upgrade["value"])
+		rune = upgrade_rune(rune, upgrade["type"], upgrade["level"])
 	
 	return rune
 
-static func upgrade_rune(rune: Rune, upgrade_name: String, value: int) -> Rune:
+
+static func upgrade_rune(rune: Rune, upgrade_name: String, level: int) -> Rune:
+	print("Rune::upgrade_rune, rune: ", rune.get_save_infos(), ", upgrade_name: ", upgrade_name, ", lvl: ", str(level))
 	match(upgrade_name):
-		"RuneUpgradeBounce": return RuneUpgradeBounce.new(rune, value)
-		"RuneUpgradeCooldownReduction": return RuneUpgradeCooldownReduction.new(rune, value)
-		"RuneUpgradeDamage": return RuneUpgradeDamage.new(rune, value)
-		"RuneUpgradeEffectDuration": return RuneUpgradeEffectDuration.new(rune, value)
-		"RuneUpgradeEffectRangeTransmission": return RuneUpgradeEffectRangeTransmission.new(rune, value)
-		"RuneUpgradePenetration": return RuneUpgradePenetration.new(rune, value)
-		"RuneUpgradePerforation": return RuneUpgradePerforation.new(rune, value)
-		"RuneUpgradeRadius": return RuneUpgradeRadius.new(rune, value)
-		"RuneUpgradeSpeed": return RuneUpgradeSpeed.new(rune, value)
-		"RuneUpgradeStatusEffectChance": return RuneUpgradeStatusEffectChance.new(rune, value)
+		"BOUNCE":
+			return RuneUpgradeBounce.new(rune, level)
+		"COOLDOWN_REDUCTION":
+			return RuneUpgradeCooldownReduction.new(rune, level)
+		"DAMAGE":
+			return RuneUpgradeDamage.new(rune, level)
+		"EFFECT_DURATION":
+			return RuneUpgradeEffectDuration.new(rune, level)
+		"EFFECT_RANGE":
+			return RuneUpgradeEffectRangeTransmission.new(rune, level)
+		"PENETRATION":
+			return RuneUpgradePenetration.new(rune, level)
+		"PERFORATION":
+			return RuneUpgradePerforation.new(rune, level)
+		"RADIUS":
+			return RuneUpgradeRadius.new(rune, level)
+		"SPEED":
+			return RuneUpgradeSpeed.new(rune, level)
+		"STATUS_EFFECT_CHANCE":
+			return RuneUpgradeStatusEffectChance.new(rune, level)
 		_: push_warning("Rune upgrade " + upgrade_name + " not recognized")
 	return rune
+
 
 func light_attack(destination: Vector3, rune_resource_for_projectile: RuneResource) -> void:
 	#print(self, " ", rune_resource_for_projectile.projectile_damage)
@@ -78,13 +96,16 @@ func light_attack(destination: Vector3, rune_resource_for_projectile: RuneResour
 func heavy_attack(destination: Vector3) -> void:
 	pass
 
+
 func get_rune_id() -> int:
 	return -1
+
 
 func get_damage_type() -> Enums.DamageType:
 	push_error("get_damage_type not implemented in ", self)
 	assert(false, "Override of `get_damage_type()` needed in " + str(self))
 	return Enums.DamageType.NORMAL
+
 
 func get_data_to_performe_attaque() -> RuneResource:
 	#print("get_data_to_performe_attaque()::Rune")
@@ -92,4 +113,4 @@ func get_data_to_performe_attaque() -> RuneResource:
 
 
 func get_save_infos() -> Dictionary:
-	return {}
+	return {"rune_id": get_rune_id(), "rune_upgrades" : []}

@@ -38,6 +38,11 @@ var current_player_name: String = "Peter"
 var gold: int = 0
 var xp_to_lvl_up:float = 10 # TODO: compute in function of lvl
 
+const LOOT_ORBE_RUNE = preload("res://scenes/decorations/loot_orbe_rune.tscn")
+
+var tmp_new_runes: Array[int] = []
+var tmp_old_rune
+var tmp_upgrades: Array = []
 
 func _ready():
 	super._ready()
@@ -45,12 +50,8 @@ func _ready():
 	godMode = true
 	collisionShape.disabled = true
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	active_rune = FireRune1.new(self) #TODO: init the player with the normal rune
+	active_rune = NormalRune1.new(self)
 	active_rune.projectile_layer_to_hit = 5
-	active_rune = RuneUpgradeDamage.new(active_rune, 2) # DEBUG
-	active_rune = RuneUpgradeBounce.new(active_rune) # DEBUG
-	active_rune = RuneUpgradePerforation.new(active_rune) # DEBUG
-	active_rune = RuneUpgradeStatusEffectChance.new(active_rune, 1.0) # DEBUG
 	
 	layer = 2
 	
@@ -68,6 +69,7 @@ func initialize_player(meta_data, game_data, current_maze: Maze) -> void:
 	
 	# meta data:
 	active_rune = Rune.create_rune_with_id(meta_data["equiped_rune_lobby"], self)
+	active_rune.projectile_layer_to_hit = 5
 	health_component.set_up_perm_with_data(meta_data["health_component_upgrades"])
 	
 	#progression data
@@ -93,7 +95,10 @@ func initialize_player(meta_data, game_data, current_maze: Maze) -> void:
 	var rune2_data = game_data["runes"][1] if len(game_data["runes"][1]) > 2 else null
 	
 	active_rune = Rune.create_rune(rune1_data, self) # this override meta_data active_rune
+	active_rune.projectile_layer_to_hit = 5
 	second_rune = Rune.create_rune(rune2_data, self)
+	if second_rune:
+		second_rune.projectile_layer_to_hit = 5
 	
 	health_component.set_up_temp_with_data(game_data["health_component_upgrades"])
 	grapple.set_up_with_data(game_data["grappin_upgrades"])
@@ -141,6 +146,9 @@ func _unhandled_input(event):
 
 
 func _physics_process(delta):
+	if Input.is_action_just_pressed("SwapRune"):
+		_swap_runes()# TODO: animations !!
+	
 	if Input.is_action_just_pressed("attack"):
 		#print("orphan:")
 		#print_orphan_nodes() # DEBUG
@@ -161,7 +169,7 @@ func _physics_process(delta):
 		active_rune.light_attack(destination, active_rune.get_data_to_performe_attaque())
 		
 		#print("active_rune save infos: ", active_rune.get_save_infos())
-		active_rune = RuneUpgradeDamage.new(active_rune)
+		#active_rune = RuneUpgradeDamage.new(active_rune)
 		#active_rune = RuneUpgradeSpeed.new(active_rune)
 	
 		#var sphere = SPHERE.instantiate()
@@ -271,10 +279,139 @@ func get_type() -> Enums.DamageType:
 
 
 func _swap_runes() -> void:
+	#print("player::_swap_runes second_rune: ", second_rune)
 	if second_rune:
 		var tmp_rune = active_rune
 		active_rune = second_rune
 		second_rune = tmp_rune
+
+# upgrades: [[runeType, lvl], [healthType, lvl], [grapleType, lvl]]
+func propose_upgrades(upgrades: Array) -> void:
+	#print(upgrades)
+	tmp_upgrades = upgrades
+	#print("[runeType, lvl]")
+	#for rune_up_typ in upgrades[0]:
+		#print(str(RuneUpgrade.RuneUpgradeType.keys()[rune_up_typ[0]]), ": ", (str(RuneUpgrade.UpgradeLevel.keys()[rune_up_typ[1]])))
+	#
+	#print("[healthType, lvl]")
+	#for health_up_type in upgrades[1]:
+		#print(health_up_type[0], ": ", health_up_type[1])
+		#
+	#print("[grapleType, lvl]")
+	#for graple_up_type in upgrades[2]:
+		#print(graple_up_type[0], ": ", graple_up_type[1])
+	
+	var nothing: Signal
+	
+	get_tree().paused = true
+	# TODO: maybe show the levels but not the upgrade here
+	var prop_1 = ["Rune upgrade", "res://icon.svg", "Description:\nSelect 1 of 3 upgrades for selected rune"]
+	var prop_2 = ["Player upgrade", "res://icon.svg", "Description:\nSelect 1 of 3 upgrades for the health component"]
+	var prop_3 = ["Grapple upgrade", "res://icon.svg", "Description:\nSelect 1 of 3 upgrades for the grapple"]
+	$CanvasLayer/UpgradeMenu.set_up_propositions(prop_1, prop_2, prop_3, select_upgrade_proposition_type, nothing)
+	$CanvasLayer/UpgradeMenu.show()
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+
+
+func propose_new_runes(new_runes: Array, call_on_finish: Signal) -> void:
+	#print(new_runes)
+	tmp_new_runes = new_runes
+	get_tree().paused = true
+	# TODO: read description of runes proposed and provide informations for menu display
+	var rune_1 = ["rune 1", "res://icon.svg", "Description:\nid: " + str(new_runes[0])]
+	var rune_2 = ["rune 2", "res://icon.svg", "Description:\nid: " + str(new_runes[1])]
+	var rune_3 = ["rune 3", "res://icon.svg", "Description:\nid: " + str(new_runes[2])]
+	$CanvasLayer/UpgradeMenu.set_up_propositions(rune_1, rune_2, rune_3, set_new_rune_at_placement, call_on_finish)
+	$CanvasLayer/UpgradeMenu.show()
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+
+
+func propose_new_rune(new_rune_data, call_on_finish: Signal) -> void:
+	#print(new_rune_data)
+	tmp_old_rune = new_rune_data
+	var rune_2 = ["rune id:" + str(new_rune_data["rune_id"]), "res://icon.svg", "Description:\ndata: " + str(new_rune_data["rune_upgrades"])]
+	$CanvasLayer/UpgradeMenu.set_up_propositions(null, rune_2, null, set_old_rune_at_placement, call_on_finish)
+	$CanvasLayer/UpgradeMenu.show()
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+
+
+func set_new_rune_at_placement(rune_index: int, active_placement: bool, call_on_finish: Signal) -> void:
+	var loot_orbe_rune = LOOT_ORBE_RUNE.instantiate()
+	loot_orbe_rune.position = position
+	loot_orbe_rune.rotation = rotation
+	if active_placement: # for the moment copy whole rune with upgrades, maybe swap upgrades on the new rune
+		loot_orbe_rune.init_with_rune(active_rune.get_save_infos())
+		get_parent().add_child(loot_orbe_rune)
+		active_rune = Rune.create_rune_with_id(tmp_new_runes[rune_index], self)
+	else:
+		if second_rune:
+			loot_orbe_rune.init_with_rune(second_rune.get_save_infos())
+			get_parent().add_child(loot_orbe_rune)
+		second_rune = Rune.create_rune_with_id(tmp_new_runes[rune_index], self)
+	call_on_finish.emit(true)
+
+
+func set_old_rune_at_placement(_not_used: int, active_placement: bool, call_on_finish: Signal) -> void:
+	var loot_orbe_rune = LOOT_ORBE_RUNE.instantiate()
+	loot_orbe_rune.position = position
+	loot_orbe_rune.rotation = rotation
+	if active_placement: # for the moment copy whole rune with upgrades, maybe swap upgrades on the new rune
+		loot_orbe_rune.init_with_rune(active_rune.get_save_infos())
+		get_parent().add_child(loot_orbe_rune)
+		active_rune = Rune.create_rune(tmp_old_rune, self)
+	else:
+		if second_rune:
+			loot_orbe_rune.init_with_rune(second_rune.get_save_infos())
+			get_parent().add_child(loot_orbe_rune)
+		second_rune = Rune.create_rune(tmp_old_rune, self)
+	call_on_finish.emit(true)
+
+
+func select_upgrade_proposition_type(proposition_type_index: int, _no_active_placement: bool, _no_call_on_finished: Signal) -> void:
+	await get_tree().create_timer(0.01).timeout
+	
+	get_tree().paused = true
+	var props: Array = []
+	var func_to_call = [select_rune_upgrade, select_health_upgrade, select_grapple_upgrade]
+	var gold_proposal = ["Golds", "res://icon.svg", "Description:\nquantité: 20"]
+	if proposition_type_index == 0:
+		for i in range(3):
+			props.append([str(RuneUpgrade.RuneUpgradeType.keys()[tmp_upgrades[0][i][0]]), "res://icon.svg", "Description:\nlvl: " + str(tmp_upgrades[0][i][1] + 1)])
+	elif proposition_type_index == 1:
+		for i in range(3):
+			props.append([str(tmp_upgrades[proposition_type_index][i][0]), "res://icon.svg", "Description:\nlvl: " + str(tmp_upgrades[proposition_type_index][i][1] + 1)])
+	else:
+		for i in range(2):
+			props.append([str(tmp_upgrades[proposition_type_index][i][0]), "res://icon.svg", "Description:\nlvl: " + str(tmp_upgrades[proposition_type_index][i][1] + 1)])
+		props.append(gold_proposal)
+	#print(props)
+	$CanvasLayer/UpgradeMenu.set_up_propositions(props[0], props[1], props[2], func_to_call[proposition_type_index], _no_call_on_finished)
+	$CanvasLayer/UpgradeMenu.show()
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+
+
+func select_rune_upgrade(rune_upgrade_index: int, active_placement: bool, _no_call_on_finished: Signal):
+	#print("Player::select_rune_upgrade, active_placement: ", active_placement, ", should be: ", str(RuneUpgrade.RuneUpgradeType.keys()[tmp_upgrades[0][rune_upgrade_index][0]]), ", lvl: ", tmp_upgrades[0][rune_upgrade_index][1])
+	if active_placement:
+		active_rune = Rune.upgrade_rune(active_rune, str(RuneUpgrade.RuneUpgradeType.keys()[tmp_upgrades[0][rune_upgrade_index][0]]), tmp_upgrades[0][rune_upgrade_index][1])
+	elif second_rune:
+		second_rune =  Rune.upgrade_rune(second_rune, str(RuneUpgrade.RuneUpgradeType.keys()[tmp_upgrades[0][rune_upgrade_index][0]]), tmp_upgrades[0][rune_upgrade_index][1])
+
+
+func select_health_upgrade(health_upgrade_index: int, _active_placement: bool, _no_call_on_finished: Signal):
+	health_component.add_temp_upgrade(tmp_upgrades[1][health_upgrade_index][0], tmp_upgrades[1][health_upgrade_index][1])
+
+
+func select_grapple_upgrade(grapple_upgrade_index: int, _active_placement: bool, _no_call_on_finished: Signal):
+	match grapple_upgrade_index: 
+		0: 
+			for i in range(tmp_upgrades[2][grapple_upgrade_index][1]):
+				grapple.upgrade_range()
+		1: 
+			for i in range(tmp_upgrades[2][grapple_upgrade_index][1]):
+				grapple.upgrade_boost()
+		2: gold += 20
+		_: push_warning("Player::select_grapple_upgrade: grapple_upgrade_index: ", grapple_upgrade_index, " is unknown upgrade. tmp_upgrades: ", tmp_upgrades)
 
 
 func get_fire_projectile_spot() -> Marker3D:
@@ -283,3 +420,7 @@ func get_fire_projectile_spot() -> Marker3D:
 
 func get_player_name() -> String:
 	return current_player_name
+
+
+func get_interaction_label() -> Label:
+	return $CanvasLayer/UI.get_children()[1]

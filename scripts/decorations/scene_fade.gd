@@ -4,6 +4,7 @@ static var player_name: String = "FADE"
 
 signal lobby_loaded()
 signal maze_loaded()
+signal save_id_changed(value: int)
 
 func _ready() -> void:
 	$ColorRect.mouse_filter = Control.MOUSE_FILTER_IGNORE

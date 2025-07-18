@@ -41,6 +41,7 @@ static func load_grid_damage_type(config: ConfigFile, erase: bool = false) -> vo
 		if (	!damage_type_grid.has(damage_type)) && \
 				len(config.get_value(damage_type, "grid")) == len(config.get_sections()):
 			damage_type_grid[damage_type] = config.get_value(damage_type, "grid")
+			print("Enums::load_grid_damage_type: ", damage_type, " loaded correctly")
 		else:
 			push_error("Error while reading 'damageGrid.cfg'. damage_type_grid may not correctly be initialised. Please verify file content !")
 			config.clear()

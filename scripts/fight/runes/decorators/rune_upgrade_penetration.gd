@@ -3,12 +3,11 @@ extends RuneUpgrade
 class_name RuneUpgradePenetration
 
 
-func _init(rune: Rune, value: float = 1) -> void:
+func _init(rune: Rune, lvl: RuneUpgrade.UpgradeLevel = RuneUpgrade.UpgradeLevel.ONE) -> void:
 	super._init(rune)
-	rune_resource.projectile_penetration = value
+	upgrade_lvl = lvl
+	rune_resource.projectile_penetration = VALUES_FOR_PENETRATION[lvl]
 
 
-func get_save_infos() -> Dictionary:
-	var dico = super.get_save_infos()
-	dico["rune_upgrades"].append({"type" : "RuneUpgradePenetration", "value": rune_resource.projectile_penetration})
-	return dico
+func _to_string() -> String:
+	return str(RuneUpgrade.RuneUpgradeType.keys()[5])

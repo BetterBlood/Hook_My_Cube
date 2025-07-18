@@ -3,12 +3,11 @@ extends RuneUpgrade
 class_name RuneUpgradeCooldownReduction
 
 
-func _init(rune: Rune, value: float = 0.01) -> void:
+func _init(rune: Rune, lvl: RuneUpgrade.UpgradeLevel = RuneUpgrade.UpgradeLevel.ONE) -> void:
 	super._init(rune)
-	rune_resource.cooldown_reduction = value
+	upgrade_lvl = lvl
+	rune_resource.cooldown_reduction = VALUES_FOR_COOLDOWN[lvl]
 
 
-func get_save_infos() -> Dictionary:
-	var dico = super.get_save_infos()
-	dico["rune_upgrades"].append({"type" : "RuneUpgradeCooldownReduction", "value": rune_resource.cooldown_reduction})
-	return dico
+func _to_string() -> String:
+	return str(RuneUpgrade.RuneUpgradeType.keys()[1])

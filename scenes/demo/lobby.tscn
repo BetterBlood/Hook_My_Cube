@@ -91,7 +91,7 @@ shadow_enabled = true
 environment = SubResource("Environment_4d0q1")
 
 [node name="Enemy" parent="." instance=ExtResource("3_d1p01")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.1958, -17.7606, -19.4407)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.7913, -17.7606, -7.26184)
 
 [node name="Enemy2" parent="." instance=ExtResource("3_d1p01")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.2531, -17.2201, -4.26082)
@@ -386,7 +386,7 @@ mesh = SubResource("CylinderMesh_wkq0h")
 shape = SubResource("CylinderShape3D_6728e")
 
 [node name="LootOrbe" parent="." instance=ExtResource("8_pdx53")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.719, 1, -16.9402)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.134, 0.834538, -12.7377)
 
 [editable path="MainFloor/P1 -> Fight Room"]
 [editable path="MainFloor/Real Lab/P3 -> Lab Entrance"]

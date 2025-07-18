@@ -23,14 +23,12 @@ func _ready() -> void:
 
 func _on_damage_taken():
 	if health_component.health <= 0:
-		print(self, " is dead ! Regeneration activated !!!")
-		health_component.health = health_component.max_health
+		print(self, " is dead ! Regeneration activated !!! health: ", health_component.health)
+		health_component.health = health_component.get_max_health()
+		#print(self, " Regenerated, health: ", health_component.health)
+		
 		# TODO: in herited classes: do something on creature's death !
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta: float) -> void:
-	pass
 
 func can_host_status_effect(id: int = 0) -> bool:
 	return !effect_ids.has(id)

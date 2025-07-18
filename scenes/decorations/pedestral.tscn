@@ -1,6 +1,7 @@
-[gd_scene load_steps=27 format=3 uid="uid://b7mikquera18c"]
+[gd_scene load_steps=30 format=3 uid="uid://b7mikquera18c"]
 
 [ext_resource type="Script" uid="uid://b38nikd26qldw" path="res://scripts/decorations/pedestral.gd" id="1_dobgo"]
+[ext_resource type="Script" uid="uid://duqdm15li6un3" path="res://scripts/interactions/interactionsDetector.gd" id="2_s0j5f"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_dobgo"]
 
@@ -120,6 +121,83 @@ tracks/5/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_wfw6a"]
+resource_name = "active"
+length = 8.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Shelf/ReadablePart:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 1.61871, -0.690084), Vector3(0, 1.61871, -0.690084)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Shelf/ReadablePart:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 2, 4, 6, 8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 1.5708, 0), Vector3(0, 3.14159, 0), Vector3(0, 4.18879, 0), Vector3(0, 6.28319, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Shelf/holder:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0.034608, 2.15452, -1.17788), Vector3(0.034608, 2.15452, -1.17788)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Shelf/holder:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 2, 4, 6, 8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(3.14159, 0, 0), Vector3(3.14159, 0, 0), Vector3(4.18879, 0, 0), Vector3(6.28319, 0, 0)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Column/StaticBody3D:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0.977565, 0), Vector3(0, 0.977565, 0)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Column/StaticBody3D:rotation")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 2, 4, 6, 8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0, -1.5708), Vector3(0, 0, -3.14159), Vector3(0, 0, -4.18879), Vector3(0, 0, -6.28319)]
 }
 
 [sub_resource type="Animation" id="Animation_dobgo"]
@@ -310,6 +388,7 @@ tracks/3/keys = {
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_0htf7"]
 _data = {
 &"RESET": SubResource("Animation_s0j5f"),
+&"active": SubResource("Animation_wfw6a"),
 &"destroy": SubResource("Animation_dobgo"),
 &"idle": SubResource("Animation_lnrp4"),
 &"leave_area": SubResource("Animation_uw02s"),
@@ -329,14 +408,21 @@ input_1/name = "Nearing"
 input_1/auto_advance = false
 input_1/break_loop_at_end = false
 input_1/reset = true
-input_2/name = "Leaving"
+input_2/name = "Active"
 input_2/auto_advance = false
 input_2/break_loop_at_end = false
 input_2/reset = true
-input_3/name = "Destroing"
+input_3/name = "Leaving"
 input_3/auto_advance = false
 input_3/break_loop_at_end = false
 input_3/reset = true
+input_4/name = "Destroing"
+input_4/auto_advance = false
+input_4/break_loop_at_end = false
+input_4/reset = true
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_qpwuh"]
+animation = &"active"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_wfw6a"]
 animation = &"idle"
@@ -348,19 +434,21 @@ animation = &"leave_area"
 animation = &"player_near"
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_uw02s"]
-graph_offset = Vector2(-534.49, 97.9646)
+graph_offset = Vector2(-725.873, 132.588)
 nodes/Animation/node = SubResource("AnimationNodeAnimation_dobgo")
-nodes/Animation/position = Vector2(-213.333, 613.333)
+nodes/Animation/position = Vector2(-80, 586.667)
 nodes/Transition/node = SubResource("AnimationNodeTransition_dobgo")
-nodes/Transition/position = Vector2(186.667, 266.667)
+nodes/Transition/position = Vector2(106.667, 293.333)
+nodes/active/node = SubResource("AnimationNodeAnimation_qpwuh")
+nodes/active/position = Vector2(-346.667, 426.667)
 nodes/idle/node = SubResource("AnimationNodeAnimation_wfw6a")
-nodes/idle/position = Vector2(-213.333, 133.333)
+nodes/idle/position = Vector2(-80, 213.333)
 nodes/leave/node = SubResource("AnimationNodeAnimation_s0j5f")
-nodes/leave/position = Vector2(-213.333, 453.333)
-nodes/output/position = Vector2(533.333, 293.333)
+nodes/leave/position = Vector2(-213.333, 506.667)
+nodes/output/position = Vector2(293.333, 320)
 nodes/player_near/node = SubResource("AnimationNodeAnimation_0htf7")
-nodes/player_near/position = Vector2(-213.333, 293.333)
-node_connections = [&"Transition", 0, &"idle", &"Transition", 1, &"player_near", &"Transition", 2, &"leave", &"Transition", 3, &"Animation", &"output", 0, &"Transition"]
+nodes/player_near/position = Vector2(-213.333, 320)
+node_connections = [&"Transition", 0, &"idle", &"Transition", 1, &"player_near", &"Transition", 2, &"active", &"Transition", 3, &"leave", &"Transition", 4, &"Animation", &"output", 0, &"Transition"]
 
 [node name="Pedestral" type="Node3D"]
 script = ExtResource("1_dobgo")
@@ -369,7 +457,7 @@ script = ExtResource("1_dobgo")
 transform = Transform3D(1, 0, 0, 0, 0.92388, -0.382683, 0, 0.382683, 0.92388, 0, 0.62, 0)
 
 [node name="ReadablePart" type="StaticBody3D" parent="Shelf"]
-transform = Transform3D(1, 0, 0, 0, 0.997728, -0.0673712, 0, 0.0673712, 0.997728, 0, 0.00782353, -0.0228343)
+transform = Transform3D(1, 0, 0, 0, 0.997729, -0.0673714, 0, 0.0673713, 0.99773, 0, 0.00782353, -0.0228343)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Shelf/ReadablePart"]
 mesh = SubResource("BoxMesh_s0j5f")
@@ -404,13 +492,22 @@ mesh = SubResource("BoxMesh_uw02s")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Base/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_dobgo")
 
-[node name="Area3D" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.22309, 0.465583)
+[node name="InteractionsDetector" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.22309, 1.18939)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("2_s0j5f")
+metadata/_custom_type_script = "uid://duqdm15li6un3"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InteractionsDetector"]
+shape = SubResource("BoxShape3D_dobgo")
+
+[node name="AnimationArea" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.22309, 1.18939)
 collision_layer = 0
 collision_mask = 2
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.715858)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AnimationArea"]
 shape = SubResource("BoxShape3D_dobgo")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
@@ -425,5 +522,5 @@ parameters/Transition/current_state = "Idle"
 parameters/Transition/transition_request = ""
 parameters/Transition/current_index = 0
 
-[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
-[connection signal="body_exited" from="Area3D" to="." method="_on_area_3d_body_exited"]
+[connection signal="body_entered" from="AnimationArea" to="." method="_on_area_3d_body_entered"]
+[connection signal="body_exited" from="AnimationArea" to="." method="_on_area_3d_body_exited"]
