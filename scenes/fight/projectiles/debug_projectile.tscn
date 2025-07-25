@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://b3vpabtr4a1gg"]
 
-[ext_resource type="Material" uid="uid://llqdeyixmjnv" path="res://materials/workInProgress/StandardMatWIP.tres" id="1_fmc5r"]
 [ext_resource type="Script" uid="uid://blc7dh3kjkmec" path="res://scripts/fight/projectiles/debug_projectile.gd" id="1_t6xx2"]
+[ext_resource type="Material" uid="uid://dla2uqqdaue2e" path="res://materials/projectiles/debug_projectile.tres" id="2_t6xx2"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_urv7o"]
 friction = 0.0
@@ -10,7 +10,7 @@ bounce = 1.0
 [sub_resource type="SphereShape3D" id="SphereShape3D_nsle0"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_ypha4"]
-material = ExtResource("1_fmc5r")
+material = ExtResource("2_t6xx2")
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_ykp5w"]
 

@@ -12,9 +12,13 @@ var tmp_destination: Vector3 = Vector3()
 
 
 var _distance: float = 30.0
-var _defaul_mask: int = 16
-var _enemy_mask: int = 4 # 4 means enemy, enemy need to defined it as 2 to catch the player
+var _distance_default_upgrade: float = 10.0
+
 var _speed_boost: float = 1.2
+var _speed_boost_default_upgrade: float = 0.3
+
+var _enemy_mask: int = 4 # 4 means enemy, enemy need to defined it as 2 to catch the player
+var _defaul_mask: int = 16 
 
 var upgrades: Array[int] = [0, 0, 0, 0] # [0:range, 1:boost, 2:enemy, 3:ice_wall]
 static var NBR_UPGRADES: int = 2
@@ -75,7 +79,12 @@ func get_data():
 
 
 func get_distance() -> float:
-	return _distance + upgrades[0] * 10
+	return _distance + upgrades[0] * _distance_default_upgrade
+
+
+func get_boost() -> float:
+	return _speed_boost + upgrades[1] * _speed_boost_default_upgrade
+	
 
 
 func get_collision_mask() -> int:
@@ -88,24 +97,25 @@ func set_creature_owner(new_owner: Creature) -> void:
 	grapple_owner = new_owner
 
 
+func _upgrade_at(index: int) -> int:
+	upgrades[index] += 1
+	return upgrades[index]
+
+
 func upgrade_range() -> int:
-	upgrades[0] += 1
-	return upgrades[0]
+	return _upgrade_at(0)
 
 
 func upgrade_boost() -> int:
-	upgrades[1] += 1
-	return upgrades[1]
+	return _upgrade_at(1)
 
 
 func upgrade_enemy() -> int:
-	upgrades[2] += 1
-	return upgrades[2]
+	return _upgrade_at(2)
 
 
 func upgrade_wall() -> int:
-	upgrades[3] += 1
-	return upgrades[3]
+	return _upgrade_at(3)
 
 
 #	TODO: may be interesting: for being usable on moving target, need to pass the entity hited to reparent 
@@ -119,14 +129,14 @@ func shoot(destination: Vector3, hit: bool, hit2: bool = false) -> void:
 	else:
 		_grapple_return_modifier = 1
 	
-	grappling_hook.reparent(get_parent().get_parent())
+	grappling_hook.reparent(get_parent().get_parent().get_parent())
 	
 	#print("shoot")
 	#print(destination)
 	tmp_destination = destination
 	
 	#var sphere = SPHERE.instantiate()
-	#get_parent().get_parent().add_child(sphere)
+	#get_parent().get_parent().get_parent().add_child(sphere)
 	#sphere.position = destination
 	#sphere.scale = Vector3(0.2, 0.2, 0.2)
 	
@@ -201,7 +211,7 @@ func cancel_grab() -> void:
 				effect_instance.effect_id = new_id
 				effect_instance.same_effect = null
 				effect_instance.cooldown = 3.0
-				effect_instance.value = _speed_boost + 0.3 * upgrades[1]
+				effect_instance.value = get_boost()
 				effect_instance.target = grapple_owner
 				effect_instance.total_duration = 3.0
 				effect_instance.total_duration_fixe = 3.0

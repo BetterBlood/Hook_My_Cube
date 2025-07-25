@@ -17,10 +17,10 @@ radius = 0.4
 height = 1.8
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_fulqv"]
-radius = 10.0
+radius = 25.0
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_f2e6v"]
-radius = 20.0
+radius = 40.0
 
 [node name="Zombie" type="CharacterBody3D"]
 collision_layer = 0

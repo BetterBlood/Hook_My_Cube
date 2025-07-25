@@ -9,6 +9,14 @@ enum DamageType {
 	ELEC
 }
 
+enum UpgradeLevel { # TODO: !!! check uniformisation with all upgrades !!!!
+	ONE = 0,
+	TWO = 1,
+	THREE = 2,
+	FOUR = 3,
+	FIVE = 4,
+}
+
 static var damage_type_loaded: bool = false
 
 static var damage_type_grid:Dictionary = {}

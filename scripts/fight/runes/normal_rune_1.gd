@@ -2,9 +2,12 @@ extends Rune
 
 class_name NormalRune1
 
+const NORMAL_PROJECTILE_MAT = preload("res://materials/projectiles/normal_projectile.tres")
 
 func _init(parent: Node3D) -> void:
 	super._init(parent)
+	
+	active_mat = NORMAL_PROJECTILE_MAT
 	
 	#print("_init de NormalRune1: ", self)
 	

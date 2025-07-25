@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://cla26sao8dhjw"]
+[gd_scene load_steps=7 format=3 uid="uid://cla26sao8dhjw"]
 
 [ext_resource type="Script" uid="uid://d0qm8855yl4cu" path="res://scripts/maze.gd" id="1_ol5qi"]
 [ext_resource type="PackedScene" uid="uid://y1yw5naea0tu" path="res://scenes/characters/player.tscn" id="2_fgl6e"]
@@ -15,6 +15,9 @@ background_mode = 2
 sky = SubResource("Sky_l3biw")
 tonemap_mode = 2
 
+[sub_resource type="NavigationMesh" id="NavigationMesh_fgl6e"]
+agent_height = 2.0
+
 [node name="Maze" type="Node3D"]
 script = ExtResource("1_ol5qi")
 
@@ -26,3 +29,6 @@ transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -
 shadow_enabled = true
 
 [node name="Player" parent="." instance=ExtResource("2_fgl6e")]
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+navigation_mesh = SubResource("NavigationMesh_fgl6e")

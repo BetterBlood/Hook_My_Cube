@@ -96,7 +96,7 @@ func _initialize_new_maze_file_save() -> void:
 			[]
 		],
 		"updated_chests": [], # [int]
-		"updated_spawners": [] # [{"spawner_id": int, "id_mob_dead" : [int]}]
+		"updated_spawners": {} # {int, [int]}
 	}
 	
 	var json_string = JSON.stringify(save_dict)

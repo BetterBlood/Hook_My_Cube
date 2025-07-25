@@ -10,6 +10,7 @@ var xp:float = 0.0
 var layer: int = 0
 var effect_ids: Dictionary = {}
 
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	#print("Creature::_ready")

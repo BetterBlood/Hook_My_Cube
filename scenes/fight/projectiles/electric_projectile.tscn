@@ -1,6 +1,7 @@
-[gd_scene load_steps=9 format=3 uid="uid://cwyt8h3dpv25x"]
+[gd_scene load_steps=7 format=3 uid="uid://cwyt8h3dpv25x"]
 
 [ext_resource type="Script" uid="uid://d2qu5y0gg03f6" path="res://scripts/fight/projectiles/electric_projectile.gd" id="1_woj5k"]
+[ext_resource type="Material" uid="uid://37q0cue3osg2" path="res://materials/projectiles/electric_projectile.tres" id="2_o114c"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_o114c"]
 friction = 0.0
@@ -8,24 +9,8 @@ bounce = 1.0
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_2ykfi"]
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_ely38"]
-noise_type = 3
-frequency = 0.2574
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_lf30x"]
-seamless = true
-noise = SubResource("FastNoiseLite_ely38")
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i7aax"]
-albedo_color = Color(0.517647, 1, 1, 1)
-albedo_texture = SubResource("NoiseTexture2D_lf30x")
-metallic = 0.55
-emission_enabled = true
-emission = Color(0.517647, 1, 1, 1)
-emission_energy_multiplier = 5.0
-
 [sub_resource type="SphereMesh" id="SphereMesh_xedxl"]
-material = SubResource("StandardMaterial3D_i7aax")
+material = ExtResource("2_o114c")
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_67fg0"]
 

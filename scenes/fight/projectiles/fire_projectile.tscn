@@ -1,6 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://bseq03jqv66ql"]
 
 [ext_resource type="Script" uid="uid://bjseftj2hvomq" path="res://scripts/fight/projectiles/fire_projectile.gd" id="1_kjbeq"]
+[ext_resource type="Material" uid="uid://cwdgeqkq01psg" path="res://materials/projectiles/fire_projectile.tres" id="2_6f8sn"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_kjbeq"]
 friction = 0.0
@@ -8,14 +9,8 @@ bounce = 1.0
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_kjbeq"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kjbeq"]
-albedo_color = Color(0.875024, 0.522181, 0.181648, 1)
-emission_enabled = true
-emission = Color(0.72549, 0.631373, 0, 1)
-emission_energy_multiplier = 9.33
-
 [sub_resource type="SphereMesh" id="SphereMesh_cgd1u"]
-material = SubResource("StandardMaterial3D_kjbeq")
+material = ExtResource("2_6f8sn")
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_30r5t"]
 

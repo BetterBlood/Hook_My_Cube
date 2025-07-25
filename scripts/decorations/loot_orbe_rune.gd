@@ -20,7 +20,7 @@ func _interact() -> void:
 
 
 func set_loot(_is_upgrade: bool, _special_seed: String) -> void:
-	push_warning("Be carefull, this function is not designed for 'LootOrbeRune', please use 'init_with_rune'")
+	push_warning("Be carefull, this function is not designed for 'LootOrbeRune', please consider using 'init_with_rune'")
 
 
 func init_with_rune(rune_data) -> void:

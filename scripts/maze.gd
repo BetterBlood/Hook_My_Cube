@@ -9,7 +9,7 @@ class_name Maze
 var default_tags: Array[int] = [1, 0]
 var updated_tags: Array = []
 var updated_chests: Array[int] = []
-var updated_spawners:  Array = []
+var updated_spawners: Dictionary = {}
 
 const Logger = preload("res://scripts/CSharp/Logger.cs")
 var logger:Logger = Logger.new()
@@ -22,6 +22,7 @@ const NORMAL_WALL_VALUE = NORMAL_GRAPPLE + ENV_VALUE
 const ICE_WALL_VALUE = ICE_GRAPPLE + ENV_VALUE
 
 @onready var player: Player = $Player
+@onready var navigation_region_3d: NavigationRegion3D = $NavigationRegion3D
 
 var chests_room_ids: Array[int] = []
 var spawners_room_ids: Array[int] = []
@@ -32,6 +33,8 @@ static var normal_wall_proportion: float = 2.0/3.0
 
 const SPHERE = preload("res://addons/polyrinthe/sphere.tscn") # DEBUG
 const PEDESTRAL = preload("res://scenes/decorations/pedestral.tscn")
+const SPAWNER = preload("res://scenes/fight/spawner.tscn")
+
 var save_pedestral_position: Vector3 = Vector3(-5, 9.7, 5)
 var chest_pedestral_position: Vector3 = Vector3(5, 9.7, 5)
 var last_save_id: int = 0
@@ -57,7 +60,7 @@ func _ready() -> void:
 		else:
 			Enums.load_grid_damage_type(config, true)
 	
-	add_child(polyrinthe)
+	navigation_region_3d.add_child(polyrinthe)
 	
 	_initialise_world()
 	
@@ -105,6 +108,8 @@ func _initialise_world() -> void:
 	apply_collision_layer(polyrinthe, ICE) # static updates for wall grapple collisions 
 	
 	_apply_maze_modifications(polyrinthe)
+	
+	navigation_region_3d.bake_navigation_mesh()
 
 
 func _generate_maze() -> void:
@@ -130,12 +135,12 @@ func _generate_maze() -> void:
 		
 		var parse_result = json.parse(json_string)
 		if not parse_result == OK:
-			push_warning("JSON Parse Error: " + json.get_error_message() + " in " + json_string + " at line " + json.get_error_line())
+			push_warning("JSON Parse Error: " + json.get_error_message() + " in " + json_string + " at line " + str(json.get_error_line()))
 			continue
 		
 		var maze_data = json.data
 		polyrinthe.begin_id = int(maze_data["begin_id"])
-		polyrinthe.algo = int(maze_data["generation_used"])
+		polyrinthe.algo = polyrinthe.GENERATION_ALGORITHME.keys()[maze_data["generation_used"]]
 		
 		difficulty = int(maze_data["difficulty"])
 		for val in maze_data["default_tags"]:
@@ -151,10 +156,15 @@ func _generate_maze() -> void:
 			for val in tab:
 				updated_tags[i].append(int(val))
 			i += 1
+		
 		for val in maze_data["updated_chests"]:
 			updated_chests.append(int(val))
-		for data in maze_data["updated_spawners"]:
-			updated_spawners.append({data["spawner_id"]: data["id_mob_dead"]})
+		
+		for key in maze_data["updated_spawners"]: # {int, [int]}
+			var array_int: Array[int]
+			for val in maze_data["updated_spawners"][key]:
+				array_int.append(int(val))
+			updated_spawners[key] = array_int
 	
 	#_save_maze()
 
@@ -343,11 +353,12 @@ func _apply_maze_modifications(maze: Polyrinthe) -> void: # TODO
 		pedestral.maze = self
 		pedestral.is_save_pedestral = true
 		pedestral.id = save_point_id
-		add_child(pedestral)
+		#add_child(pedestral)
+		navigation_region_3d.add_child(pedestral)
 		#pedestral.set_color(Color(0, 1, 0, 1))
 		pedestral.position = maze.maze[save_point_id].position - save_pedestral_position
 	
-	SceneFade.emit_signal("save_id_changed", last_save_id)
+	SceneFade.emit_signal("save_id_changed", last_save_id) # set_up animation for player's spwan point
 	
 	for chests_id: int in chests_room_ids: # chests_room_ids is correct, already cleaned
 		var pedestral = PEDESTRAL.instantiate()
@@ -357,25 +368,36 @@ func _apply_maze_modifications(maze: Polyrinthe) -> void: # TODO
 		#pedestral.set_color(Color(0, 0, 1, 1))
 		#pedestral.is_rune = maze.maze[chests_id].position.y == 0
 		pedestral.is_rune = Polyrinthe.is_id_on_first_floor(size, chests_id)
-		add_child(pedestral)
+		navigation_region_3d.add_child(pedestral)
 		pedestral.position = maze.maze[chests_id].position - chest_pedestral_position
 	
+	#print(updated_spawners)
 	for spawner_id: int in spawners_room_ids:
 		var sphere = SPHERE.instantiate() # DEBUG
-		add_child(sphere) # DEBUG
-		if spawner_id not in updated_spawners:
-			sphere.get_child(0).mesh.material.albedo_color = Color(1, 0, 0, 1) # DEBUG
-			sphere.position = maze.maze[spawner_id].position # DEBUG
+		#add_child(sphere) # DEBUG
+		sphere.position = maze.maze[spawner_id].position # DEBUG
+		
+		var mob_id_to_avoid: Array[int] = []
+		if str(spawner_id) in updated_spawners.keys():
+			mob_id_to_avoid = updated_spawners[str(spawner_id)]
+			sphere.get_child(0).mesh.material.albedo_color = Color(1, 0, float(len(mob_id_to_avoid))/Spawner.NBR_MOB_BY_SPAWNER, 1) # DEBUG
+			if len(mob_id_to_avoid) >= 3:
+				print("spawner '", spawner_id, "' skipped, all mobs are dead")
+				for i in range(Spawner.NBR_MOB_BY_SPAWNER):
+					Enemy.get_next_id()
+				continue
 		else:
-			sphere.get_child(0).mesh.material.albedo_color = Color(1, 0, 1, 1) # DEBUG
-			sphere.position = maze.maze[spawner_id].position # DEBUG
-			#TODO: check updated_spawners to call the instantiation of the spawner correctly
-			# (need to do spawner before, probably take the list of dead mobs id as parameter to avoid creating them)
-			continue
+			sphere.get_child(0).mesh.material.albedo_color = Color(1, 0, 0, 1) # DEBUG
+		var spawner = SPAWNER.instantiate()
+		spawner.setMaze(self)
+		add_child(spawner)
+		spawner.id = spawner_id
+		spawner.position = maze.maze[spawner_id].position
+		spawner.initialise_mobs_list(maze.seed_human + "spawner" + str(spawner_id), mob_id_to_avoid)
 	
 	# check player grapple to know if it's needed to spawn this upgrade
 	if player.grapple.upgrades[3] == 0:
-		var sphere = SPHERE.instantiate()
+		var sphere = SPHERE.instantiate() # TODO: add the upgrade
 		add_child(sphere)
 		sphere.get_child(0).mesh.material.albedo_color = Color(0, 0.8, 0.8, 1)
 		sphere.position = maze.maze[grapple_ice_upgrade_room_id].position - Vector3(0, 5, 0)
@@ -442,3 +464,9 @@ static func apply_collision_layer(maze: Polyrinthe, material: StandardMaterial3D
 			wall.collision_layer = col_layer
 			if col_layer == ICE_WALL_VALUE:
 				wall.get_children()[0].material_override = material
+
+
+func update_spawner(id_spawner: int, mob_ids: Array[int]) -> void:
+	if updated_spawners.has(str(id_spawner)):
+		pass # TODO: update list
+	updated_spawners[str(id_spawner)] = mob_ids

@@ -2,9 +2,12 @@ extends Rune
 
 class_name DebugRune
 
+const DEBUG_PROJECTILE_MAT = preload("res://materials/projectiles/debug_projectile.tres")
 
 func _init(parent: Node3D) -> void:
 	super._init(parent)
+	
+	active_mat = DEBUG_PROJECTILE_MAT
 	
 	#print("_init de DebugRune: ", self)
 	

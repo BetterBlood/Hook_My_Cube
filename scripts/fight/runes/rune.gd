@@ -14,6 +14,9 @@ var rune_spot: Marker3D
 
 static var NBR_UPGRADES: int = 10
 
+const RUNE_VISUAL_IDENTIFIER = preload("res://scenes/fight/runes/visualIndicators/rune_visual_identifier.tscn")
+var visual_rune: Node3D
+var active_mat: StandardMaterial3D
 
 func _init(parent: Node3D) -> void:
 	#print("_init de Rune: ", self)
@@ -25,6 +28,14 @@ func _init(parent: Node3D) -> void:
 		rune_spot.position = Vector3()
 		#get_parent().add_child(rune_spot)
 
+
+func activate() -> void:
+	for child in rune_spot.get_children():
+		child.queue_free()
+	visual_rune = RUNE_VISUAL_IDENTIFIER.instantiate()
+	visual_rune.scale = Vector3(0.2, 0.2, 0.2)
+	rune_spot.add_child(visual_rune)
+	visual_rune.get_child(0).mesh.material = active_mat
 
 static func create_rune_with_id(id: int, parent: Node3D) -> Rune:
 	match(id): # TODO: add case for all runes

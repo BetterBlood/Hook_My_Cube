@@ -3,13 +3,12 @@ extends Control
 @onready var upgrade_proposition: Control = $VBoxContainer/HBoxContainer/UpgradeProposition
 @onready var upgrade_proposition_2: Control = $VBoxContainer/HBoxContainer/UpgradeProposition2
 @onready var upgrade_proposition_3: Control = $VBoxContainer/HBoxContainer/UpgradeProposition3
+@onready var close: Button = $VBoxContainer/Close
 
 var function_to_call_on_selection: Callable
 var is_active_selected: bool = false # TODO: set the choice for the user (default(false) select the second rune)
 var call_to_potentially_free_orbe: Signal
 
-func _ready() -> void:
-	$VBoxContainer/Close.grab_focus()
 
 func set_up_propositions(prop_1, prop_2, prop_3, dont_forget_to_call: Callable, call_on_finish: Signal) -> void:
 	function_to_call_on_selection = dont_forget_to_call
@@ -36,6 +35,8 @@ func _on_upgrade_proposition_select_pressed() -> void:
 	function_to_call_on_selection.call(0, is_active_selected, call_to_potentially_free_orbe)
 	_on_close_pressed()
 
+func _init_focus() -> void:
+	close.grab_focus()
 
 func _on_upgrade_proposition_2_select_pressed() -> void:
 	function_to_call_on_selection.call(1, is_active_selected, call_to_potentially_free_orbe)

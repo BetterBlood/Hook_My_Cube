@@ -2,9 +2,12 @@ extends Rune
 
 class_name PlantRune1
 
+const PLANT_PROJECTILE_MAT = preload("res://materials/projectiles/plant_projectile.tres")
 
 func _init(parent: Node3D) -> void:
 	super._init(parent)
+	
+	active_mat = PLANT_PROJECTILE_MAT
 	
 	#print("_init de PlantRune1: ", self)
 	

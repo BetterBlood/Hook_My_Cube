@@ -1,27 +1,15 @@
-[gd_scene load_steps=9 format=3 uid="uid://df7a0bpn232qa"]
+[gd_scene load_steps=7 format=3 uid="uid://df7a0bpn232qa"]
 
 [ext_resource type="Script" uid="uid://cnsb7r4c3j1ea" path="res://scripts/fight/projectiles/plant_projectile.gd" id="1_u3xbx"]
+[ext_resource type="Material" uid="uid://bn1sb3js08j0l" path="res://materials/projectiles/plant_projectile.tres" id="2_del8d"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_del8d"]
 bounce = 0.75
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_pmbl8"]
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_1slyq"]
-noise_type = 2
-frequency = 0.0118
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_sclps"]
-seamless = true
-seamless_blend_skirt = 0.56
-noise = SubResource("FastNoiseLite_1slyq")
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8qvud"]
-albedo_color = Color(0.227451, 0.643137, 0.152941, 1)
-albedo_texture = SubResource("NoiseTexture2D_sclps")
-
 [sub_resource type="SphereMesh" id="SphereMesh_wih37"]
-material = SubResource("StandardMaterial3D_8qvud")
+material = ExtResource("2_del8d")
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_etk1w"]
 

@@ -2,14 +2,15 @@ extends Rune
 
 class_name FireRune1
 
+const FIRE_PROJECTILE_MAT = preload("res://materials/projectiles/fire_projectile.tres")
 
 func _init(parent: Node3D) -> void:
 	super._init(parent)
 	
+	active_mat = FIRE_PROJECTILE_MAT
 	#print("_init de FireRune1: ", self)
 	
 	projectile_scene = preload("res://scenes/fight/projectiles/fire_projectile.tscn")
-	
 	cooldown = 2.0
 	
 	# TODO: load from file for rune with id 1 or name FireRune1

@@ -3,10 +3,12 @@ extends Control
 var main: PackedScene = preload("res://scenes/main.tscn")
 var previous_pause_state: bool = false
 var previous_mouse_mode: Input.MouseMode = Input.MOUSE_MODE_CAPTURED
+@onready var continue_button: Button = $VBoxContainer/Continue
 
 func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("pause"):
 		if !$".".visible:
+			continue_button.grab_focus()
 			previous_pause_state = get_tree().paused
 			previous_mouse_mode = Input.mouse_mode
 			get_tree().paused = true

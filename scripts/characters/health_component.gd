@@ -5,15 +5,28 @@ class_name HealthComponent
 
 @export var _max_health: float = 10.0
 var health: float = _max_health
+var _health_default_upgrade: float = 1.0
 
 @export var _health_regen_per_sec: float = 0.0
-#var health_regen_timer: float = 0.25
 var health_regen_timer_reset: float = 0.25
+var _health_regen_default_upgrade: float = 0.1
 
 @export var _armor: float = 0.0
+var _armor_default_upgrade: float = 0.25
 @export var _penetration_resistance: float = 0.0 # [0; 1] 
+var _pen_res_default_upgrade: float = 0.01
 @export var _max_speed: float = 5
 var speed: float = _max_speed
+var _speed_default_upgrade: float = 0.5
+
+# TODO : balance !
+var _default_upgrades_values: Array[float] = [
+	_health_default_upgrade,
+	_health_regen_default_upgrade,
+	_armor_default_upgrade,
+	_pen_res_default_upgrade,
+	_speed_default_upgrade,
+]
 
 # [0:_max_health, 1:_health_regen_per_sec, 2:_armor, 3:_penetration_resistance, 4:_max_speed]
 var perm_upgrades: Array[float] = [0, 0, 0, 0, 0]
@@ -31,7 +44,6 @@ func _ready() -> void:
 	health_regen_timer.timeout.connect(_passive_heal)
 	add_child(health_regen_timer)
 
-
 func set_up_perm_with_data(data) -> void:
 	for upgrade in data:
 		if int(upgrade["type"]) > len(perm_upgrades):
@@ -39,8 +51,10 @@ func set_up_perm_with_data(data) -> void:
 			continue
 		perm_upgrades[int(upgrade["type"])] += float(upgrade["value"])
 
-func add_perm_upgrade(type: int, value: float) -> void:
-	perm_upgrades[type] += value
+func add_perm_upgrade(type: int, level: float) -> void:
+	for i in range(level + 1): # TODO check if level or level + 1
+		perm_upgrades[type] += _default_upgrades_values[type]
+	#perm_upgrades[type] += value
 
 func get_perm_data():
 	var data = []
@@ -55,8 +69,10 @@ func set_up_temp_with_data(data) -> void:
 			continue
 		temp_upgrades[int(upgrade["type"])] += float(upgrade["value"])
 
-func add_temp_upgrade(type: int, value: float) -> void:
-	temp_upgrades[type] += value
+func add_temp_upgrade(type: int, level: float) -> void:
+	for i in range(level + 1): # TODO check if level or level + 1
+		temp_upgrades[type] += _default_upgrades_values[type]
+	#temp_upgrades[type] += value
 
 func get_temp_data():
 	var data = []
@@ -84,7 +100,7 @@ func get_max_speed() -> float:
 
 func _passive_heal() -> void:
 	if get_health_regen_per_sec() > 0.0 and health < get_max_health():
-		health = min(health + get_health_regen_per_sec() / (1.0 / health_regen_timer_reset), get_max_health())
+		health = min(health + get_health_regen_per_sec() * health_regen_timer_reset, get_max_health())
 		#print(self, "::_passive_heal::health: ", health)
 	health_regen_timer.start(health_regen_timer_reset)
 

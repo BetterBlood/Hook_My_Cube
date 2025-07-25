@@ -39,7 +39,7 @@ func _start_new_game(player_name: String = "default") -> void:
 	#TODO: check if name is okey for file system
 	
 	# check that not already used
-	if _player_exist(player_name):
+	if player_name.is_empty() or _player_exist(player_name):
 		push_warning("Player name: '" + player_name + "' already exist !")
 		# TODO: GRAPHICS: instead of nothing call a function on new_menu that player name is already taken
 		return

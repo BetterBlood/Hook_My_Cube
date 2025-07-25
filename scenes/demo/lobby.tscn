@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://bualks0wajs8i" path="res://scenes/characters/zombie.tscn" id="3_d1p01"]
 [ext_resource type="PackedScene" uid="uid://dvkq4hwixk2m8" path="res://scenes/decorations/torch.tscn" id="4_u1smo"]
 [ext_resource type="PackedScene" uid="uid://canga3dhywbr3" path="res://scenes/portal_with_frame.tscn" id="5_4of2y"]
-[ext_resource type="Material" uid="uid://llqdeyixmjnv" path="res://materials/workInProgress/StandardMatWIP.tres" id="6_f5ty6"]
+[ext_resource type="Material" uid="uid://dla2uqqdaue2e" path="res://materials/projectiles/debug_projectile.tres" id="6_pdx53"]
 [ext_resource type="Material" uid="uid://penbwn0i2in" path="res://materials/ice.tres" id="6_yr8w2"]
 [ext_resource type="PackedScene" uid="uid://tnoxj6xhwxrt" path="res://scenes/decorations/loot_orbe.tscn" id="8_pdx53"]
 
@@ -32,7 +32,7 @@ size = Vector3(50, 0.2, 50)
 data = PackedVector3Array(-25, 0.1, 25, 25, 0.1, 25, -25, -0.1, 25, 25, 0.1, 25, 25, -0.1, 25, -25, -0.1, 25, 25, 0.1, -25, -25, 0.1, -25, 25, -0.1, -25, -25, 0.1, -25, -25, -0.1, -25, 25, -0.1, -25, 25, 0.1, 25, 25, 0.1, -25, 25, -0.1, 25, 25, 0.1, -25, 25, -0.1, -25, 25, -0.1, 25, -25, 0.1, -25, -25, 0.1, 25, -25, -0.1, -25, -25, 0.1, 25, -25, -0.1, 25, -25, -0.1, -25, 25, 0.1, 25, -25, 0.1, 25, 25, 0.1, -25, -25, 0.1, 25, -25, 0.1, -25, 25, 0.1, -25, -25, -0.1, 25, 25, -0.1, 25, -25, -0.1, -25, 25, -0.1, 25, 25, -0.1, -25, -25, -0.1, -25)
 
 [sub_resource type="BoxMesh" id="BoxMesh_dcxnu"]
-material = ExtResource("6_f5ty6")
+material = ExtResource("6_pdx53")
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_wkq0h"]
 data = PackedVector3Array(-0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5)
@@ -92,12 +92,15 @@ environment = SubResource("Environment_4d0q1")
 
 [node name="Enemy" parent="." instance=ExtResource("3_d1p01")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.7913, -17.7606, -7.26184)
+is_in_lobby = true
 
 [node name="Enemy2" parent="." instance=ExtResource("3_d1p01")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.2531, -17.2201, -4.26082)
+is_in_lobby = true
 
 [node name="Enemy3" parent="." instance=ExtResource("3_d1p01")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.25537, -17.3363, 2.54891)
+is_in_lobby = true
 
 [node name="Torch2" parent="." instance=ExtResource("4_u1smo")]
 transform = Transform3D(0.653288, 0.757109, 0, -0.757109, 0.653288, 0, 0, 0, 1, -24.7571, 2.20074, -0.0301046)

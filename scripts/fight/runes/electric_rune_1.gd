@@ -2,9 +2,12 @@ extends Rune
 
 class_name ElectricRune1
 
+const ELECTRIC_PROJECTILE_MAT = preload("res://materials/projectiles/electric_projectile.tres")
 
 func _init(parent: Node3D) -> void:
 	super._init(parent)
+	
+	active_mat = ELECTRIC_PROJECTILE_MAT
 	
 	#print("_init de ElectricRune1: ", self)
 	
