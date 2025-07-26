@@ -63,3 +63,18 @@ func get_save_infos() -> Dictionary:
 	var dico = rune_upgraded.get_save_infos()
 	dico["rune_upgrades"].append({"type" : _to_string(), "level": upgrade_lvl})
 	return dico
+
+func get_rune_spot() -> Marker3D:
+	return rune_upgraded.get_rune_spot()
+
+func get_active_mat() -> StandardMaterial3D:
+	return rune_upgraded.get_active_mat()
+	
+func get_projectile_source() -> Creature:
+	return rune_upgraded.get_projectile_source()
+
+func get_layet_to_hit() -> int:
+	return rune_upgraded.get_layet_to_hit()
+	
+func set_layet_to_hit(value: int) -> void:
+	rune_upgraded.set_layet_to_hit(value)

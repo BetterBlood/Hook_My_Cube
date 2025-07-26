@@ -30,12 +30,18 @@ func _init(parent: Node3D) -> void:
 
 
 func activate() -> void:
-	for child in rune_spot.get_children():
+	for child in get_rune_spot().get_children():
 		child.queue_free()
 	visual_rune = RUNE_VISUAL_IDENTIFIER.instantiate()
 	visual_rune.scale = Vector3(0.2, 0.2, 0.2)
-	rune_spot.add_child(visual_rune)
-	visual_rune.get_child(0).mesh.material = active_mat
+	get_rune_spot().add_child(visual_rune)
+	visual_rune.get_child(0).mesh.material = get_active_mat()
+
+func get_rune_spot() -> Marker3D:
+	return rune_spot
+	
+func get_active_mat() -> StandardMaterial3D:
+	return active_mat
 
 static func create_rune_with_id(id: int, parent: Node3D) -> Rune:
 	match(id): # TODO: add case for all runes
@@ -93,16 +99,24 @@ func light_attack(destination: Vector3, rune_resource_for_projectile: RuneResour
 	#print(self, " ", rune_resource_for_projectile.projectile_damage)
 	var projectile = projectile_scene.instantiate()
 	
-	projectile_source.get_parent().add_child(projectile)
-	projectile.source = projectile_source
-	projectile.global_position = rune_spot.global_position
-	projectile.set_layers_to_hit(projectile_layer_to_hit)
+	get_projectile_source().get_parent().add_child(projectile)
+	projectile.source = get_projectile_source()
+	projectile.global_position = get_rune_spot().global_position
+	projectile.set_layers_to_hit(get_layet_to_hit())
 	projectile.set_data(rune_resource_for_projectile)
 	
 	projectile.apply_impulse(
-		(destination - rune_spot.global_position).normalized() * 
+		(destination - get_rune_spot().global_position).normalized() * 
 		rune_resource_for_projectile.projectile_speed, Vector3())
 
+func get_projectile_source() -> Creature:
+	return projectile_source
+
+func get_layet_to_hit() -> int:
+	return projectile_layer_to_hit
+
+func set_layet_to_hit(value: int) -> void:
+	projectile_layer_to_hit = value
 
 func heavy_attack(destination: Vector3) -> void:
 	pass

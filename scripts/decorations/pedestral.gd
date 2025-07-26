@@ -75,6 +75,8 @@ func _on_area_3d_body_exited(_body: Node3D) -> void:
 func use() -> void:
 	is_used = true
 	if is_save_pedestral:
+		var player = get_tree().get_first_node_in_group("Player")
+		player.leveling_phase(maze.polyrinthe.get_seed())
 		maze._save_point_activated(id)
 		SceneFade.emit_signal("save_id_changed", id)
 	else:

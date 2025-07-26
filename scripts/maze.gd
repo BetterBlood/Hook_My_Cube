@@ -70,12 +70,13 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("launch_generation"):
 		print("pressed")
-		player.grapple.upgrade_wall()
-		player.active_rune = RuneUpgradeBounce.new(player.active_rune)
-		_save_player_progress(size*size-1)
+		#player.grapple.upgrade_wall()
+		#player.active_rune = RuneUpgradeBounce.new(player.active_rune)
+		player.xp += 1000
+		#_save_player_progress(size*size-1)
 		#_initialise_player()
 		#_erase_player_progress()
-		print("player.health_component.get_max_life(): ", player.health_component.get_max_health())
+		#print("player.health_component.get_max_life(): ", player.health_component.get_max_health())
 
 
 func _initialise_world() -> void:

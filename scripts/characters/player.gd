@@ -36,13 +36,18 @@ var grapple: Grapple
 
 var current_player_name: String = "Peter"
 var gold: int = 0
-var xp_to_lvl_up:float = 10 # TODO: compute in function of lvl
+var xp_to_lvl_up:float = 10.0 # TODO: compute in function of lvl
+var xp_left: float = 0.0
 
 const LOOT_ORBE_RUNE = preload("res://scenes/decorations/loot_orbe_rune.tscn")
 
 var tmp_new_runes: Array[int] = []
 var tmp_old_rune
 var tmp_upgrades: Array = []
+
+var essences: Array[int] = [0, 0, 0, 0]
+
+signal try_lvl_up(maze_seed: String)
 
 func _ready():
 	super._ready()
@@ -68,7 +73,7 @@ func initialize_player(meta_data, game_data, current_maze: Maze) -> void:
 	
 	# meta data:
 	active_rune = Rune.create_rune_with_id(meta_data["equiped_rune_lobby"], self)
-	active_rune.projectile_layer_to_hit = 5
+	active_rune.set_layet_to_hit(5)
 	_init_active_rune_visual_spot()
 	health_component.set_up_perm_with_data(meta_data["health_component_upgrades"])
 	
@@ -91,14 +96,17 @@ func initialize_player(meta_data, game_data, current_maze: Maze) -> void:
 	#TODO : initialise xp_to_lvl_up based on lvl
 	xp = game_data["xp"]
 	
+	#print(game_data["runes"])
 	var rune1_data = game_data["runes"][0]
-	var rune2_data = game_data["runes"][1] if len(game_data["runes"][1]) > 2 else null
+	var rune2_data = game_data["runes"][1] if len(game_data["runes"]) > 1 else null
+	#print(rune1_data)
+	#print(rune2_data)
 	
 	active_rune = Rune.create_rune(rune1_data, self) # this override meta_data active_rune
 	_init_active_rune_visual_spot()
 	second_rune = Rune.create_rune(rune2_data, self)
 	if second_rune:
-		second_rune.projectile_layer_to_hit = 5
+		second_rune.set_layet_to_hit(5)
 	
 	health_component.set_up_temp_with_data(game_data["health_component_upgrades"])
 	grapple.set_up_with_data(game_data["grappin_upgrades"])
@@ -289,11 +297,11 @@ func _swap_runes() -> void:
 
 func _init_active_rune_visual_spot() -> void:
 	active_rune.activate()
-	active_rune.projectile_layer_to_hit = 5
+	active_rune.set_layet_to_hit(5)
 	# TODO: animation ?
 
 # upgrades: [[runeType, lvl], [healthType, lvl], [grapleType, lvl]]
-func propose_upgrades(upgrades: Array) -> void:
+func propose_upgrades(upgrades: Array, call_after: Signal) -> void:
 	#print(upgrades)
 	tmp_upgrades = upgrades
 	#print("[runeType, lvl]")
@@ -308,14 +316,13 @@ func propose_upgrades(upgrades: Array) -> void:
 	#for graple_up_type in upgrades[2]:
 		#print(graple_up_type[0], ": ", graple_up_type[1])
 	
-	var nothing: Signal
 	
 	get_tree().paused = true
 	# TODO: maybe show the levels but not the upgrade here
 	var prop_1 = ["Rune upgrade", "res://icon.svg", "Description:\nSelect 1 of 3 upgrades for selected rune"]
 	var prop_2 = ["Player upgrade", "res://icon.svg", "Description:\nSelect 1 of 3 upgrades for the health component"]
 	var prop_3 = ["Grapple upgrade", "res://icon.svg", "Description:\nSelect 1 of 3 upgrades for the grapple"]
-	$CanvasLayer/UpgradeMenu.set_up_propositions(prop_1, prop_2, prop_3, select_upgrade_proposition_type, nothing)
+	$CanvasLayer/UpgradeMenu.set_up_propositions(prop_1, prop_2, prop_3, select_upgrade_proposition_type, call_after)
 	$CanvasLayer/UpgradeMenu.show()
 	$CanvasLayer/UpgradeMenu._init_focus()
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
@@ -379,7 +386,7 @@ func set_old_rune_at_placement(_not_used: int, active_placement: bool, call_on_f
 	call_on_finish.emit(true)
 
 
-func select_upgrade_proposition_type(proposition_type_index: int, _no_active_placement: bool, _no_call_on_finished: Signal) -> void:
+func select_upgrade_proposition_type(proposition_type_index: int, _no_active_placement: bool, call_on_finished: Signal) -> void:
 	await get_tree().create_timer(0.01).timeout
 	
 	get_tree().paused = true
@@ -397,39 +404,28 @@ func select_upgrade_proposition_type(proposition_type_index: int, _no_active_pla
 			props.append([str(tmp_upgrades[proposition_type_index][i][0]), "res://icon.svg", "Description:\nlvl: " + str(tmp_upgrades[proposition_type_index][i][1] + 1)])
 		props.append(gold_proposal)
 	#print(props)
-	$CanvasLayer/UpgradeMenu.set_up_propositions(props[0], props[1], props[2], func_to_call[proposition_type_index], _no_call_on_finished)
+	$CanvasLayer/UpgradeMenu.set_up_propositions(props[0], props[1], props[2], func_to_call[proposition_type_index], call_on_finished)
 	$CanvasLayer/UpgradeMenu.show()
 	$CanvasLayer/UpgradeMenu._init_focus()
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 
-func select_rune_upgrade(rune_upgrade_index: int, active_placement: bool, _no_call_on_finished: Signal):
+func select_rune_upgrade(rune_upgrade_index: int, active_placement: bool, call_on_finished: Signal):
 	#print("Player::select_rune_upgrade, active_placement: ", active_placement, ", should be: ", str(RuneUpgrade.RuneUpgradeType.keys()[tmp_upgrades[0][rune_upgrade_index][0]]), ", lvl: ", tmp_upgrades[0][rune_upgrade_index][1])
 	if active_placement:
 		active_rune = Rune.upgrade_rune(active_rune, str(RuneUpgrade.RuneUpgradeType.keys()[tmp_upgrades[0][rune_upgrade_index][0]]), tmp_upgrades[0][rune_upgrade_index][1])
 		_init_active_rune_visual_spot()
 	elif second_rune:
 		second_rune =  Rune.upgrade_rune(second_rune, str(RuneUpgrade.RuneUpgradeType.keys()[tmp_upgrades[0][rune_upgrade_index][0]]), tmp_upgrades[0][rune_upgrade_index][1])
-
-
-func select_health_upgrade(health_upgrade_index: int, _active_placement: bool, _no_call_on_finished: Signal):
-	health_component.add_temp_upgrade(tmp_upgrades[1][health_upgrade_index][0], tmp_upgrades[1][health_upgrade_index][1])
-
-
-func gain_xp(value: float) -> void:
-	print("TODO: player gain xp amount: ", value)
-
-
-func gain_gold(value: int) -> void:
-	gold += value
-
-
-func gain_essence(essence_type: Enums.DamageType, value: int) -> void:
-	print("TODO: player gain essence_type: '", essence_type, "',  amount: ", value)
 	
+	call_on_finished.emit(true)
+
+func select_health_upgrade(health_upgrade_index: int, _active_placement: bool, call_on_finished: Signal):
+	health_component.add_temp_upgrade(tmp_upgrades[1][health_upgrade_index][0], tmp_upgrades[1][health_upgrade_index][1])
+	call_on_finished.emit(true)
 
 
-func select_grapple_upgrade(grapple_upgrade_index: int, _active_placement: bool, _no_call_on_finished: Signal):
+func select_grapple_upgrade(grapple_upgrade_index: int, _active_placement: bool, call_on_finished: Signal):
 	match grapple_upgrade_index: 
 		0: 
 			for i in range(tmp_upgrades[2][grapple_upgrade_index][1]):
@@ -439,6 +435,42 @@ func select_grapple_upgrade(grapple_upgrade_index: int, _active_placement: bool,
 				grapple.upgrade_boost()
 		2: gold += 20
 		_: push_warning("Player::select_grapple_upgrade: grapple_upgrade_index: ", grapple_upgrade_index, " is unknown upgrade. tmp_upgrades: ", tmp_upgrades)
+	
+	call_on_finished.emit(true)
+
+
+func gain_xp(value: float) -> void:
+	xp_left += value
+	print("Player gain xp amount: ", value, ", total: ", xp_left)
+
+
+func leveling_phase(maze_seed: String) -> void:
+	if xp_left > 0:
+		xp += xp_left
+		#xp_to_lvl_up -= xp_left
+		xp_left = 0
+	
+	if xp > xp_to_lvl_up:
+		xp -= xp_to_lvl_up
+		propose_upgrades(LootUtilities.get_loot(true, maze_seed + str(lvl)), try_lvl_up)
+		lvl += 1
+		xp_to_lvl_up = get_xp_for_leveling_up(lvl)
+		await try_lvl_up
+		await get_tree().create_timer(0.01).timeout
+		leveling_phase(maze_seed)
+
+func get_xp_for_leveling_up(current_lvl: int) -> float:
+	# TODO: find a great formula to set xp for next lvl
+	return 5.0 + 5.0 * current_lvl * current_lvl
+
+func gain_gold(value: int) -> void:
+	gold += value
+	print("Player gain gold amount: ", value, ", total: ", gold)
+
+
+func gain_essence(essence_type: Enums.DamageType, value: int) -> void:
+	essences[essence_type] += value
+	print("Player gain essence_type: '", essence_type, "',  amount: ", value, ", total: ", essences)
 
 
 func get_fire_projectile_spot() -> Marker3D:
