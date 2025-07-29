@@ -9,6 +9,8 @@ signal is_dead(id: int)
 @export var is_in_lobby: bool = false
 
 var damage_type: Enums.DamageType = Enums.DamageType.NORMAL
+var damage: float = 3
+var armor_pen: float = 0
 
 const XP_ORBE = preload("res://scenes/decorations/xp.tscn")
 const GOLD_ORBE = preload("res://scenes/decorations/gold.tscn")
@@ -31,7 +33,7 @@ func _on_damage_taken():
 ## difficulty: [-2; 2]
 func set_mob_data(human_seed: String, difficulty: int, depth_ratio: float) -> void:
 	#print("TODO: set_mob_data override in subclasses !")
-	print("Enemy::set_mob_data::human_seed: ", human_seed, ", difficulty: ", difficulty, ", depth_ratio: ", depth_ratio)
+	#print("Enemy::set_mob_data::human_seed: ", human_seed, ", difficulty: ", difficulty, ", depth_ratio: ", depth_ratio)
 	
 	# [-0.125; 0.125]
 	var new_diff = difficulty / (4.0 * 4.0) # ~normalisation (/4) attenuation (/4)
@@ -44,6 +46,8 @@ func set_mob_data(human_seed: String, difficulty: int, depth_ratio: float) -> vo
 	var lvl_max = (difficulty + 3) * 10 # [10; 50]
 	lvl = max(1, int(lvl_max * depth_ratio)) # at least lvl 1, max [10, 20, 30, 40, 50]
 	xp = lvl * (5 - difficulty) # lvl * [7; 3] => [7; 3] to [350; 150]
+	damage += difficulty + int(lvl/5.0) # damage + [-2; 2] + [2; 10] 
+	# TODO: set armor_pen
 
 
 func _death_sequence() -> void:

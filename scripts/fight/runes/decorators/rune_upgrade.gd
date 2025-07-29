@@ -78,3 +78,6 @@ func get_layet_to_hit() -> int:
 	
 func set_layet_to_hit(value: int) -> void:
 	rune_upgraded.set_layet_to_hit(value)
+
+func get_damage_type() -> Enums.DamageType:
+	return rune_upgraded.get_damage_type()

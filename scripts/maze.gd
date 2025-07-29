@@ -34,6 +34,9 @@ static var normal_wall_proportion: float = 2.0/3.0
 const SPHERE = preload("res://addons/polyrinthe/sphere.tscn") # DEBUG
 const PEDESTRAL = preload("res://scenes/decorations/pedestral.tscn")
 const SPAWNER = preload("res://scenes/fight/spawner.tscn")
+const GOLD = preload("res://scenes/decorations/gold.tscn")
+
+const LOOT_ORBE_ICE_GRAPPLE = preload("res://scenes/decorations/loot_orbe_ice_grapple.tscn")
 
 var save_pedestral_position: Vector3 = Vector3(-5, 9.7, 5)
 var chest_pedestral_position: Vector3 = Vector3(5, 9.7, 5)
@@ -383,12 +386,13 @@ func _apply_maze_modifications(maze: Polyrinthe) -> void: # TODO
 			mob_id_to_avoid = updated_spawners[str(spawner_id)]
 			sphere.get_child(0).mesh.material.albedo_color = Color(1, 0, float(len(mob_id_to_avoid))/Spawner.NBR_MOB_BY_SPAWNER, 1) # DEBUG
 			if len(mob_id_to_avoid) >= 3:
-				print("spawner '", spawner_id, "' skipped, all mobs are dead")
+				print("spawner '", spawner_id, "' skipped, all mobs are dead") # DEBUG
 				for i in range(Spawner.NBR_MOB_BY_SPAWNER):
 					Enemy.get_next_id()
 				continue
 		else:
 			sphere.get_child(0).mesh.material.albedo_color = Color(1, 0, 0, 1) # DEBUG
+		
 		var spawner = SPAWNER.instantiate()
 		spawner.setMaze(self)
 		add_child(spawner)
@@ -398,10 +402,18 @@ func _apply_maze_modifications(maze: Polyrinthe) -> void: # TODO
 	
 	# check player grapple to know if it's needed to spawn this upgrade
 	if player.grapple.upgrades[3] == 0:
-		var sphere = SPHERE.instantiate() # TODO: add the upgrade
-		add_child(sphere)
-		sphere.get_child(0).mesh.material.albedo_color = Color(0, 0.8, 0.8, 1)
-		sphere.position = maze.maze[grapple_ice_upgrade_room_id].position - Vector3(0, 5, 0)
+		var loot_orbe_ice_grapple = LOOT_ORBE_ICE_GRAPPLE.instantiate()
+		loot_orbe_ice_grapple.position = maze.maze[grapple_ice_upgrade_room_id].position
+		add_child(loot_orbe_ice_grapple)
+		
+		# DEBUG: if the player alread have the grapple upgrade, uncomment bellow 
+		# lines to add an ice-blue sphere on the room with the grapple ice wall upgrades
+		#var sphere = SPHERE.instantiate()
+		#add_child(sphere)
+		#sphere.get_child(0).mesh.material.albedo_color = Color(0, 0.8, 0.8, 1)
+		#sphere.position = maze.maze[grapple_ice_upgrade_room_id].position - Vector3(0, 5, 0)
+	else:
+		player.grapple.upgrade_ice_grapple_color()
 	
 	# TODO: add a portal in the last room to enter the boss fight
 	var sphere_end = SPHERE.instantiate()
@@ -409,9 +421,11 @@ func _apply_maze_modifications(maze: Polyrinthe) -> void: # TODO
 	sphere_end.get_child(0).mesh.material.albedo_color = Color(0, 0, 0, 1)
 	sphere_end.position = maze.maze[maze.deepest_id].position - Vector3(0, 0, 5)
 	
+	var gold_factor: Vector3 = Vector3(16, 16, 16)
 	for key in maze.maze.keys():
 		var chests_closure = maze.cubeGraph.get_tag(key, 3)
 		if chests_closure > 0:
+			var gold_scale = chests_closure / 1000.0
 			var neighbors = maze.cubeGraph.getNeighborsConnection(key)
 			var higher: bool = false
 			for id in neighbors:
@@ -419,20 +433,23 @@ func _apply_maze_modifications(maze: Polyrinthe) -> void: # TODO
 					higher = true
 					var direction = (maze.maze[id].position - maze.maze[key].position)/2.5
 					
-					var rg_color = chests_closure / 1000.0
-					var chest_sphere = SPHERE.instantiate() # (TODO: GRAPHICS: some gold to show the way ?)
-					add_child(chest_sphere)
-					chest_sphere.scale = Vector3(rg_color, rg_color, rg_color)
-					chest_sphere.get_child(0).mesh.material.albedo_color = Color(1, 1, 0, 1)
-					chest_sphere.position = maze.maze[key].position - Vector3(0, 10, 0) + direction - Vector3(0, rg_color, 0)/2
+					var gold = GOLD.instantiate()
+					gold.position = maze.maze[key].global_position - Vector3(0, 10, 0) + direction + Vector3(0, gold_scale, 0)/2
+					add_child(gold)
+					gold.get_child(0).scale = gold_factor * gold_scale
+					gold.set_amount(int(chests_closure/20.0))
+					
+					#var sphere = SPHERE.instantiate()
+					#add_child(sphere)
+					#sphere.get_child(0).mesh.material.albedo_color = Color(1, 1, 0, 1)
+					#sphere.position = maze.maze[key].global_position - Vector3(0, 10, 0) + direction - Vector3(0, rg_color, 0)/2
 			
-			if !higher: # spawn in center (TODO: GRAPHICS: some gold to show the way ?)
-				var rg_color = chests_closure / 1000.0
-				var chest_sphere = SPHERE.instantiate()
-				add_child(chest_sphere)
-				chest_sphere.scale = Vector3(rg_color, rg_color, rg_color)
-				chest_sphere.get_child(0).mesh.material.albedo_color = Color(1, 1, 0, 1)
-				chest_sphere.position = maze.maze[key].position - Vector3(0, 10, 0) - Vector3(0, rg_color, 0)/2
+			if !higher:
+				var gold = GOLD.instantiate()
+				gold.position = maze.maze[key].global_position - Vector3(0, 10, 0) + Vector3(0, gold_scale, 0)/2
+				add_child(gold)
+				gold.get_child(0).scale = gold_factor * gold_scale
+				gold.set_amount(int(chests_closure/20.0))
 			
 
 

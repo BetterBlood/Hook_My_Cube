@@ -8,6 +8,7 @@ signal launch_game(player_name: String)
 
 var unlocked_runes: Array[int] = [0, 1, 2, 3] #TODO: default [0]
 var gold: int = 0
+var essences: Array[int] = [0, 0, 0, 0]
 
 const Logger = preload("res://scripts/CSharp/Logger.cs")
 var logger:Logger = Logger.new()
@@ -121,6 +122,7 @@ func save_meta() -> void:
 		"unlocked_runes" : unlocked_runes,
 		"equiped_rune_lobby" : player.active_rune.get_rune_id(),
 		"gold" : gold,
+		"essences" : essences,
 		"health_component_upgrades" : player.health_component.get_perm_data(),
 	}
 	
@@ -153,6 +155,9 @@ func load_meta() -> void:
 		meta_data = json.data
 	
 	gold = meta_data["gold"]
+	essences.clear()
+	for essence in meta_data["essences"]:
+		essences.append(int(essence))
 	unlocked_runes.clear()
 	for rune_id in meta_data["unlocked_runes"]:
 		unlocked_runes.append(int(rune_id))

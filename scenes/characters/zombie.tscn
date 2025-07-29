@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://bualks0wajs8i"]
+[gd_scene load_steps=13 format=3 uid="uid://bualks0wajs8i"]
 
 [ext_resource type="Script" uid="uid://veoyspye5l5q" path="res://scripts/characters/zombie.gd" id="1_fulqv"]
 
@@ -22,6 +22,89 @@ radius = 25.0
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_f2e6v"]
 radius = 40.0
 
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_fccri"]
+radius = 2.0
+
+[sub_resource type="Animation" id="Animation_fccri"]
+resource_name = "attack"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.566667, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(1, 1, 1), Vector3(2, 1, 2), Vector3(10, 1, 10)]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(1),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"recover_after_attaque"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_u6mvt"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_pg0rp"]
+resource_name = "recover"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(10, 1, 10), Vector3(1, 1, 1)]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(1),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"end_attack"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_pg0rp"]
+_data = {
+&"RESET": SubResource("Animation_u6mvt"),
+&"attack": SubResource("Animation_fccri"),
+&"recover": SubResource("Animation_pg0rp")
+}
+
 [node name="Zombie" type="CharacterBody3D"]
 collision_layer = 0
 motion_mode = 1
@@ -29,6 +112,7 @@ script = ExtResource("1_fulqv")
 
 [node name="EnemyArea3D" type="Area3D" parent="."]
 collision_layer = 4
+collision_mask = 3
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="EnemyArea3D"]
 shape = SubResource("CapsuleShape3D_fulqv")
@@ -65,7 +149,22 @@ collision_mask = 2
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="ReleaseChaseArea"]
 shape = SubResource("CylinderShape3D_f2e6v")
 
+[node name="AttackArea" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AttackArea"]
+shape = SubResource("CylinderShape3D_fccri")
+debug_color = Color(0.954993, 0.12164, 0.442674, 0.42)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_pg0rp")
+}
+
 [connection signal="body_entered" from="EnemyArea3D" to="." method="_on_enemy_area_3d_body_entered"]
 [connection signal="timeout" from="Navigation/UpdateNavigation" to="." method="_on_update_navigation_timeout"]
 [connection signal="area_entered" from="ChaseArea" to="." method="_on_chase_area_area_entered"]
 [connection signal="area_exited" from="ReleaseChaseArea" to="." method="_on_release_chase_area_area_exited"]
+[connection signal="area_entered" from="AttackArea" to="." method="_on_attack_area_area_entered"]
+[connection signal="area_exited" from="AttackArea" to="." method="_on_attack_area_area_exited"]

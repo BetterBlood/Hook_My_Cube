@@ -115,8 +115,12 @@ func upgrade_enemy() -> int:
 
 
 func upgrade_wall() -> int:
+	upgrade_ice_grapple_color()
 	return _upgrade_at(3)
 
+func upgrade_ice_grapple_color() -> void:
+	# TODO: when the grappeling hook is no longer a sphere update him the proper way !
+	grappling_hook.get_child(0).mesh.material.albedo_color = Color(0, 0.8, 0.8, 1)
 
 #	TODO: may be interesting: for being usable on moving target, need to pass the entity hited to reparent 
 #	hook on the target (the raycast should provide this information) 

@@ -91,6 +91,9 @@ func initialize_player(meta_data, game_data, current_maze: Maze) -> void:
 	
 	position = current_maze.get_position_for_player_save_point(int(game_data["save_spot_id"]))
 	gold = game_data["gold"]
+	essences.clear()
+	for essence in game_data["essences"]:
+		essences.append(int(essence))
 	health_component.health = game_data["hp"]
 	lvl = game_data["lvl"]
 	#TODO : initialise xp_to_lvl_up based on lvl
@@ -119,6 +122,7 @@ func save_progression(save_point_id: int = 0) -> void:
 		"current_player_name" : current_player_name,
 		"save_spot_id" : save_point_id,
 		"gold" : gold,
+		"essences" : essences,
 		"hp" : health_component.health,
 		"lvl" : lvl,
 		"xp" : xp,
@@ -465,13 +469,16 @@ func get_xp_for_leveling_up(current_lvl: int) -> float:
 
 func gain_gold(value: int) -> void:
 	gold += value
-	print("Player gain gold amount: ", value, ", total: ", gold)
+	#print("Player gain gold amount: ", value, ", new total: ", gold)
 
 
 func gain_essence(essence_type: Enums.DamageType, value: int) -> void:
 	essences[essence_type] += value
 	print("Player gain essence_type: '", essence_type, "',  amount: ", value, ", total: ", essences)
 
+
+func gain_ice_wall_grab_upgrade() -> void:
+	grapple.upgrade_wall()
 
 func get_fire_projectile_spot() -> Marker3D:
 	return rune_spot

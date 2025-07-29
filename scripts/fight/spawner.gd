@@ -20,6 +20,7 @@ var entered_player: Player = null
 
 const SPHERE = preload("res://addons/polyrinthe/sphere.tscn") # DEBUG
 # "updated_spawners":{"49":[138],"98":[252,253],"99":[66,67,68]}
+
 func _process(_delta: float) -> void:
 	if entered_player && not spawned:
 		#player_ray_cast.enabled = false
@@ -72,7 +73,7 @@ func setMaze(maze_ref: Maze) -> void:
 func initialise_mobs_list(human_seed: String, mob_id_to_avoid: Array[int]) -> void:
 	mob_dead = mob_id_to_avoid
 	if id == debug_id:
-		print("Spawner::initialise_mobs_list::id: ", id, ", human_seed: ", human_seed, ", mob_id_to_avoid: ", mob_id_to_avoid)
+		print("Spawner::initialise_mobs_list::id: ", id, ", human_seed: ", human_seed, ", mob_id_to_avoid: ", mob_id_to_avoid, ", difficulty: ", maze.difficulty)
 	
 	for i in range(NBR_MOB_BY_SPAWNER):
 		var new_id = Enemy.get_next_id()
