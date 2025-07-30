@@ -23,14 +23,10 @@ const SPHERE = preload("res://addons/polyrinthe/sphere.tscn") # DEBUG
 
 func _process(_delta: float) -> void:
 	if entered_player && not spawned:
-		#player_ray_cast.enabled = false
-		#player_ray_cast.enabled = true
 		player_ray_cast.target_position = entered_player.position - position # position relative to world
 		player_ray_cast.force_raycast_update()
 		var dist_to_player = (player_ray_cast.get_collision_point() - position).length()
 		
-		#wall_ray_cast.enabled = false
-		#wall_ray_cast.enabled = true
 		wall_ray_cast.target_position = entered_player.position - position # position relative to world
 		wall_ray_cast.force_raycast_update()
 		
@@ -40,7 +36,7 @@ func _process(_delta: float) -> void:
 		
 		if dist_to_player < dist_to_wall:
 			#print(dist_to_player, " ", dist_to_wall)
-			#
+			
 			spawned = true
 			for mob in current_mobs:
 				add_child(mob)
@@ -49,20 +45,22 @@ func _process(_delta: float) -> void:
 			$PlayerRayCast.queue_free()
 			$wallRayCast.queue_free()
 			$Area3D.queue_free()
+			
+			# DEBUG: hit collision marker
 			#var sphere = SPHERE.instantiate() # DEBUG
-			#sphere.position = wall_ray_cast.get_collision_point()
+			#sphere.position = wall_ray_cast.get_collision_point() # DEBUG
 			#sphere.scale = Vector3(0.05, 0.05, 0.05) # DEBUG
 			#get_parent().add_child(sphere) # DEBUG
 			#
 			#var sphere2 = SPHERE.instantiate() # DEBUG
-			#sphere2.get_child(0).mesh.material.albedo_color = Color(0, 0, 0, 1)
-			#sphere2.position = player_ray_cast.get_collision_point()
+			#sphere2.get_child(0).mesh.material.albedo_color = Color(0, 0, 0, 1) # DEBUG
+			#sphere2.position = player_ray_cast.get_collision_point() # DEBUG
 			#sphere2.scale = Vector3(0.05, 0.05, 0.05) # DEBUG
 			#get_parent().add_child(sphere2) # DEBUG
 			#
 			#var sphere3 = SPHERE.instantiate() # DEBUG
-			#sphere3.get_child(0).mesh.material.albedo_color = Color(0, 1, 0, 1)
-			#sphere3.position = position
+			#sphere3.get_child(0).mesh.material.albedo_color = Color(0, 1, 0, 1) # DEBUG
+			#sphere3.position = position # DEBUG
 			#sphere3.scale = Vector3(0.05, 0.05, 0.05) # DEBUG
 			#get_parent().add_child(sphere3) # DEBUG
 
@@ -108,9 +106,9 @@ func _on_mob_death(mob_id: int) -> void:
 func _on_area_3d_area_entered(area: Area3D) -> void:
 	#print("Spawner::", self, "::_on_area_3d_area_entered::player entered : ", area.get_parent())
 	entered_player = area.get_parent()
-	if wall_ray_cast:
+	if !wall_ray_cast:
 		wall_ray_cast.enabled = true
-	if player_ray_cast:
+	if !player_ray_cast:
 		player_ray_cast.enabled = true
 
 
