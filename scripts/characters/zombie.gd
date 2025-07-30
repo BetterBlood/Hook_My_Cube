@@ -12,11 +12,13 @@ var player_at_range: bool = false
 func _ready() -> void:
 	super._ready()
 	
-	health_component._health_regen_per_sec = 1.0
+	if is_in_lobby:
+		health_component._health_regen_per_sec = 1.0
+	
 	health_component._armor = 2.0
 	health_component._penetration_resistance = 0.5
 	health_component._max_speed = SPEED
-	health_component.speed = SPEED
+	health_component.speed = SPEED 
 
 func _physics_process(delta: float) -> void:
 	var direction = Vector3()

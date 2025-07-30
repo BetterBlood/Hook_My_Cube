@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://canga3dhywbr3" path="res://scenes/portal_with_frame.tscn" id="5_4of2y"]
 [ext_resource type="Material" uid="uid://dla2uqqdaue2e" path="res://materials/projectiles/debug_projectile.tres" id="6_pdx53"]
 [ext_resource type="Material" uid="uid://penbwn0i2in" path="res://materials/ice.tres" id="6_yr8w2"]
-[ext_resource type="PackedScene" uid="uid://tnoxj6xhwxrt" path="res://scenes/decorations/loot_orbe.tscn" id="8_pdx53"]
+[ext_resource type="PackedScene" uid="uid://1l6fhyplxedk" path="res://scenes/decorations/difficulty_selectionner.tscn" id="7_pdx53"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_wehoa"]
 sky_top_color = Color(0.0970707, 0.463976, 0.749279, 1)
@@ -31,12 +31,6 @@ size = Vector3(50, 0.2, 50)
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_6728e"]
 data = PackedVector3Array(-25, 0.1, 25, 25, 0.1, 25, -25, -0.1, 25, 25, 0.1, 25, 25, -0.1, 25, -25, -0.1, 25, 25, 0.1, -25, -25, 0.1, -25, 25, -0.1, -25, -25, 0.1, -25, -25, -0.1, -25, 25, -0.1, -25, 25, 0.1, 25, 25, 0.1, -25, 25, -0.1, 25, 25, 0.1, -25, 25, -0.1, -25, 25, -0.1, 25, -25, 0.1, -25, -25, 0.1, 25, -25, -0.1, -25, -25, 0.1, 25, -25, -0.1, 25, -25, -0.1, -25, 25, 0.1, 25, -25, 0.1, 25, 25, 0.1, -25, -25, 0.1, 25, -25, 0.1, -25, 25, 0.1, -25, -25, -0.1, 25, 25, -0.1, 25, -25, -0.1, -25, 25, -0.1, 25, 25, -0.1, -25, -25, -0.1, -25)
 
-[sub_resource type="BoxMesh" id="BoxMesh_dcxnu"]
-material = ExtResource("6_pdx53")
-
-[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_wkq0h"]
-data = PackedVector3Array(-0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5)
-
 [sub_resource type="BoxMesh" id="BoxMesh_6728e"]
 size = Vector3(50, 30, 0.3)
 
@@ -49,6 +43,12 @@ albedo_color = Color(0.341176, 0.870588, 0.913725, 1)
 [sub_resource type="BoxMesh" id="BoxMesh_7x35k"]
 material = SubResource("StandardMaterial3D_yr8w2")
 size = Vector3(50, 30, 0.3)
+
+[sub_resource type="BoxMesh" id="BoxMesh_dcxnu"]
+material = ExtResource("6_pdx53")
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_wkq0h"]
+data = PackedVector3Array(-0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5)
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_br7h5"]
 vertices = PackedVector3Array(-0.650002, -19.6, -1.15, 0.0999985, -19.6, -1.15, 0.0999985, -19.6, -24.15, -24.15, -19.6, -0.150002, -1.15, -19.6, -0.150002, -24.15, -19.6, -24.15, 1.1, -19.6, -0.650002, 1.1, -19.6, 0.599998, 24.35, -19.6, 0.599998, 24.35, -19.6, -24.15, -1.65, -19.6, 7.6, -0.150002, -19.6, 7.6, -0.150002, -19.6, 1.1, -1.15, -19.6, 0.599998, -24.15, -19.6, 8.6, -1.9, -19.6, 8.6, 0.349998, -19.6, 7.85, 0.349998, -19.6, 8.6, 1.1, -19.6, 8.6, 1.35, -19.6, 7.6, 0.849998, -19.6, 1.1, 4.1, -19.6, 7.6, 24.35, -19.6, 9.1, 4.35, -19.6, 9.1, -1.4, -19.6, 24.35, -1.4, -19.6, 9.85, -1.9, -19.6, 9.6, -24.15, -19.6, 24.35, 1.35, -19.6, 9.85, 0.0999985, -19.6, 9.85, 3.85, -19.6, 24.35, 3.85, -19.6, 9.85, 23.35, -19.6, 14.6, 22.85, -19.6, 14.85, 23.35, -19.6, 16.35, 21.6, -19.6, 13.6, 23.35, -19.6, 13.6, 24.35, -19.6, 24.35, 21.6, -19.6, 16.35)
@@ -103,19 +103,32 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.25537, -17.3363, 2.54891)
 is_in_lobby = true
 
 [node name="Torch2" parent="." instance=ExtResource("4_u1smo")]
-transform = Transform3D(0.653288, 0.757109, 0, -0.757109, 0.653288, 0, 0, 0, 1, -24.7571, 2.20074, -0.0301046)
+transform = Transform3D(0.653288, 0.757109, 0, -0.757109, 0.653288, 0, 0, 0, 1, -24.757, 7.5, 0)
 
 [node name="Torch3" parent="." instance=ExtResource("4_u1smo")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.0937, 0.688972, -0.0301046)
+transform = Transform3D(0.653421, 0.756995, 0, -0.756995, 0.653421, 0, 0, 0, 1, -24.757, 7.5, -15)
 
-[node name="MainFloor" type="StaticBody3D" parent="."]
+[node name="MainFloor" type="Node3D" parent="."]
+
+[node name="Floor" type="StaticBody3D" parent="MainFloor"]
 collision_layer = 17
-collision_mask = 31
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="MainFloor"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MainFloor/Floor"]
 mesh = SubResource("BoxMesh_wehoa")
+skeleton = NodePath("../..")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="MainFloor"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MainFloor/Floor"]
+shape = SubResource("ConcavePolygonShape3D_6728e")
+
+[node name="Ceil" type="StaticBody3D" parent="MainFloor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 100, 0)
+collision_layer = 33
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MainFloor/Ceil"]
+mesh = SubResource("BoxMesh_wehoa")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MainFloor/Ceil"]
 shape = SubResource("ConcavePolygonShape3D_6728e")
 
 [node name="P1 -> Fight Room" parent="MainFloor" instance=ExtResource("5_4of2y")]
@@ -126,43 +139,31 @@ exit_portal = NodePath("../../../NavigationRegion3D/TrainingFloor/P2 -> Main Lob
 view_direction = 1
 teleport_direction = 0
 
+[node name="P9 -> Runes Unlock" parent="MainFloor" instance=ExtResource("5_4of2y")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -22.5, 1.25, -15)
+
+[node name="Portal3D" parent="MainFloor/P9 -> Runes Unlock" index="0" node_paths=PackedStringArray("exit_portal")]
+exit_portal = NodePath("../../../RuneUnlockedRoom/P11 -> Lobby Main Room/Portal3D")
+view_direction = 1
+teleport_direction = 0
+
+[node name="P10 -> Health Component Upgrades Room" parent="MainFloor" instance=ExtResource("5_4of2y")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -22.5, 1.25, 0)
+
+[node name="Portal3D" parent="MainFloor/P10 -> Health Component Upgrades Room" index="0" node_paths=PackedStringArray("exit_portal")]
+exit_portal = NodePath("../../../HealthComponentUpgradeRoom/P12 -> Lobby Main Room/Portal3D")
+view_direction = 1
+teleport_direction = 0
+
 [node name="Real Lab" type="Node" parent="MainFloor"]
 
-[node name="P3 -> Lab Entrance" parent="MainFloor/Real Lab" instance=ExtResource("5_4of2y")]
+[node name="P3 -> Maze Selection" parent="MainFloor/Real Lab" instance=ExtResource("5_4of2y")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, -22.5)
 
-[node name="Portal3D" parent="MainFloor/Real Lab/P3 -> Lab Entrance" index="0" node_paths=PackedStringArray("exit_portal")]
-exit_portal = NodePath("../../P4 -> Main Room/Portal3D")
+[node name="Portal3D" parent="MainFloor/Real Lab/P3 -> Maze Selection" index="0" node_paths=PackedStringArray("exit_portal")]
+exit_portal = NodePath("../../../../MazeSelectionFloor/P4 -> Lobby Main Room/Portal3D")
 view_direction = 1
 teleport_direction = 0
-
-[node name="P4 -> Main Room" parent="MainFloor/Real Lab" instance=ExtResource("5_4of2y")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 1.25, -35)
-
-[node name="Portal3D" parent="MainFloor/Real Lab/P4 -> Main Room" index="0" node_paths=PackedStringArray("exit_portal")]
-exit_portal = NodePath("../../P3 -> Lab Entrance/Portal3D")
-view_direction = 1
-teleport_direction = 0
-
-[node name="SpotLight3D" type="SpotLight3D" parent="MainFloor/Real Lab/P4 -> Main Room"]
-transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 1.5, 0)
-layers = 31
-light_energy = 8.0
-light_indirect_energy = 16.0
-shadow_caster_mask = 4293918751
-spot_range = 25.0
-spot_angle = 80.0
-spot_angle_attenuation = 0.267944
-
-[node name="obstacle5" type="StaticBody3D" parent="MainFloor/Real Lab"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1, -40)
-collision_layer = 17
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="MainFloor/Real Lab/obstacle5"]
-mesh = SubResource("BoxMesh_dcxnu")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="MainFloor/Real Lab/obstacle5"]
-shape = SubResource("ConcavePolygonShape3D_wkq0h")
 
 [node name="Debug Lab" type="Node3D" parent="MainFloor"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 45.3371, 0, 0)
@@ -242,13 +243,43 @@ mesh = SubResource("BoxMesh_6728e")
 shape = SubResource("ConcavePolygonShape3D_8d4em")
 
 [node name="Wall5" type="StaticBody3D" parent="MainFloor/Walls"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 45, 25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 45, 125)
 collision_layer = 33
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="MainFloor/Walls/Wall5"]
 mesh = SubResource("BoxMesh_7x35k")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MainFloor/Walls/Wall5"]
+shape = SubResource("ConcavePolygonShape3D_8d4em")
+
+[node name="Wall6" type="StaticBody3D" parent="MainFloor/Walls"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -25, 45, 0)
+collision_layer = 33
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MainFloor/Walls/Wall6"]
+mesh = SubResource("BoxMesh_7x35k")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MainFloor/Walls/Wall6"]
+shape = SubResource("ConcavePolygonShape3D_8d4em")
+
+[node name="Wall7" type="StaticBody3D" parent="MainFloor/Walls"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 45, -25)
+collision_layer = 33
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MainFloor/Walls/Wall7"]
+mesh = SubResource("BoxMesh_7x35k")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MainFloor/Walls/Wall7"]
+shape = SubResource("ConcavePolygonShape3D_8d4em")
+
+[node name="Wall8" type="StaticBody3D" parent="MainFloor/Walls"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 125, 45, 0)
+collision_layer = 33
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MainFloor/Walls/Wall8"]
+mesh = SubResource("BoxMesh_7x35k")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MainFloor/Walls/Wall8"]
 shape = SubResource("ConcavePolygonShape3D_8d4em")
 
 [node name="MainLobbyLight" type="OmniLight3D" parent="MainFloor"]
@@ -259,6 +290,287 @@ light_cull_mask = 4293918721
 shadow_caster_mask = 4293918721
 distance_fade_begin = 50.0
 omni_range = 45.0
+
+[node name="MazeSelectionFloor" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -100)
+
+[node name="P4 -> Lobby Main Room" parent="MazeSelectionFloor" instance=ExtResource("5_4of2y")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 1.25, 20)
+
+[node name="Portal3D" parent="MazeSelectionFloor/P4 -> Lobby Main Room" index="0" node_paths=PackedStringArray("exit_portal")]
+exit_portal = NodePath("../../../MainFloor/Real Lab/P3 -> Maze Selection/Portal3D")
+view_direction = 1
+teleport_direction = 0
+
+[node name="SpotLight3D" type="SpotLight3D" parent="MazeSelectionFloor/P4 -> Lobby Main Room"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 1.5, 0)
+visible = false
+layers = 31
+light_energy = 8.0
+light_indirect_energy = 16.0
+shadow_caster_mask = 4293918751
+spot_range = 25.0
+spot_angle = 80.0
+spot_angle_attenuation = 0.267944
+
+[node name="Wall6" type="StaticBody3D" parent="MazeSelectionFloor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 15, 25)
+collision_layer = 17
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MazeSelectionFloor/Wall6"]
+mesh = SubResource("BoxMesh_6728e")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MazeSelectionFloor/Wall6"]
+shape = SubResource("ConcavePolygonShape3D_8d4em")
+
+[node name="Wall7" type="StaticBody3D" parent="MazeSelectionFloor"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 15, 0)
+collision_layer = 17
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MazeSelectionFloor/Wall7"]
+mesh = SubResource("BoxMesh_6728e")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MazeSelectionFloor/Wall7"]
+shape = SubResource("ConcavePolygonShape3D_8d4em")
+
+[node name="Wall8" type="StaticBody3D" parent="MazeSelectionFloor"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 15, -25)
+collision_layer = 17
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MazeSelectionFloor/Wall8"]
+mesh = SubResource("BoxMesh_6728e")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MazeSelectionFloor/Wall8"]
+shape = SubResource("ConcavePolygonShape3D_8d4em")
+
+[node name="Wall9" type="StaticBody3D" parent="MazeSelectionFloor"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 25, 15, 0)
+collision_layer = 17
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MazeSelectionFloor/Wall9"]
+mesh = SubResource("BoxMesh_6728e")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MazeSelectionFloor/Wall9"]
+shape = SubResource("ConcavePolygonShape3D_8d4em")
+
+[node name="MazeSelectionLight" type="OmniLight3D" parent="MazeSelectionFloor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, 0)
+light_energy = 16.0
+light_bake_mode = 1
+light_cull_mask = 4293918721
+shadow_caster_mask = 4293918721
+distance_fade_begin = 50.0
+omni_range = 45.0
+
+[node name="Floor" type="StaticBody3D" parent="MazeSelectionFloor"]
+collision_layer = 17
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MazeSelectionFloor/Floor"]
+mesh = SubResource("BoxMesh_wehoa")
+skeleton = NodePath("../../../MainFloor")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MazeSelectionFloor/Floor"]
+shape = SubResource("ConcavePolygonShape3D_6728e")
+
+[node name="Ceil" type="StaticBody3D" parent="MazeSelectionFloor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 100, 0)
+collision_layer = 17
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MazeSelectionFloor/Ceil"]
+mesh = SubResource("BoxMesh_wehoa")
+skeleton = NodePath("../../../MainFloor")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MazeSelectionFloor/Ceil"]
+shape = SubResource("ConcavePolygonShape3D_6728e")
+
+[node name="Seed" type="Node3D" parent="MazeSelectionFloor"]
+transform = Transform3D(0.992546, 0, 0.121869, 0, 1, 0, -0.121869, 0, 0.992546, -7.5, 0, 7.5)
+
+[node name="Difficulty" type="Node3D" parent="MazeSelectionFloor"]
+transform = Transform3D(0.992546, 0, 0.121869, 0, 1, 0, -0.121869, 0, 0.992546, -15, 0, -10)
+
+[node name="DifficultySelectionner" parent="MazeSelectionFloor/Difficulty" instance=ExtResource("7_pdx53")]
+
+[node name="Size" type="Node3D" parent="MazeSelectionFloor"]
+transform = Transform3D(0.992546, 0, 0.121869, 0, 1, 0, -0.121869, 0, 0.992546, 0, 0, -10)
+
+[node name="Algo" type="Node3D" parent="MazeSelectionFloor"]
+transform = Transform3D(0.992546, 0, 0.121869, 0, 1, 0, -0.121869, 0, 0.992546, 15, 0, -10)
+
+[node name="BeginId" type="Node3D" parent="MazeSelectionFloor"]
+transform = Transform3D(0.992546, 0, 0.121869, 0, 1, 0, -0.121869, 0, 0.992546, 7.5, 0, 7.5)
+
+[node name="obstacle5" type="StaticBody3D" parent="MazeSelectionFloor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.5, 0)
+collision_layer = 17
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MazeSelectionFloor/obstacle5"]
+mesh = SubResource("BoxMesh_dcxnu")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MazeSelectionFloor/obstacle5"]
+shape = SubResource("ConcavePolygonShape3D_wkq0h")
+
+[node name="RuneUnlockedRoom" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -100, 0, -50)
+
+[node name="Wall6" type="StaticBody3D" parent="RuneUnlockedRoom"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 15, 25)
+collision_layer = 17
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RuneUnlockedRoom/Wall6"]
+mesh = SubResource("BoxMesh_6728e")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RuneUnlockedRoom/Wall6"]
+shape = SubResource("ConcavePolygonShape3D_8d4em")
+
+[node name="Wall7" type="StaticBody3D" parent="RuneUnlockedRoom"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 15, 0)
+collision_layer = 17
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RuneUnlockedRoom/Wall7"]
+mesh = SubResource("BoxMesh_6728e")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RuneUnlockedRoom/Wall7"]
+shape = SubResource("ConcavePolygonShape3D_8d4em")
+
+[node name="Wall8" type="StaticBody3D" parent="RuneUnlockedRoom"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 15, -25)
+collision_layer = 17
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RuneUnlockedRoom/Wall8"]
+mesh = SubResource("BoxMesh_6728e")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RuneUnlockedRoom/Wall8"]
+shape = SubResource("ConcavePolygonShape3D_8d4em")
+
+[node name="Wall9" type="StaticBody3D" parent="RuneUnlockedRoom"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 25, 15, 0)
+collision_layer = 17
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RuneUnlockedRoom/Wall9"]
+mesh = SubResource("BoxMesh_6728e")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RuneUnlockedRoom/Wall9"]
+shape = SubResource("ConcavePolygonShape3D_8d4em")
+
+[node name="MazeSelectionLight" type="OmniLight3D" parent="RuneUnlockedRoom"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, 0)
+light_energy = 16.0
+light_bake_mode = 1
+light_cull_mask = 4293918721
+shadow_caster_mask = 4293918721
+distance_fade_begin = 50.0
+omni_range = 45.0
+
+[node name="Floor" type="StaticBody3D" parent="RuneUnlockedRoom"]
+collision_layer = 17
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RuneUnlockedRoom/Floor"]
+mesh = SubResource("BoxMesh_wehoa")
+skeleton = NodePath("../../../MainFloor")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RuneUnlockedRoom/Floor"]
+shape = SubResource("ConcavePolygonShape3D_6728e")
+
+[node name="Ceil" type="StaticBody3D" parent="RuneUnlockedRoom"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 100, 0)
+collision_layer = 17
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RuneUnlockedRoom/Ceil"]
+mesh = SubResource("BoxMesh_wehoa")
+skeleton = NodePath("../../../MainFloor")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RuneUnlockedRoom/Ceil"]
+shape = SubResource("ConcavePolygonShape3D_6728e")
+
+[node name="P11 -> Lobby Main Room" parent="RuneUnlockedRoom" instance=ExtResource("5_4of2y")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 20, 1.25, 0)
+
+[node name="Portal3D" parent="RuneUnlockedRoom/P11 -> Lobby Main Room" index="0" node_paths=PackedStringArray("exit_portal")]
+exit_portal = NodePath("../../../MainFloor/P9 -> Runes Unlock/Portal3D")
+view_direction = 1
+teleport_direction = 0
+
+[node name="HealthComponentUpgradeRoom" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -100, 0, 50)
+
+[node name="Wall6" type="StaticBody3D" parent="HealthComponentUpgradeRoom"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 15, 25)
+collision_layer = 17
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="HealthComponentUpgradeRoom/Wall6"]
+mesh = SubResource("BoxMesh_6728e")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HealthComponentUpgradeRoom/Wall6"]
+shape = SubResource("ConcavePolygonShape3D_8d4em")
+
+[node name="Wall7" type="StaticBody3D" parent="HealthComponentUpgradeRoom"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 15, 0)
+collision_layer = 17
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="HealthComponentUpgradeRoom/Wall7"]
+mesh = SubResource("BoxMesh_6728e")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HealthComponentUpgradeRoom/Wall7"]
+shape = SubResource("ConcavePolygonShape3D_8d4em")
+
+[node name="Wall8" type="StaticBody3D" parent="HealthComponentUpgradeRoom"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 15, -25)
+collision_layer = 17
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="HealthComponentUpgradeRoom/Wall8"]
+mesh = SubResource("BoxMesh_6728e")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HealthComponentUpgradeRoom/Wall8"]
+shape = SubResource("ConcavePolygonShape3D_8d4em")
+
+[node name="Wall9" type="StaticBody3D" parent="HealthComponentUpgradeRoom"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 25, 15, 0)
+collision_layer = 17
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="HealthComponentUpgradeRoom/Wall9"]
+mesh = SubResource("BoxMesh_6728e")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HealthComponentUpgradeRoom/Wall9"]
+shape = SubResource("ConcavePolygonShape3D_8d4em")
+
+[node name="MazeSelectionLight" type="OmniLight3D" parent="HealthComponentUpgradeRoom"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, 0)
+light_energy = 16.0
+light_bake_mode = 1
+light_cull_mask = 4293918721
+shadow_caster_mask = 4293918721
+distance_fade_begin = 50.0
+omni_range = 45.0
+
+[node name="Floor" type="StaticBody3D" parent="HealthComponentUpgradeRoom"]
+collision_layer = 17
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="HealthComponentUpgradeRoom/Floor"]
+mesh = SubResource("BoxMesh_wehoa")
+skeleton = NodePath("../../../MainFloor")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HealthComponentUpgradeRoom/Floor"]
+shape = SubResource("ConcavePolygonShape3D_6728e")
+
+[node name="Ceil" type="StaticBody3D" parent="HealthComponentUpgradeRoom"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 100, 0)
+collision_layer = 17
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="HealthComponentUpgradeRoom/Ceil"]
+mesh = SubResource("BoxMesh_wehoa")
+skeleton = NodePath("../../../MainFloor")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HealthComponentUpgradeRoom/Ceil"]
+shape = SubResource("ConcavePolygonShape3D_6728e")
+
+[node name="P12 -> Lobby Main Room" parent="HealthComponentUpgradeRoom" instance=ExtResource("5_4of2y")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 20, 1.25, 0)
+
+[node name="Portal3D" parent="HealthComponentUpgradeRoom/P12 -> Lobby Main Room" index="0" node_paths=PackedStringArray("exit_portal")]
+exit_portal = NodePath("../../../MainFloor/P10 -> Health Component Upgrades Room/Portal3D")
+view_direction = 1
+teleport_direction = 0
 
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
 navigation_mesh = SubResource("NavigationMesh_br7h5")
@@ -388,14 +700,17 @@ mesh = SubResource("CylinderMesh_wkq0h")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/TrainingFloor/Columns/Column"]
 shape = SubResource("CylinderShape3D_6728e")
 
-[node name="LootOrbe" parent="." instance=ExtResource("8_pdx53")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.134, 0.834538, -12.7377)
+[connection signal="difficulty_changed" from="MazeSelectionFloor/Difficulty/DifficultySelectionner" to="." method="_on_difficulty_selectionner_difficulty_changed"]
 
 [editable path="MainFloor/P1 -> Fight Room"]
-[editable path="MainFloor/Real Lab/P3 -> Lab Entrance"]
-[editable path="MainFloor/Real Lab/P4 -> Main Room"]
+[editable path="MainFloor/P9 -> Runes Unlock"]
+[editable path="MainFloor/P10 -> Health Component Upgrades Room"]
+[editable path="MainFloor/Real Lab/P3 -> Maze Selection"]
 [editable path="MainFloor/Debug Lab/P5 -> Lab 3x3x3 Entrance"]
 [editable path="MainFloor/Debug Lab/P6 -> Main Room"]
 [editable path="MainFloor/Debug Lab/P7 -> Return to Lobby"]
 [editable path="MainFloor/Debug Lab/P8 -> LastRoom 3x3x3"]
+[editable path="MazeSelectionFloor/P4 -> Lobby Main Room"]
+[editable path="RuneUnlockedRoom/P11 -> Lobby Main Room"]
+[editable path="HealthComponentUpgradeRoom/P12 -> Lobby Main Room"]
 [editable path="NavigationRegion3D/TrainingFloor/P2 -> Main Lobby"]

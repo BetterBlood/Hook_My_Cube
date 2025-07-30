@@ -29,8 +29,8 @@ func _on_damage_taken():
 		if health_component.health <= 0:
 			_death_sequence()
 
-## depth_ratio: [0.0; 1.0]
-## difficulty: [-2; 2]
+## depth_ratio: [0.0; 1.0] => determines enemy lvl
+## difficulty: [-2; 2] => determines all stats accordingly with the lvl
 func set_mob_data(human_seed: String, difficulty: int, depth_ratio: float) -> void:
 	#print("TODO: set_mob_data override in subclasses !")
 	#print("Enemy::set_mob_data::human_seed: ", human_seed, ", difficulty: ", difficulty, ", depth_ratio: ", depth_ratio)
@@ -47,7 +47,10 @@ func set_mob_data(human_seed: String, difficulty: int, depth_ratio: float) -> vo
 	lvl = max(1, int(lvl_max * depth_ratio)) # at least lvl 1, max [10, 20, 30, 40, 50]
 	xp = lvl * (5 - difficulty) # lvl * [7; 3] => [7; 3] to [350; 150]
 	damage += difficulty + int(lvl/5.0) # damage + [-2; 2] + [2; 10] 
-	# TODO: set armor_pen
+	if lvl <= lvl_max / 5.0:
+		armor_pen = 0
+	else:
+		armor_pen = lvl / 10.0 # [0.2; 1] ... [1.0; 5.0]
 
 
 func _death_sequence() -> void:

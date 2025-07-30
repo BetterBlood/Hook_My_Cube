@@ -4,7 +4,11 @@ class_name Lobby
 
 signal launch_game(player_name: String)
 
+@export var maze_seed: String = ""
+@export var difficulty: int = 0
 @export var size: int = 7 # DEBUG
+@export var algo: int = 9
+@export var begin_id: int = 0
 
 var unlocked_runes: Array[int] = [0, 1, 2, 3] #TODO: default [0]
 var gold: int = 0
@@ -21,6 +25,14 @@ var maze_scene: PackedScene = preload("res://scenes/maze.tscn")
 
 
 func _ready() -> void:
+	$MainFloor/Ceil.position = $MainFloor/Ceil.position - Vector3(0, 40, 0)
+	$MainFloor/Walls/Wall5.position = $MainFloor/Walls/Wall5.position - Vector3(0, 0, 100)
+	$MainFloor/Walls/Wall8.position = $MainFloor/Walls/Wall8.position - Vector3(100, 0, 0)
+	
+	$MazeSelectionFloor/Ceil.position = $MazeSelectionFloor/Ceil.position - Vector3(0, 70, 0)
+	$RuneUnlockedRoom/Ceil.position = $RuneUnlockedRoom/Ceil.position - Vector3(0, 70, 0)
+	$HealthComponentUpgradeRoom/Ceil.position = $HealthComponentUpgradeRoom/Ceil.position - Vector3(0, 70, 0)
+	
 	player.current_player_name = SceneFade.player_name
 	add_child(logger)
 	logger.Info("An informational message: " + self.to_string());
@@ -84,11 +96,11 @@ func _initialize_new_maze_file_save() -> void:
 	
 	#TODO: get real data from the room of maze selection in lobby
 	var save_dict = {
-		"seed" : "DEBUG" if player.get_player_name() == "DEBUG" else "", # TODO get the seed choosen by the player !
-		"size" : 7,
-		"begin_id" : 0,
-		"generation_used" : Polyrinthe.GENERATION_ALGORITHME.DFS_LBL_ALT_6,
-		"difficulty" : 0, # [-2; 2]
+		"seed" : "DEBUG" if player.get_player_name() == "DEBUG" else maze_seed, # TODO get the seed choosen by the player !
+		"size" : size,
+		"begin_id" : begin_id,
+		"generation_used" : Polyrinthe.GENERATION_ALGORITHME.values()[algo],
+		"difficulty" : difficulty, # [-2; 2]
 		"default_tags": [ # TODO: other tags needed !! # [int]
 			1, # wall default collision layers 
 			0, # color for room near chests
@@ -165,3 +177,7 @@ func load_meta() -> void:
 	
 	#player.call_deferred("initialize_player").bind(meta_data, null, null)
 	player.initialize_player(meta_data, null, null)
+
+
+func _on_difficulty_selectionner_difficulty_changed(new_difficulty: int) -> void:
+	difficulty = new_difficulty

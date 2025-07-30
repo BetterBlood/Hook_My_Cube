@@ -1,0 +1,76 @@
+[gd_scene load_steps=10 format=3 uid="uid://1l6fhyplxedk"]
+
+[ext_resource type="Script" uid="uid://d2rfelcor7dl8" path="res://scripts/decorations/difficulty_selectionner.gd" id="1_fm1rd"]
+[ext_resource type="Material" uid="uid://hmsq54yxaifh" path="res://materials/difficulties/norm.tres" id="2_hq68p"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hq68p"]
+albedo_color = Color(0.663372, 1.79287e-06, 4.81307e-07, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_g5ang"]
+material = SubResource("StandardMaterial3D_hq68p")
+radius = 0.2
+height = 0.4
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_yeydb"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_fm1rd"]
+material = ExtResource("2_hq68p")
+radius = 0.3
+height = 0.6
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2wa2b"]
+albedo_color = Color(0.10355, 1, 0.0903921, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_6hago"]
+material = SubResource("StandardMaterial3D_2wa2b")
+radius = 0.2
+height = 0.4
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_okkxo"]
+
+[node name="DifficultySelectionner" type="Node3D"]
+script = ExtResource("1_fm1rd")
+
+[node name="More" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.25, 0)
+collision_layer = 0
+collision_mask = 8
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="More"]
+mesh = SubResource("SphereMesh_g5ang")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="More"]
+shape = SubResource("SphereShape3D_yeydb")
+
+[node name="Mazo" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
+
+[node name="Hard" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+
+[node name="Norm" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+
+[node name="Indicator" type="MeshInstance3D" parent="Norm"]
+mesh = SubResource("SphereMesh_fm1rd")
+skeleton = NodePath("")
+
+[node name="Easy" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="Kido" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+
+[node name="Less" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0.25, 0)
+collision_layer = 0
+collision_mask = 8
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Less"]
+mesh = SubResource("SphereMesh_6hago")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Less"]
+shape = SubResource("SphereShape3D_okkxo")
+
+[connection signal="area_entered" from="More" to="." method="_on_more_area_entered"]
+[connection signal="area_entered" from="Less" to="." method="_on_less_area_entered"]
