@@ -6,7 +6,7 @@ signal launch_game(player_name: String)
 
 @export var maze_seed: String = ""
 @export var difficulty: int = 0
-@export var size: int = 7 # DEBUG
+@export var size: int = 6 # DEBUG
 @export var algo: int = 9
 @export var begin_id: int = 0
 
@@ -83,7 +83,7 @@ func _process(_delta: float) -> void:
 		#initialise the file containing maze info
 		_initialize_new_maze_file_save()
 		# player initialisation needed to keep the lobby rune
-		player.save_progression(0) #TODO: get real begin_id from polyrinthe
+		player.save_progression(begin_id)
 		SceneFade.change_scene(maze_scene, SceneFade.maze_loaded)
 		#get_tree().change_scene_to_packed(maze_scene)
 
@@ -180,4 +180,30 @@ func load_meta() -> void:
 
 
 func _on_difficulty_selectionner_difficulty_changed(new_difficulty: int) -> void:
+	#print("lobby::_on_difficulty_selectionner_difficulty_changed new_difficulty: ", new_difficulty)
 	difficulty = new_difficulty
+
+
+func _on_size_selector_size_changed(new_size: int) -> void:
+	#print("lobby::_on_size_selector_size_changed new_size: ", new_size)
+	size = new_size
+
+
+func _on_seed_selector_seed_changed(new_seed: String) -> void:
+	#print("lobby::_on_seed_selector_seed_changed new_seed: ", new_seed)
+	maze_seed = new_seed
+
+
+func _on_algo_selector_algo_changed(new_algo: Polyrinthe.GENERATION_ALGORITHME) -> void:
+	#print("lobby::_on_algo_selector_algo_changed new_algo: ", new_algo)
+	algo = new_algo
+
+
+func _on_fake_portal_fake_portal_entered() -> void:
+	launch_game.emit(player.get_player_name())
+	
+	#initialise the file containing maze info
+	_initialize_new_maze_file_save()
+	# player initialisation needed to keep the lobby rune
+	player.save_progression(begin_id)
+	SceneFade.change_scene(maze_scene, SceneFade.maze_loaded)

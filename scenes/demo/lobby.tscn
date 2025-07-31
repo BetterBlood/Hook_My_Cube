@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://br883pylmypa7"]
+[gd_scene load_steps=32 format=3 uid="uid://br883pylmypa7"]
 
 [ext_resource type="Script" uid="uid://wdhsttcv1ana" path="res://scripts/demo/lobby.gd" id="1_yr8w2"]
 [ext_resource type="PackedScene" uid="uid://y1yw5naea0tu" path="res://scenes/characters/player.tscn" id="2_pdx53"]
@@ -6,8 +6,13 @@
 [ext_resource type="PackedScene" uid="uid://dvkq4hwixk2m8" path="res://scenes/decorations/torch.tscn" id="4_u1smo"]
 [ext_resource type="PackedScene" uid="uid://canga3dhywbr3" path="res://scenes/portal_with_frame.tscn" id="5_4of2y"]
 [ext_resource type="Material" uid="uid://dla2uqqdaue2e" path="res://materials/projectiles/debug_projectile.tres" id="6_pdx53"]
+[ext_resource type="PackedScene" uid="uid://cgkf7mglet062" path="res://scenes/decorations/seed_selector.tscn" id="6_u1smo"]
 [ext_resource type="Material" uid="uid://penbwn0i2in" path="res://materials/ice.tres" id="6_yr8w2"]
-[ext_resource type="PackedScene" uid="uid://1l6fhyplxedk" path="res://scenes/decorations/difficulty_selectionner.tscn" id="7_pdx53"]
+[ext_resource type="PackedScene" uid="uid://gxh7el742n46" path="res://scenes/decorations/size_selector.tscn" id="7_d1p01"]
+[ext_resource type="PackedScene" uid="uid://1l6fhyplxedk" path="res://scenes/decorations/difficulty_selector.tscn" id="7_pdx53"]
+[ext_resource type="PackedScene" uid="uid://bsx71lc6whpp5" path="res://scenes/decorations/algo_selector.tscn" id="9_4of2y"]
+[ext_resource type="PackedScene" uid="uid://cbtw3epdjui6n" path="res://scenes/decorations/begin_id_selector.tscn" id="10_f5ty6"]
+[ext_resource type="PackedScene" uid="uid://drrpq2dh7v0b2" path="res://scenes/movement/fake_portal.tscn" id="12_iojra"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_wehoa"]
 sky_top_color = Color(0.0970707, 0.463976, 0.749279, 1)
@@ -386,6 +391,8 @@ shape = SubResource("ConcavePolygonShape3D_6728e")
 [node name="Seed" type="Node3D" parent="MazeSelectionFloor"]
 transform = Transform3D(0.992546, 0, 0.121869, 0, 1, 0, -0.121869, 0, 0.992546, -7.5, 0, 7.5)
 
+[node name="SeedSelector" parent="MazeSelectionFloor/Seed" instance=ExtResource("6_u1smo")]
+
 [node name="Difficulty" type="Node3D" parent="MazeSelectionFloor"]
 transform = Transform3D(0.992546, 0, 0.121869, 0, 1, 0, -0.121869, 0, 0.992546, -15, 0, -10)
 
@@ -394,11 +401,17 @@ transform = Transform3D(0.992546, 0, 0.121869, 0, 1, 0, -0.121869, 0, 0.992546, 
 [node name="Size" type="Node3D" parent="MazeSelectionFloor"]
 transform = Transform3D(0.992546, 0, 0.121869, 0, 1, 0, -0.121869, 0, 0.992546, 0, 0, -10)
 
+[node name="SizeSelector" parent="MazeSelectionFloor/Size" instance=ExtResource("7_d1p01")]
+
 [node name="Algo" type="Node3D" parent="MazeSelectionFloor"]
 transform = Transform3D(0.992546, 0, 0.121869, 0, 1, 0, -0.121869, 0, 0.992546, 15, 0, -10)
 
+[node name="AlgoSelector" parent="MazeSelectionFloor/Algo" instance=ExtResource("9_4of2y")]
+
 [node name="BeginId" type="Node3D" parent="MazeSelectionFloor"]
 transform = Transform3D(0.992546, 0, 0.121869, 0, 1, 0, -0.121869, 0, 0.992546, 7.5, 0, 7.5)
+
+[node name="BeginIDSelector" parent="MazeSelectionFloor/BeginId" instance=ExtResource("10_f5ty6")]
 
 [node name="obstacle5" type="StaticBody3D" parent="MazeSelectionFloor"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.5, 0)
@@ -409,6 +422,13 @@ mesh = SubResource("BoxMesh_dcxnu")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MazeSelectionFloor/obstacle5"]
 shape = SubResource("ConcavePolygonShape3D_wkq0h")
+
+[node name="FakePortal" parent="MazeSelectionFloor" instance=ExtResource("12_iojra")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 20, 1.25, 0)
+
+[node name="Label3D" type="Label3D" parent="MazeSelectionFloor/FakePortal"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25219, 0.308487)
+text = "Enter the Maze !"
 
 [node name="RuneUnlockedRoom" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -100, 0, -50)
@@ -700,7 +720,11 @@ mesh = SubResource("CylinderMesh_wkq0h")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/TrainingFloor/Columns/Column"]
 shape = SubResource("CylinderShape3D_6728e")
 
+[connection signal="seed_changed" from="MazeSelectionFloor/Seed/SeedSelector" to="." method="_on_seed_selector_seed_changed"]
 [connection signal="difficulty_changed" from="MazeSelectionFloor/Difficulty/DifficultySelectionner" to="." method="_on_difficulty_selectionner_difficulty_changed"]
+[connection signal="size_changed" from="MazeSelectionFloor/Size/SizeSelector" to="." method="_on_size_selector_size_changed"]
+[connection signal="algo_changed" from="MazeSelectionFloor/Algo/AlgoSelector" to="." method="_on_algo_selector_algo_changed"]
+[connection signal="fake_portal_entered" from="MazeSelectionFloor/FakePortal" to="." method="_on_fake_portal_fake_portal_entered"]
 
 [editable path="MainFloor/P1 -> Fight Room"]
 [editable path="MainFloor/P9 -> Runes Unlock"]

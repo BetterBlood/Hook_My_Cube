@@ -180,7 +180,7 @@ func _generate_maze_modifications(maze: Polyrinthe) -> void:
 	
 	var nbr_save_points = maze_size - difficulty * 2
 	var nbr_chests = maze_size * 2 - difficulty * 2
-	var nbr_spawner = ceil(maze_nbr_rooms / 4.0) + difficulty * 3
+	var nbr_spawner = max(5, ceil(maze_nbr_rooms / 4.0) + difficulty * 3)
 	
 	# init save_points room ids :
 	_init_tabs(nbr_save_points, maze_nbr_rooms, save_points_room_ids, maze.get_seed() + "save_points")
@@ -231,7 +231,7 @@ func _init_tabs(
 
 func _find_last_dead_end_before_ice(maze: Polyrinthe) -> int:
 	var graphe = maze.cubeGraph
-	var deepest_dead_end_id: int = maze.begin_id
+	var deepest_dead_end_id: int = maze.begin_id # TODO if no dead_end find a better place
 	var deepest_dead_end_depth: int = graphe.getDepth(maze.begin_id)
 	
 	var current_depth:int = deepest_dead_end_depth
@@ -375,7 +375,7 @@ func _apply_maze_modifications(maze: Polyrinthe) -> void: # TODO
 		navigation_region_3d.add_child(pedestral)
 		pedestral.position = maze.maze[chests_id].position - chest_pedestral_position
 	
-	#print(updated_spawners)
+	print(spawners_room_ids)
 	for spawner_id: int in spawners_room_ids:
 		var sphere = SPHERE.instantiate() # DEBUG
 		#add_child(sphere) # DEBUG
