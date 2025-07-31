@@ -94,12 +94,20 @@ func _editor_ready() -> void:
 func _process(_delta):
 	pass
 
-func _generate_seeds(chars:String = _characters, length:int = 10) -> void:
-	seed_human = ""
+static func static_generate_seed(chars:String = _characters, length:int = 10) -> String:
+	var new_seed = ""
 	var chars_len = len(chars)
 	for i in range(length):
-		seed_human += chars[randi()% chars_len]
+		new_seed += chars[randi()% chars_len]
 	
+	return new_seed
+
+func _generate_seeds(chars:String = _characters, length:int = 10) -> void:
+	#seed_human = ""
+	#var chars_len = len(chars)
+	#for i in range(length):
+		#seed_human += chars[randi()% chars_len]
+	seed_human = static_generate_seed(chars, length)
 	seed_hashed = hash(seed_human)
 	print(seed_human, ": ", seed_hashed)
 
