@@ -2,7 +2,7 @@ extends Node3D
 
 class_name Lobby
 
-signal launch_game(player_name: String)
+#signal launch_game(player_name: String)
 
 @export var maze_seed: String = ""
 @export var difficulty: int = 0
@@ -10,7 +10,8 @@ signal launch_game(player_name: String)
 @export var algo: int = 9
 @export var begin_id: int = 0
 
-var unlocked_runes: Array[int] = [0, 1, 2, 3] #TODO: default [0]
+var all_runes: Array = []
+var unlocked_runes: Array[int] = [0]
 var gold: int = 0
 var essences: Array[int] = [0, 0, 0, 0]
 
@@ -22,6 +23,7 @@ var polyrinthe: Polyrinthe = Polyrinthe.new()
 @onready var player: Player = $Player
 
 var maze_scene: PackedScene = preload("res://scenes/maze.tscn")
+const PEDESTRAL_RUNE_UNLOCKER = preload("res://scenes/decorations/pedestral_rune_unlock.tscn")
 
 
 func _ready() -> void:
@@ -30,7 +32,14 @@ func _ready() -> void:
 	$MainFloor/Walls/Wall8.position = $MainFloor/Walls/Wall8.position - Vector3(100, 0, 0)
 	
 	$MazeSelectionFloor/Ceil.position = $MazeSelectionFloor/Ceil.position - Vector3(0, 70, 0)
+	
 	$RuneUnlockedRoom/Ceil.position = $RuneUnlockedRoom/Ceil.position - Vector3(0, 70, 0)
+	$NormalRuneUnlock/Ceil.position = $NormalRuneUnlock/Ceil.position - Vector3(0, 70, 0)
+	$FireRuneUnlock/Ceil.position = $FireRuneUnlock/Ceil.position - Vector3(0, 70, 0)
+	$PlantRuneUnlock/Ceil.position = $PlantRuneUnlock/Ceil.position - Vector3(0, 70, 0)
+	$ElectricRuneUnlock/Ceil.position = $ElectricRuneUnlock/Ceil.position - Vector3(0, 70, 0)
+	$MoreRuneUnlock/Ceil.position = $MoreRuneUnlock/Ceil.position - Vector3(0, 70, 0)
+	
 	$HealthComponentUpgradeRoom/Ceil.position = $HealthComponentUpgradeRoom/Ceil.position - Vector3(0, 70, 0)
 	
 	player.current_player_name = SceneFade.player_name
@@ -51,6 +60,15 @@ func _ready() -> void:
 	Maze.set_tag_for_collision_layer(polyrinthe)
 	polyrinthe.display()
 	Maze.apply_collision_layer(polyrinthe)
+	
+	
+	if len(all_runes) == 0:
+		var config = ConfigFile.new()
+		var err = config.load("user://all_runes.cfg")
+		if err != OK:
+			Rune.save_rune_infos()
+		else:
+			all_runes = Rune.get_rune_infos(config)
 	
 	if !Enums.damage_type_loaded:
 		var config = ConfigFile.new()
@@ -78,7 +96,7 @@ func _process(_delta: float) -> void:
 		print("player.health_component.get_max_life(): ", player.health_component.get_max_health())
 		# DEBUG
 		
-		launch_game.emit(player.get_player_name())
+		#launch_game.emit(player.get_player_name())
 		
 		#initialise the file containing maze info
 		_initialize_new_maze_file_save()
@@ -147,7 +165,7 @@ func load_meta() -> void:
 	if not FileAccess.file_exists("user://" + player.get_player_name() + "/meta.save"):
 		push_error("player: " + player.get_player_name() + " does not exist. Player meta load failed")
 		return
-		
+	
 	var save_file = FileAccess.open(
 		"user://" + player.get_player_name() + "/meta.save", 
 		FileAccess.READ)
@@ -173,10 +191,43 @@ func load_meta() -> void:
 	unlocked_runes.clear()
 	for rune_id in meta_data["unlocked_runes"]:
 		unlocked_runes.append(int(rune_id))
-	#TODO: call here the methode to display selection and other stuff about runes in lobby
+	
+	_init_runes_unlocker()
 	
 	#player.call_deferred("initialize_player").bind(meta_data, null, null)
-	player.initialize_player(meta_data, null, null)
+	player.initialize_player(meta_data, null)
+
+
+func _init_runes_unlocker() -> void:
+	var tmp_rune_number = 4 # need to stay hard codded for developpement
+	if len(unlocked_runes) > tmp_rune_number and -1 not in unlocked_runes:
+		push_warning("Possible errors of rune unlocker pedestal placement, pls check")
+	if len(unlocked_runes) > tmp_rune_number + 1 and -1 in unlocked_runes: # DEBUG
+		push_warning("Possible errors of rune unlocker pedestal placement, pls check") # DEBUG
+	
+	# TODO: check correct orientation and room if more than tmp_rune_number runes !!!
+	var parents: Array = [$NormalRuneUnlock, $FireRuneUnlock, $PlantRuneUnlock, $ElectricRuneUnlock]
+	var rotation_deg: Array = [180, 180, 0, 0]
+	
+	#print(unlocked_runes)
+	
+	for rune_data in all_runes:
+		#print("rune_data: ", rune_data)
+		if rune_data["id"] == -1: # DEBUG RUNE
+			continue
+		
+		var pedestal = PEDESTRAL_RUNE_UNLOCKER.instantiate()
+		pedestal.maze = null
+		pedestal.is_save_pedestral = false
+		pedestal.id = rune_data["id"]
+		pedestal.rune_name = rune_data["name"]
+		pedestal.lobby = self
+		parents[rune_data["id"] % len(parents)].get_children()[0].add_child(pedestal)
+		pedestal.set_cost_value(rune_data["cost_value"])
+		pedestal.set_cost_type(rune_data["type"])
+		pedestal.set_used(rune_data["id"] in unlocked_runes)
+		pedestal.position = Vector3(0, 1.25, 0) # TODO: when more rune of type normal fire plant or elec: change position x and z
+		pedestal.rotation_degrees = Vector3(0, rotation_deg[rune_data["id"] % len(rotation_deg)], 0)
 
 
 func _on_difficulty_selectionner_difficulty_changed(new_difficulty: int) -> void:
@@ -200,10 +251,20 @@ func _on_algo_selector_algo_changed(new_algo: Polyrinthe.GENERATION_ALGORITHME) 
 
 
 func _on_fake_portal_fake_portal_entered() -> void:
-	launch_game.emit(player.get_player_name())
+	#launch_game.emit(player.get_player_name())
 	
 	#initialise the file containing maze info
 	_initialize_new_maze_file_save()
 	# player initialisation needed to keep the lobby rune
 	player.save_progression(begin_id)
 	SceneFade.change_scene(maze_scene, SceneFade.maze_loaded)
+
+
+func unlock_rune(id: int, cost_value: int, cost_type: Enums.DamageType) -> bool:
+	if cost_value <= essences[cost_type]:
+		essences[cost_type] -= cost_value
+		unlocked_runes.append(id)
+		save_meta()
+		# TODO: update other pedestal of same type with the new essences possesion
+		return true
+	return false

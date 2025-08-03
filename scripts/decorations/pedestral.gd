@@ -31,6 +31,7 @@ func _ready() -> void:
 	if is_save_pedestral:
 		material = SAVE_COLOR
 		interactionToDisplay = "Save"
+		SceneFade.save_id_changed.connect(try_being_save_point_selected)
 	else:
 		material = CHEST_COLOR
 		interactionToDisplay = "Open"
@@ -44,7 +45,6 @@ func _ready() -> void:
 	if !interactionToDisplay.is_empty():
 		interactionDetector.actionName += interactionToDisplay
 	
-	SceneFade.save_id_changed.connect(try_being_save_point_selected)
 
 
 func set_color(color: Color) -> void:

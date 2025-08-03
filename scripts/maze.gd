@@ -42,18 +42,22 @@ var save_pedestral_position: Vector3 = Vector3(-5, 9.7, 5)
 var chest_pedestral_position: Vector3 = Vector3(5, 9.7, 5)
 var last_save_id: int = 0
 
+const FAKE_PORTAL = preload("res://scenes/movement/fake_portal.tscn")
+var boss_room: PackedScene = preload("res://scenes/boss_room.tscn")
+var lobby_scene: PackedScene = preload("res://scenes/demo/lobby.tscn")
+
 #func _init(new_player_name: String = "DEBUG") -> void:
 	#player_name = new_player_name
 
 func _ready() -> void:
 	player.current_player_name = SceneFade.player_name
 	add_child(logger)
-	logger.Info("An informational message: " + self.to_string());
-	logger.Debug("A Debug message: " + self.to_string());
-	
-	for line in logger.GetLines():
-		print(line)
-	print()
+	#logger.Info("An informational message: " + self.to_string());
+	#logger.Debug("A Debug message: " + self.to_string());
+	#
+	#for line in logger.GetLines():
+		#print(line)
+	#print()
 	
 	if !Enums.damage_type_loaded:
 		var config = ConfigFile.new()
@@ -67,6 +71,8 @@ func _ready() -> void:
 	
 	_initialise_world()
 	
+	player.is_dead.connect(_on_player_death)
+	
 	SceneFade.emit_signal("maze_loaded")
 
 
@@ -78,7 +84,7 @@ func _process(_delta: float) -> void:
 		player.xp += 1000
 		#_save_player_progress(size*size-1)
 		#_initialise_player()
-		#_erase_player_progress()
+		#SceneFade._erase_player_progress(player.get_player_name())
 		#print("player.health_component.get_max_life(): ", player.health_component.get_max_health())
 
 
@@ -98,7 +104,7 @@ func _initialise_world() -> void:
 	# once polyrinthe generated:
 	set_tag_for_collision_layer(polyrinthe) # ice Wall
 	
-	#TODO: logic: add new runes for the begining of tha lab then only upgrades (health and runes)
+	
 	_generate_maze_modifications(polyrinthe)
 	
 	
@@ -265,12 +271,6 @@ func _save_point_activated(save_point_id: int = 0) -> void:
 func _save_player_progress(save_point_id: int = 0) -> void: 
 	player.save_progression(save_point_id)
 
-# erase current player and maze progression (doesn't touch meta progression) 
-func _erase_player_progress() -> void:
-	DirAccess.remove_absolute("user://" + player.get_player_name() + "/progression.save")
-	DirAccess.remove_absolute("user://" + player.get_player_name() + "/maze.save")
-
-
 func _initialise_player():
 	if not FileAccess.file_exists("user://" + player.get_player_name() + "/meta.save"):
 		push_error("player: " + player.get_player_name() + " does not exist. Player meta load failed")
@@ -319,7 +319,8 @@ func _initialise_player():
 	
 	last_save_id = int(game_data["save_spot_id"])
 	
-	player.initialize_player(meta_data, game_data, self)
+	player.initialize_player(meta_data, game_data)
+	player.position = get_position_for_player_save_point(int(game_data["save_spot_id"]))
 
 
 # save maze data
@@ -375,7 +376,7 @@ func _apply_maze_modifications(maze: Polyrinthe) -> void: # TODO
 		navigation_region_3d.add_child(pedestral)
 		pedestral.position = maze.maze[chests_id].position - chest_pedestral_position
 	
-	print(spawners_room_ids)
+	#print("spawners_room_ids: ", spawners_room_ids)
 	for spawner_id: int in spawners_room_ids:
 		var sphere = SPHERE.instantiate() # DEBUG
 		#add_child(sphere) # DEBUG
@@ -416,10 +417,16 @@ func _apply_maze_modifications(maze: Polyrinthe) -> void: # TODO
 		player.grapple.upgrade_ice_grapple_color()
 	
 	# TODO: add a portal in the last room to enter the boss fight
-	var sphere_end = SPHERE.instantiate()
-	add_child(sphere_end)
-	sphere_end.get_child(0).mesh.material.albedo_color = Color(0, 0, 0, 1)
-	sphere_end.position = maze.maze[maze.deepest_id].position - Vector3(0, 0, 5)
+	#var sphere_end = SPHERE.instantiate()
+	#add_child(sphere_end)
+	#sphere_end.get_child(0).mesh.material.albedo_color = Color(0, 0, 0, 1)
+	#sphere_end.position = maze.maze[maze.deepest_id].position - Vector3(0, 0, 5)
+	
+	var portal_end = FAKE_PORTAL.instantiate()
+	add_child(portal_end)
+	portal_end.position = maze.maze[maze.deepest_id].position - Vector3(0, 8.8, 5)
+	portal_end.fake_portal_entered.connect(_on_last_room_portal_passed.bind(maze.deepest_id))
+	
 	
 	var gold_factor: Vector3 = Vector3(16, 16, 16)
 	for key in maze.maze.keys():
@@ -486,5 +493,20 @@ static func apply_collision_layer(maze: Polyrinthe, material: StandardMaterial3D
 
 func update_spawner(id_spawner: int, mob_ids: Array[int]) -> void:
 	if updated_spawners.has(str(id_spawner)):
-		pass # TODO: update list
+		pass # TODO: update list ?
 	updated_spawners[str(id_spawner)] = mob_ids
+
+
+func _on_last_room_portal_passed(room_id: int) -> void:
+	#print("Maze::_on_last_room_portal_passed")
+	player.leveling_phase(polyrinthe.get_seed())
+	
+	await player.leveling_phase_ended
+	
+	_save_point_activated(room_id)
+	SceneFade.change_scene(boss_room, SceneFade.boss_room_loaded)
+
+
+func _on_player_death(_id: int) -> void:
+	SceneFade._erase_player_progress(player.get_player_name())
+	SceneFade.change_scene_with_file("res://scenes/demo/lobby.tscn", SceneFade.lobby_loaded)

@@ -18,6 +18,8 @@ const RUNE_VISUAL_IDENTIFIER = preload("res://scenes/fight/runes/visualIndicator
 var visual_rune: Node3D
 var active_mat: StandardMaterial3D
 
+static var all_runes: Array = []
+
 func _init(parent: Node3D) -> void:
 	#print("_init de Rune: ", self)
 	projectile_source = parent
@@ -42,6 +44,56 @@ func get_rune_spot() -> Marker3D:
 	
 func get_active_mat() -> StandardMaterial3D:
 	return active_mat
+
+static func save_rune_infos() -> void:
+	var config = ConfigFile.new()
+	config.set_value("-1", "name", "Debug")
+	config.set_value("-1", "type", Enums.DamageType.FIRE)
+	config.set_value("-1", "cost_value", -1)
+	
+	config.set_value("0", "name", "Normal_1")
+	config.set_value("0", "type", Enums.DamageType.NORMAL)
+	config.set_value("0", "cost_value", 50)
+	
+	config.set_value("1", "name", "Fire_1")
+	config.set_value("1", "type", Enums.DamageType.FIRE)
+	config.set_value("1", "cost_value", 50)
+	
+	config.set_value("2", "name", "Plant_1")
+	config.set_value("2", "type", Enums.DamageType.PLANT)
+	config.set_value("2", "cost_value", 50)
+	
+	config.set_value("3", "name", "Elec_1")
+	config.set_value("3", "type", Enums.DamageType.ELEC)
+	config.set_value("3", "cost_value", 50)
+	
+	
+	config.save("user://all_runes.cfg")
+
+
+static func get_rune_infos(config: ConfigFile, erase_current: bool = false) -> Array:
+	if len(config.get_sections()) == 0:
+		save_rune_infos()
+		push_warning("Rune info was empty, set to default")
+	elif len(config.get_sections()) != len(all_runes) and not erase_current:
+		all_runes.clear()
+	elif not erase_current:
+		return all_runes
+	else:
+		all_runes.clear()
+	
+	for section in config.get_sections():
+		all_runes.append(
+			{
+				"id" : int(section), 
+				"name" : config.get_value(section, "name"), 
+				"type" : Enums.DamageType.values()[int(config.get_value(section, "type"))],
+				"cost_value" : int(config.get_value(section, "cost_value"))
+			}
+		)
+	
+	return all_runes
+
 
 static func create_rune_with_id(id: int, parent: Node3D) -> Rune:
 	match(id): # TODO: add case for all runes
@@ -69,7 +121,7 @@ static func create_rune(rune_data, parent: Node3D) -> Rune:
 
 
 static func upgrade_rune(rune: Rune, upgrade_name: String, level: int) -> Rune:
-	print("Rune::upgrade_rune, rune: ", rune.get_save_infos(), ", upgrade_name: ", upgrade_name, ", lvl: ", str(level))
+	#sprint("Rune::upgrade_rune, rune: ", rune.get_save_infos(), ", upgrade_name: ", upgrade_name, ", lvl: ", str(level))
 	match(upgrade_name):
 		"BOUNCE":
 			return RuneUpgradeBounce.new(rune, level)

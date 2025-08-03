@@ -4,13 +4,12 @@ class_name Enemy
 
 static var next_id = 0
 var id: int
-signal is_dead(id: int)
-
-@export var is_in_lobby: bool = false
 
 var damage_type: Enums.DamageType = Enums.DamageType.NORMAL
 var damage: float = 3
 var armor_pen: float = 0
+var attack_cd: float = 5.0
+var current_cd: float = 0.0
 
 const XP_ORBE = preload("res://scenes/decorations/xp.tscn")
 const GOLD_ORBE = preload("res://scenes/decorations/gold.tscn")

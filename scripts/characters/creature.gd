@@ -2,6 +2,9 @@ extends CharacterBody3D
 
 class_name Creature
 
+@export var is_in_lobby: bool = false
+signal is_dead(id: int)
+
 var health_component: HealthComponent
 var lvl:int = 1
 var xp:float = 0.0

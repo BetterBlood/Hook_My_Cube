@@ -15,8 +15,8 @@ func _ready() -> void:
 	if is_in_lobby:
 		health_component._health_regen_per_sec = 1.0
 	
-	health_component._armor = 2.0
-	health_component._penetration_resistance = 0.5
+	health_component._armor = 0.0
+	health_component._penetration_resistance = 0.0
 	health_component._max_speed = SPEED
 	health_component.speed = SPEED 
 

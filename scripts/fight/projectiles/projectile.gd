@@ -33,7 +33,7 @@ func set_layers_to_hit(layers: int) -> int:
 
 
 func _on_interaction_area_area_entered(area: Area3D) -> void:
-	#print("In Projectile detect collision with: ", area)
+	print("In Projectile detect collision with: ", area)
 	var target = area.get_parent()
 	if target and target.has_method("get_health_component"):
 		_impact_health_component_user(target)
@@ -77,7 +77,7 @@ func _apply_effect(target: Creature) -> void:
 
 
 func _on_interaction_area_body_entered(_body: Node3D) -> void:
-	print("Projectile: ", self , " hits ", _body, ", bouncing_count: ", bouncing_count)
+	#print("Projectile: ", self , " hits ", _body, ", bouncing_count: ", bouncing_count)
 	
 	if bouncing_count <= 0:
 		#print("Projectile: ", self , ": bouncing destroy reached")
@@ -87,7 +87,7 @@ func _on_interaction_area_body_entered(_body: Node3D) -> void:
 
 
 func _on_time_to_live_timeout() -> void:
-	print("Projectile living time reached: auto destroy")
+	#print("Projectile living time reached: auto destroy")
 	queue_free()
 
 

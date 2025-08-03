@@ -36,7 +36,7 @@ static func save_grid_damage_type() -> void:
 	
 	for damage_type in config.get_sections():
 		print(damage_type)
-		if (	!damage_type_grid.has(damage_type)) && \
+		if (	!damage_type_grid.has(damage_type)) and \
 				len(config.get_value(damage_type, "grid")) == len(config.get_sections()):
 			damage_type_grid[damage_type] = config.get_value(damage_type, "grid")
 		else:
@@ -46,7 +46,7 @@ static func save_grid_damage_type() -> void:
 
 static func load_grid_damage_type(config: ConfigFile, erase: bool = false) -> void:
 	for damage_type in config.get_sections():
-		if (	!damage_type_grid.has(damage_type)) && \
+		if (	!damage_type_grid.has(damage_type)) and \
 				len(config.get_value(damage_type, "grid")) == len(config.get_sections()):
 			damage_type_grid[damage_type] = config.get_value(damage_type, "grid")
 			print("Enums::load_grid_damage_type: ", damage_type, " loaded correctly")

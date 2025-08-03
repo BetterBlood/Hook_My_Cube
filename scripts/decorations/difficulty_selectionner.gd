@@ -18,6 +18,10 @@ var current_difficulty: int = 0
 
 signal difficulty_changed(new_difficulty: int)
 
+func _ready() -> void:
+	indicator.reparent(norm)
+	indicator.mesh.material = NORM
+
 func _on_more_area_entered(area: Area3D) -> void:
 	area.get_parent().queue_free()
 	_set_difficulty(min(2, current_difficulty + 1))

@@ -17,7 +17,7 @@ var directionnalInputs = Vector3(0,0,0)
 
 var JOY_DEADZONE:= 0.1
 
-var godMode : bool
+@export var godMode : bool
 @export var godModeSpeedMultiplier = 5
 @onready var collisionShape := $CollisionShape3D
 
@@ -48,12 +48,13 @@ var tmp_upgrades: Array = []
 var essences: Array[int] = [0, 0, 0, 0]
 
 signal try_lvl_up(maze_seed: String)
+signal leveling_phase_ended()
 
 func _ready():
 	super._ready()
 	#print("player::_ready current_player_name: " + current_player_name)
-	godMode = true
-	collisionShape.disabled = true
+	godMode = false
+	collisionShape.disabled = false
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	active_rune = NormalRune1.new(self)
 	_init_active_rune_visual_spot()
@@ -65,7 +66,7 @@ func _ready():
 	$GrapplinPosition.add_child(grapple)
 
 
-func initialize_player(meta_data, game_data, current_maze: Maze) -> void:
+func initialize_player(meta_data, game_data) -> void:
 	if meta_data == null:
 		push_error("No meta data for player initialisation")
 		return 
@@ -76,20 +77,21 @@ func initialize_player(meta_data, game_data, current_maze: Maze) -> void:
 	active_rune.set_layet_to_hit(5)
 	_init_active_rune_visual_spot()
 	health_component.set_up_perm_with_data(meta_data["health_component_upgrades"])
+	# TODO: update the lobby accordingly with the perm upgrade already bought
 	
 	#progression data
 	if game_data == null:
 		print("while initialize_player: no game data")
 		return
 	
-	if current_maze == null:
-		push_error("while initialize_player: current_maze null, progression load failed")
-		return
+	#if current_maze == null:
+		#push_error("while initialize_player: current_maze null, progression load failed")
+		#return
 	
 	if meta_data["current_player_name"] != game_data["current_player_name"]:
 		push_warning("Player game progression initialisation may failed: player names are inconsistant")
 	
-	position = current_maze.get_position_for_player_save_point(int(game_data["save_spot_id"]))
+	#position = current_maze.get_position_for_player_save_point(int(game_data["save_spot_id"]))
 	gold = game_data["gold"]
 	essences.clear()
 	for essence in game_data["essences"]:
@@ -98,6 +100,7 @@ func initialize_player(meta_data, game_data, current_maze: Maze) -> void:
 	lvl = game_data["lvl"]
 	#TODO : initialise xp_to_lvl_up based on lvl
 	xp = game_data["xp"]
+	xp_to_lvl_up = get_xp_for_leveling_up(lvl)
 	
 	#print(game_data["runes"])
 	var rune1_data = game_data["runes"][0]
@@ -449,19 +452,25 @@ func gain_xp(value: float) -> void:
 
 
 func leveling_phase(maze_seed: String) -> void:
+	#print("Player::leveling_phase")
 	if xp_left > 0:
 		xp += xp_left
 		#xp_to_lvl_up -= xp_left
 		xp_left = 0
 	
-	if xp > xp_to_lvl_up:
+	if xp >= xp_to_lvl_up:
+		#print("Player::leveling_phase:: lvl up !!")
 		xp -= xp_to_lvl_up
 		propose_upgrades(LootUtilities.get_loot(true, maze_seed + str(lvl)), try_lvl_up)
 		lvl += 1
 		xp_to_lvl_up = get_xp_for_leveling_up(lvl)
 		await try_lvl_up
-		await get_tree().create_timer(0.01).timeout
+		await get_tree().create_timer(0.001).timeout
 		leveling_phase(maze_seed)
+	else:
+		await get_tree().create_timer(0.001).timeout
+		#print("Player::leveling_phase:: lvl up end")
+		leveling_phase_ended.emit()
 
 func get_xp_for_leveling_up(current_lvl: int) -> float:
 	# TODO: find a great formula to set xp for next lvl
@@ -490,3 +499,19 @@ func get_player_name() -> String:
 
 func get_interaction_label() -> Label:
 	return $CanvasLayer/UI.get_children()[1]
+
+
+func _on_damage_taken():
+	if is_in_lobby:
+		super._on_damage_taken() # TODO: probably remove this later
+	else:
+		if health_component.health <= 0:
+			is_dead.emit(-1) # id not used here
+
+
+func set_rune_at_placement(rune_id: int, active_placement: bool = true) -> void:
+	if active_placement:
+		active_rune = Rune.create_rune_with_id(rune_id, self)
+		_init_active_rune_visual_spot()
+	else:
+		second_rune = Rune.create_rune_with_id(rune_id, self)

@@ -3,31 +3,31 @@
 [ext_resource type="Script" uid="uid://b38nikd26qldw" path="res://scripts/decorations/pedestral.gd" id="1_dobgo"]
 [ext_resource type="Script" uid="uid://duqdm15li6un3" path="res://scripts/interactions/interactionsDetector.gd" id="2_s0j5f"]
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_dobgo"]
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_s0j5f"]
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_s0j5f"]
-noise = SubResource("FastNoiseLite_dobgo")
+noise = SubResource("FastNoiseLite_s0j5f")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dobgo"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0htf7"]
 normal_enabled = true
 normal_texture = SubResource("NoiseTexture2D_s0j5f")
 
 [sub_resource type="BoxMesh" id="BoxMesh_s0j5f"]
-material = SubResource("StandardMaterial3D_dobgo")
+material = SubResource("StandardMaterial3D_0htf7")
 size = Vector3(0.5, 0.05, 0.5)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s0j5f"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uw02s"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_dobgo"]
-material = SubResource("StandardMaterial3D_s0j5f")
+material = SubResource("StandardMaterial3D_uw02s")
 top_radius = 0.02
 bottom_radius = 0.02
 height = 0.18
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0htf7"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lnrp4"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_s0j5f"]
-material = SubResource("StandardMaterial3D_0htf7")
+material = SubResource("StandardMaterial3D_lnrp4")
 top_radius = 0.2
 bottom_radius = 0.17
 height = 1.0
@@ -36,10 +36,10 @@ height = 1.0
 height = 1.0
 radius = 0.25
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uw02s"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wfw6a"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_uw02s"]
-material = SubResource("StandardMaterial3D_uw02s")
+material = SubResource("StandardMaterial3D_wfw6a")
 size = Vector3(1.2, 0.1, 1.5)
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_dobgo"]

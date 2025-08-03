@@ -1,6 +1,5 @@
-[gd_scene load_steps=11 format=3 uid="uid://y1yw5naea0tu"]
+[gd_scene load_steps=10 format=3 uid="uid://y1yw5naea0tu"]
 
-[ext_resource type="Script" uid="uid://dh50j32wmvwii" path="res://scripts/characters/health_component.gd" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://cp0j2ml3yhrbt" path="res://scripts/characters/player.gd" id="1_yewv4"]
 [ext_resource type="PackedScene" uid="uid://dpx68uy1u0wsw" path="res://scenes/wip/debug_infos.tscn" id="3_76oj4"]
 [ext_resource type="PackedScene" uid="uid://bg58p3le6eq0l" path="res://scenes/fight/ui.tscn" id="4_dyp2m"]
@@ -24,10 +23,6 @@ height = 2.2
 [node name="Player" type="CharacterBody3D" groups=["Player"]]
 collision_layer = 32770
 script = ExtResource("1_yewv4")
-
-[node name="HealthComponent" type="Node3D" parent="."]
-script = ExtResource("1_3vyb7")
-metadata/_custom_type_script = "uid://dh50j32wmvwii"
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_3vyb7")
