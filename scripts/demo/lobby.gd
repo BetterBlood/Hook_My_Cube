@@ -24,6 +24,7 @@ var polyrinthe: Polyrinthe = Polyrinthe.new()
 
 var maze_scene: PackedScene = preload("res://scenes/maze.tscn")
 const PEDESTRAL_RUNE_UNLOCKER = preload("res://scenes/decorations/pedestral_rune_unlock.tscn")
+const PEDESTAL_CONVERT_ESSENCES = preload("res://scenes/decorations/pedestal_convert_essences.tscn")
 
 
 func _ready() -> void:
@@ -63,12 +64,7 @@ func _ready() -> void:
 	
 	
 	if len(all_runes) == 0:
-		var config = ConfigFile.new()
-		var err = config.load("user://all_runes.cfg")
-		if err != OK:
-			Rune.save_rune_infos()
-		else:
-			all_runes = Rune.get_rune_infos(config)
+		all_runes = Rune.get_rune_infos()
 	
 	if !Enums.damage_type_loaded:
 		var config = ConfigFile.new()
@@ -193,6 +189,7 @@ func load_meta() -> void:
 		unlocked_runes.append(int(rune_id))
 	
 	_init_runes_unlocker()
+	_init_runes_essences_converter()
 	
 	#player.call_deferred("initialize_player").bind(meta_data, null, null)
 	player.initialize_player(meta_data, null)
@@ -230,6 +227,29 @@ func _init_runes_unlocker() -> void:
 		pedestal.rotation_degrees = Vector3(0, rotation_deg[rune_data["id"] % len(rotation_deg)], 0)
 
 
+func _init_runes_essences_converter() -> void:
+	
+	# Normal to Fire, Normal to Plant & Normal to Electric
+	var convert_to: Array = [Enums.DamageType.FIRE, Enums.DamageType.PLANT, Enums.DamageType.ELEC]
+	var positions: Array[Vector3] = [Vector3(-8, 0.6, 20), Vector3(+8, 0.6, -20), Vector3(-8, 0.6, -20)]
+	var rotations: Array[Vector3] = [Vector3(0, 180, 0), Vector3(0, 0, 0), Vector3(0, 0, 0)]
+	
+	for i in [0, 1, 2]:
+		var pedestal = PEDESTAL_CONVERT_ESSENCES.instantiate()
+		pedestal.maze = null
+		pedestal.is_save_pedestral = false
+		pedestal.id = -1
+		pedestal.lobby = self
+		$RuneUnlockedRoom.get_children()[0].add_child(pedestal)
+		pedestal.set_cost_value(10)
+		pedestal.set_cost_type(Enums.DamageType.NORMAL)
+		pedestal.set_give_value(1)
+		pedestal.set_give_type(convert_to[i])
+		pedestal.position = positions[i]
+		pedestal.rotation_degrees = rotations[i]
+	
+
+
 func _on_difficulty_selectionner_difficulty_changed(new_difficulty: int) -> void:
 	#print("lobby::_on_difficulty_selectionner_difficulty_changed new_difficulty: ", new_difficulty)
 	difficulty = new_difficulty
@@ -264,6 +284,15 @@ func unlock_rune(id: int, cost_value: int, cost_type: Enums.DamageType) -> bool:
 	if cost_value <= essences[cost_type]:
 		essences[cost_type] -= cost_value
 		unlocked_runes.append(id)
+		save_meta()
+		# TODO: update other pedestal of same type with the new essences possesion
+		return true
+	return false
+
+func convert_essences(cost_value: int, cost_type: Enums.DamageType, give_value: int, give_type: Enums.DamageType) -> bool:
+	if cost_value <= essences[cost_type]:
+		essences[cost_type] -= cost_value
+		essences[give_type] += give_value
 		save_meta()
 		# TODO: update other pedestal of same type with the new essences possesion
 		return true

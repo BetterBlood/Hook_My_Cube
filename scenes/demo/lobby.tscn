@@ -440,6 +440,8 @@ text = "Enter the Maze !"
 [node name="RuneUnlockedRoom" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -100, 0, -50)
 
+[node name="Pedestals" type="Node3D" parent="RuneUnlockedRoom"]
+
 [node name="Wall6" type="StaticBody3D" parent="RuneUnlockedRoom"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 15, 25)
 collision_layer = 17

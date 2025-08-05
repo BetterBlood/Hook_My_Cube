@@ -6,6 +6,7 @@ signal lobby_loaded()
 signal maze_loaded()
 signal save_id_changed(value: int)
 signal boss_room_loaded()
+signal costs_changed()
 
 func _ready() -> void:
 	$ColorRect.mouse_filter = Control.MOUSE_FILTER_IGNORE

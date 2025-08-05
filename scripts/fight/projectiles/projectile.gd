@@ -33,7 +33,7 @@ func set_layers_to_hit(layers: int) -> int:
 
 
 func _on_interaction_area_area_entered(area: Area3D) -> void:
-	print("In Projectile detect collision with: ", area)
+	#print("In Projectile detect collision with: ", area)
 	var target = area.get_parent()
 	if target and target.has_method("get_health_component"):
 		_impact_health_component_user(target)
@@ -48,7 +48,7 @@ func _impact_health_component_user(target: Node):
 	
 	_apply_effect(target)
 	
-	print("Projectile: ", self, ": perforation_count: ", perforation_count)
+	#print("Projectile: ", self, ": perforation_count: ", perforation_count)
 	if perforation_count <= 0:
 		#print("Projectile: ", self , ": perforating destroy reached")
 		queue_free()

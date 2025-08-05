@@ -46,5 +46,5 @@ func _set_algo(algo: int) -> void:
 	label_3d.text = str(Polyrinthe.GENERATION_ALGORITHME.keys()[current_algo])
 	label_3d.reparent(sizes[current_algo])
 	label_3d.position = Vector3(1.25, 0, 0)
-	print(Polyrinthe.GENERATION_ALGORITHME.keys()[current_algo])
+	#print(Polyrinthe.GENERATION_ALGORITHME.keys()[current_algo])
 	algo_changed.emit(Polyrinthe.GENERATION_ALGORITHME.values()[current_algo])

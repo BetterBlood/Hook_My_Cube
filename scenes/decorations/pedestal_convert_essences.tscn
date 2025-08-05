@@ -1,51 +1,51 @@
-[gd_scene load_steps=30 format=3 uid="uid://gt5oquyxkadu"]
+[gd_scene load_steps=30 format=3 uid="uid://2bsrgjex0b1t"]
 
-[ext_resource type="Script" uid="uid://dm8uqli32ebh0" path="res://scripts/decorations/pedestral_rune_unlock.gd" id="1_45ikk"]
-[ext_resource type="Script" uid="uid://duqdm15li6un3" path="res://scripts/interactions/interactionsDetector.gd" id="2_hnwg0"]
+[ext_resource type="Script" uid="uid://bjr0aud06vepk" path="res://scripts/decorations/pedestal_convert_essences.gd" id="1_s64bp"]
+[ext_resource type="Script" uid="uid://duqdm15li6un3" path="res://scripts/interactions/interactionsDetector.gd" id="2_7uwt8"]
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_45ikk"]
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_dobgo"]
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_0knpg"]
-noise = SubResource("FastNoiseLite_45ikk")
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ae25s"]
+noise = SubResource("FastNoiseLite_dobgo")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hnwg0"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dobgo"]
 normal_enabled = true
-normal_texture = SubResource("NoiseTexture2D_0knpg")
+normal_texture = SubResource("NoiseTexture2D_ae25s")
 
-[sub_resource type="BoxMesh" id="BoxMesh_1pp3e"]
-material = SubResource("StandardMaterial3D_hnwg0")
+[sub_resource type="BoxMesh" id="BoxMesh_8agdl"]
+material = SubResource("StandardMaterial3D_dobgo")
 size = Vector3(0.5, 0.05, 0.5)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0knpg"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s0j5f"]
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_yahtx"]
-material = SubResource("StandardMaterial3D_0knpg")
+[sub_resource type="CylinderMesh" id="CylinderMesh_58wok"]
+material = SubResource("StandardMaterial3D_s0j5f")
 top_radius = 0.02
 bottom_radius = 0.02
 height = 0.18
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1pp3e"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0htf7"]
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_a8dlh"]
-material = SubResource("StandardMaterial3D_1pp3e")
+[sub_resource type="CylinderMesh" id="CylinderMesh_ejjvs"]
+material = SubResource("StandardMaterial3D_0htf7")
 top_radius = 0.2
 bottom_radius = 0.17
 height = 1.0
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_mg6r0"]
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_elhnk"]
 height = 1.0
 radius = 0.25
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yahtx"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uw02s"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_0kfrg"]
-material = SubResource("StandardMaterial3D_yahtx")
+[sub_resource type="BoxMesh" id="BoxMesh_5e63u"]
+material = SubResource("StandardMaterial3D_uw02s")
 size = Vector3(1.2, 0.1, 1.5)
 
-[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_uukdh"]
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_cs64l"]
 data = PackedVector3Array(-0.6, 0.05, 0.75, 0.6, 0.05, 0.75, -0.6, -0.05, 0.75, 0.6, 0.05, 0.75, 0.6, -0.05, 0.75, -0.6, -0.05, 0.75, 0.6, 0.05, -0.75, -0.6, 0.05, -0.75, 0.6, -0.05, -0.75, -0.6, 0.05, -0.75, -0.6, -0.05, -0.75, 0.6, -0.05, -0.75, 0.6, 0.05, 0.75, 0.6, 0.05, -0.75, 0.6, -0.05, 0.75, 0.6, 0.05, -0.75, 0.6, -0.05, -0.75, 0.6, -0.05, 0.75, -0.6, 0.05, -0.75, -0.6, 0.05, 0.75, -0.6, -0.05, -0.75, -0.6, 0.05, 0.75, -0.6, -0.05, 0.75, -0.6, -0.05, -0.75, 0.6, 0.05, 0.75, -0.6, 0.05, 0.75, 0.6, 0.05, -0.75, -0.6, 0.05, 0.75, -0.6, 0.05, -0.75, 0.6, 0.05, -0.75, -0.6, -0.05, 0.75, 0.6, -0.05, 0.75, -0.6, -0.05, -0.75, 0.6, -0.05, 0.75, 0.6, -0.05, -0.75, -0.6, -0.05, -0.75)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_ps116"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_nmxrg"]
 size = Vector3(6.95752, 1.79443, 3.97963)
 
 [sub_resource type="Animation" id="Animation_s0j5f"]
@@ -433,7 +433,7 @@ animation = &"leave_area"
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_0htf7"]
 animation = &"player_near"
 
-[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_rahtv"]
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_kar5s"]
 graph_offset = Vector2(-671.296, 209.842)
 nodes/Animation/node = SubResource("AnimationNodeAnimation_dobgo")
 nodes/Animation/position = Vector2(-80, 586.667)
@@ -450,8 +450,8 @@ nodes/player_near/node = SubResource("AnimationNodeAnimation_0htf7")
 nodes/player_near/position = Vector2(-213.333, 320)
 node_connections = [&"Transition", 0, &"idle", &"Transition", 1, &"player_near", &"Transition", 2, &"active", &"Transition", 3, &"leave", &"Transition", 4, &"Animation", &"output", 0, &"Transition"]
 
-[node name="PedestralRuneUnlock" type="Node3D"]
-script = ExtResource("1_45ikk")
+[node name="PedestalConvertEssences" type="Node3D"]
+script = ExtResource("1_s64bp")
 metadata/_custom_type_script = "uid://b38nikd26qldw"
 
 [node name="Shelf" type="Node3D" parent="."]
@@ -461,13 +461,13 @@ transform = Transform3D(1, 0, 0, 0, 0.92388, -0.382683, 0, 0.382683, 0.92388, 0,
 transform = Transform3D(1, 0, 0, 0, 0.997729, -0.0673714, 0, 0.0673713, 0.99773, 0, 0.00782353, -0.0228343)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Shelf/ReadablePart"]
-mesh = SubResource("BoxMesh_1pp3e")
+mesh = SubResource("BoxMesh_8agdl")
 
 [node name="holder" type="StaticBody3D" parent="Shelf"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0925153, -0.136153)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Shelf/holder"]
-mesh = SubResource("CylinderMesh_yahtx")
+mesh = SubResource("CylinderMesh_58wok")
 
 [node name="Column" type="Node3D" parent="."]
 
@@ -475,10 +475,10 @@ mesh = SubResource("CylinderMesh_yahtx")
 collision_layer = 17
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Column/StaticBody3D"]
-mesh = SubResource("CylinderMesh_a8dlh")
+mesh = SubResource("CylinderMesh_ejjvs")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Column/StaticBody3D"]
-shape = SubResource("CylinderShape3D_mg6r0")
+shape = SubResource("CylinderShape3D_elhnk")
 
 [node name="Base" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
@@ -488,20 +488,20 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.233324)
 collision_layer = 17
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Base/StaticBody3D"]
-mesh = SubResource("BoxMesh_0kfrg")
+mesh = SubResource("BoxMesh_5e63u")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Base/StaticBody3D"]
-shape = SubResource("ConcavePolygonShape3D_uukdh")
+shape = SubResource("ConcavePolygonShape3D_cs64l")
 
 [node name="InteractionsDetector" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.22309, 1.18939)
 collision_layer = 0
 collision_mask = 2
-script = ExtResource("2_hnwg0")
+script = ExtResource("2_7uwt8")
 metadata/_custom_type_script = "uid://duqdm15li6un3"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="InteractionsDetector"]
-shape = SubResource("BoxShape3D_ps116")
+shape = SubResource("BoxShape3D_nmxrg")
 
 [node name="AnimationArea" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.22309, 1.18939)
@@ -509,7 +509,7 @@ collision_layer = 0
 collision_mask = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="AnimationArea"]
-shape = SubResource("BoxShape3D_ps116")
+shape = SubResource("BoxShape3D_nmxrg")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
@@ -517,7 +517,7 @@ libraries = {
 }
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
-tree_root = SubResource("AnimationNodeBlendTree_rahtv")
+tree_root = SubResource("AnimationNodeBlendTree_kar5s")
 anim_player = NodePath("../AnimationPlayer")
 parameters/Transition/current_state = "Idle"
 parameters/Transition/transition_request = ""

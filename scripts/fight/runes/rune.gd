@@ -2,9 +2,10 @@ extends Node
 
 class_name Rune
 
-# decorators attribute
 var cooldown: float 
+# decorators attribute
 var rune_resource: RuneResource = RuneResource.new()
+
 
 var projectile_scene: Resource
 
@@ -19,6 +20,9 @@ var visual_rune: Node3D
 var active_mat: StandardMaterial3D
 
 static var all_runes: Array = []
+static var all_default_rune_classes: Array = [
+	DebugRune, NormalRune1, FireRune1, PlantRune1, ElectricRune1
+]
 
 func _init(parent: Node3D) -> void:
 	#print("_init de Rune: ", self)
@@ -45,50 +49,132 @@ func get_rune_spot() -> Marker3D:
 func get_active_mat() -> StandardMaterial3D:
 	return active_mat
 
-static func save_rune_infos() -> void:
+func _set_rune() -> void:
+	#print("Rune::_set_rune all_rune: ", all_runes)
+	if len(all_runes) <= 0:
+		#print("Rune::_set_rune call 'get_rune_infos'")
+		get_rune_infos(true)
+	
+	#print("Rune::_set_rune 'get_rune_infos' called")
+	
+	for rune_data in all_runes:
+		if int(rune_data["id"]) == get_rune_id():
+			_set_rune_data(rune_data)
+
+func _set_rune_data(rune_data: Dictionary) -> void:
+	cooldown = float(rune_data["cooldown"])
+	
+	rune_resource.cooldown_reduction = float(rune_data["cooldown_reduction"])
+	rune_resource.projectile_perforation_count = int(rune_data["p_perforation_count"])
+	rune_resource.projectile_bounce_count = int(rune_data["p_bounce_count"])
+	rune_resource.projectile_penetration = float(rune_data["p_penetration"])
+	rune_resource.projectile_damage = float(rune_data["p_damage"])
+	rune_resource.projectile_speed = float(rune_data["p_speed"])
+	rune_resource.projectile_status_effect_chance = float(rune_data["p_status_effect_chance"])
+	rune_resource.projectile_radius = float(rune_data["p_radius"])
+	rune_resource.projectile_effect_duration = float(rune_data["p_effect_duration"])
+	rune_resource.projectile_effect_area_range_transmission = float(rune_data["p_effect_area_range_transmission"])
+
+static func get_default_rune_data() -> Dictionary:
+	print("Rune::set_default_rune_data:: SHOULD NOT APPEAR !")
+	push_warning("Pls be carefull, this methode is designed to be overriden in subclasses, or not being called")
+	return {}
+
+static func save_rune_infos() -> void: # TODO: on update, don't forget to update get_rune_infos
 	var config = ConfigFile.new()
-	config.set_value("-1", "name", "Debug")
-	config.set_value("-1", "type", Enums.DamageType.FIRE)
-	config.set_value("-1", "cost_value", -1)
+	for i in range(len(all_default_rune_classes)):
+		var rune_data = all_default_rune_classes[i].get_default_rune_data()
+		#print(rune_data)
+		var rune_id_as_str = str(i - 1) # minus 1 cause of debug rune state at 0 but id -1
+		
+		config.set_value(rune_id_as_str, "name", rune_data["name"])
+		config.set_value(rune_id_as_str, "type", int(rune_data["type"]))
+		config.set_value(rune_id_as_str, "cost_value", int(rune_data["cost_value"]))
+		
+		config.set_value(rune_id_as_str, "cooldown", float(rune_data["cooldown"]))
+		
+		config.set_value(rune_id_as_str, "cooldown_reduction", float(rune_data["cooldown"]))
+		config.set_value(rune_id_as_str, "p_perforation_count", int(rune_data["p_perforation_count"]))
+		config.set_value(rune_id_as_str, "p_bounce_count", int(rune_data["p_bounce_count"]))
+		config.set_value(rune_id_as_str, "p_penetration", float(rune_data["p_penetration"]))
+		config.set_value(rune_id_as_str, "p_damage", float(rune_data["p_damage"]))
+		config.set_value(rune_id_as_str, "p_speed", float(rune_data["p_speed"]))
+		config.set_value(rune_id_as_str, "p_status_effect_chance", float(rune_data["p_status_effect_chance"]))
+		config.set_value(rune_id_as_str, "p_radius", float(rune_data["p_radius"]))
+		config.set_value(rune_id_as_str, "p_effect_duration", float(rune_data["p_effect_duration"]))
+		config.set_value(rune_id_as_str, "p_effect_area_range_transmission", float(rune_data["p_effect_area_range_transmission"]))
 	
-	config.set_value("0", "name", "Normal_1")
-	config.set_value("0", "type", Enums.DamageType.NORMAL)
-	config.set_value("0", "cost_value", 50)
-	
-	config.set_value("1", "name", "Fire_1")
-	config.set_value("1", "type", Enums.DamageType.FIRE)
-	config.set_value("1", "cost_value", 50)
-	
-	config.set_value("2", "name", "Plant_1")
-	config.set_value("2", "type", Enums.DamageType.PLANT)
-	config.set_value("2", "cost_value", 50)
-	
-	config.set_value("3", "name", "Elec_1")
-	config.set_value("3", "type", Enums.DamageType.ELEC)
-	config.set_value("3", "cost_value", 50)
+	#config.set_value("0", "name", "Normal_1")
+	#config.set_value("0", "type", Enums.DamageType.NORMAL)
+	#config.set_value("0", "cost_value", 50)
+	#
+	#config.set_value("1", "name", "Fire_1")
+	#config.set_value("1", "type", Enums.DamageType.FIRE)
+	#config.set_value("1", "cost_value", 50)
+	#
+	#config.set_value("2", "name", "Plant_1")
+	#config.set_value("2", "type", Enums.DamageType.PLANT)
+	#config.set_value("2", "cost_value", 50)
+	#
+	#config.set_value("3", "name", "Elec_1")
+	#config.set_value("3", "type", Enums.DamageType.ELEC)
+	#config.set_value("3", "cost_value", 50)
 	
 	
 	config.save("user://all_runes.cfg")
 
-
-static func get_rune_infos(config: ConfigFile, erase_current: bool = false) -> Array:
+ # TODO: on update, don't forget to update save_rune_infos
+static func get_rune_infos(erase_current: bool = false) -> Array:
+	#print("Rune::get_rune_infos")
+	var config = ConfigFile.new()
+	var err = config.load("user://all_runes.cfg")
+	
+	if err != OK:
+		#print("Rune::get_rune_infos:: err: ", str(err))
+		if erase_current:
+			push_warning("Rune info unreadable, set to default")
+			#print("Rune::_set_rune call 'save_rune_infos'")
+			save_rune_infos()
+		
+		err = config.load("user://all_runes.cfg")
+		if err != OK:
+			push_error("Unable to load rune config files. Please check file: " + " 'all_runes.cfg'")
+			return []
+	
+	if erase_current:
+		all_runes.clear()
+	elif len(config.get_sections()) == len(all_runes):
+		return all_runes
+	
 	if len(config.get_sections()) == 0:
 		save_rune_infos()
 		push_warning("Rune info was empty, set to default")
-	elif len(config.get_sections()) != len(all_runes) and not erase_current:
-		all_runes.clear()
-	elif not erase_current:
-		return all_runes
-	else:
-		all_runes.clear()
+		
+		err = config.load("user://all_runes.cfg")
+		if err != OK:
+			push_error("Unable to load rune config files. Please check file: " + " 'all_runes.cfg'")
+			return []
 	
 	for section in config.get_sections():
 		all_runes.append(
 			{
 				"id" : int(section), 
 				"name" : config.get_value(section, "name"), 
-				"type" : Enums.DamageType.values()[int(config.get_value(section, "type"))],
-				"cost_value" : int(config.get_value(section, "cost_value"))
+				"type" : int(config.get_value(section, "type")),
+				"cost_value" : int(config.get_value(section, "cost_value")),
+				
+				"cooldown" : float(config.get_value(section, "cooldown")),
+				
+				"cooldown_reduction" : float(config.get_value(section, "cooldown_reduction")),
+				"p_perforation_count" : int(config.get_value(section, "p_perforation_count")),
+				"p_bounce_count" : int(config.get_value(section, "p_bounce_count")),
+				"p_penetration" : float(config.get_value(section, "p_penetration")),
+				"p_damage" : float(config.get_value(section, "p_damage")),
+				"p_speed" : float(config.get_value(section, "p_speed")),
+				"p_status_effect_chance" : float(config.get_value(section, "p_status_effect_chance")),
+				"p_radius" : float(config.get_value(section, "p_radius")),
+				"p_effect_duration" : float(config.get_value(section, "p_effect_duration")),
+				"p_effect_area_range_transmission" : float(config.get_value(section, "p_effect_area_range_transmission"))
 			}
 		)
 	

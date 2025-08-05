@@ -14,14 +14,14 @@ var rotation_delay: float = 0.0
 func _ready() -> void:
 	super._ready()
 	player = get_tree().get_first_node_in_group("Player")
-	health_component._max_health = 35#0
+	health_component._max_health = 350
 	health_component.health = health_component._max_health
 	health_component._armor = 2.0
 	health_component._penetration_resistance = 0.5
 	health_component._max_speed = 50 # rotation speed
 	health_component.speed = health_component._max_speed
 	damage = 15 # TODO: balance !
-	damage_type = Enums.DamageType.NORMAL # TODO: is water is added change this to water damage
+	damage_type = Enums.DamageType.NORMAL # TODO: when water is added: change this to water damage type
 	$AnimationPlayer.play("idle")
 	
 	attack_cd = 2.0

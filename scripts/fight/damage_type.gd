@@ -23,7 +23,6 @@ static var damage_type_grid:Dictionary = {}
 
 static func get_grid_modifier(att_type: Enums.DamageType, def_type: Enums.DamageType) -> float:
 	#print("att_type: ", Enums.DamageType.keys()[att_type], ", def_type: ", Enums.DamageType.keys()[def_type])
-	
 	return damage_type_grid[str(Enums.DamageType.keys()[att_type])][def_type]
 
 static func save_grid_damage_type() -> void:
@@ -39,8 +38,8 @@ static func save_grid_damage_type() -> void:
 		if (	!damage_type_grid.has(damage_type)) and \
 				len(config.get_value(damage_type, "grid")) == len(config.get_sections()):
 			damage_type_grid[damage_type] = config.get_value(damage_type, "grid")
-		else:
-			print("Enums::save_grid_damage_type: ", damage_type, " not load, probably already loaded")
+		#else:
+			#print("Enums::save_grid_damage_type: ", damage_type, " not load, probably already loaded")
 	
 	damage_type_loaded = true
 
@@ -49,7 +48,7 @@ static func load_grid_damage_type(config: ConfigFile, erase: bool = false) -> vo
 		if (	!damage_type_grid.has(damage_type)) and \
 				len(config.get_value(damage_type, "grid")) == len(config.get_sections()):
 			damage_type_grid[damage_type] = config.get_value(damage_type, "grid")
-			print("Enums::load_grid_damage_type: ", damage_type, " loaded correctly")
+			#print("Enums::load_grid_damage_type: ", damage_type, " loaded correctly")
 		else:
 			push_error("Error while reading 'damageGrid.cfg'. damage_type_grid may not correctly be initialised. Please verify file content !")
 			config.clear()
