@@ -107,7 +107,6 @@ _data = {
 
 [node name="Zombie" type="CharacterBody3D"]
 collision_layer = 0
-motion_mode = 1
 script = ExtResource("1_fulqv")
 
 [node name="EnemyArea3D" type="Area3D" parent="."]
@@ -122,11 +121,13 @@ debug_color = Color(0.882208, 0.304611, 0.375487, 0.42)
 mesh = SubResource("CapsuleMesh_j7qbc")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+visible = false
 shape = SubResource("CapsuleShape3D_f2e6v")
 
 [node name="Navigation" type="Node3D" parent="."]
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="Navigation"]
+debug_enabled = true
 debug_path_custom_color = Color(1, 0, 0, 1)
 
 [node name="UpdateNavigation" type="Timer" parent="Navigation"]

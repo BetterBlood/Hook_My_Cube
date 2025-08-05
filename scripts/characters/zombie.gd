@@ -21,6 +21,12 @@ func _ready() -> void:
 	health_component.speed = SPEED 
 
 func _physics_process(delta: float) -> void:
+	if not base_position:
+		$Navigation/UpdateNavigation.stop()
+	elif $Navigation/UpdateNavigation.is_stopped():
+		$Navigation/UpdateNavigation.start()
+	
+	var tmp_y_velocity = velocity.y 
 	var direction = Vector3()
 	if target or not navigation_agent_3d.is_navigation_finished():
 		direction = (navigation_agent_3d.get_next_path_position() - global_position).normalized()
@@ -32,11 +38,13 @@ func _physics_process(delta: float) -> void:
 	
 	# Add the gravity.
 	if not is_on_floor():
-		velocity += get_gravity() * delta * 2
-	
+		velocity += get_gravity() * delta * 4
+		#base_position = null
+		velocity.y += tmp_y_velocity  * delta * 4
 	move_and_slide()
 
 func compute_path() -> void:
+	#print("compute_path: ", base_position, ", target: ", target)
 	if target:
 		#print(target)
 		navigation_agent_3d.target_position = target.global_position
@@ -45,8 +53,9 @@ func compute_path() -> void:
 
 func _on_enemy_area_3d_body_entered(_body: Node3D) -> void:
 	#print("enemy collide with: ", _body, ", groups: ", _body.get_groups())
-	if not base_position:
+	if not base_position and not _body.is_in_group("Player"):
 		base_position = global_position
+		#print(self, " set base_position to: ", base_position)
 	elif _body.is_in_group("Player"):
 		var creature = (_body as Creature)
 		if 	creature and creature.has_method("get_health_component") and \

@@ -150,7 +150,7 @@ func _generate_maze() -> void:
 		
 		var maze_data = json.data
 		polyrinthe.begin_id = int(maze_data["begin_id"])
-		polyrinthe.algo = polyrinthe.GENERATION_ALGORITHME.keys()[maze_data["generation_used"]]
+		polyrinthe.algo = polyrinthe.GENERATION_ALGORITHME.values()[maze_data["generation_used"]]
 		
 		difficulty = int(maze_data["difficulty"])
 		for val in maze_data["default_tags"]:
@@ -335,7 +335,7 @@ func _save_maze() -> void:
 		"seed" : polyrinthe.get_seed(),
 		"size" : polyrinthe.size,
 		"begin_id" : polyrinthe.begin_id,
-		"generation_used" : Polyrinthe.GENERATION_ALGORITHME.DFS_LBL_ALT_6,
+		"generation_used" : polyrinthe.algo,
 		"difficulty" : difficulty,
 		"default_tags": [ # TODO: other tags needed !!
 			1, # wall default collision layers (automatically update for grapple use in initialisation)
@@ -416,12 +416,12 @@ func _apply_maze_modifications(maze: Polyrinthe) -> void: # TODO
 	else:
 		player.grapple.upgrade_ice_grapple_color()
 	
-	# TODO: add a portal in the last room to enter the boss fight
 	#var sphere_end = SPHERE.instantiate()
 	#add_child(sphere_end)
 	#sphere_end.get_child(0).mesh.material.albedo_color = Color(0, 0, 0, 1)
 	#sphere_end.position = maze.maze[maze.deepest_id].position - Vector3(0, 0, 5)
 	
+	# portal in the last room to enter the boss fight
 	var portal_end = FAKE_PORTAL.instantiate()
 	add_child(portal_end)
 	portal_end.position = maze.maze[maze.deepest_id].position - Vector3(0, 8.8, 5)

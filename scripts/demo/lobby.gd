@@ -7,7 +7,7 @@ class_name Lobby
 @export var maze_seed: String = ""
 @export var difficulty: int = 0
 @export var size: int = 6 # DEBUG
-@export var algo: int = 9
+@export var algo: Polyrinthe.GENERATION_ALGORITHME = Polyrinthe.GENERATION_ALGORITHME.DFS_LBL_ALT_6
 @export var begin_id: int = 0
 
 var all_runes: Array = []
@@ -110,10 +110,10 @@ func _initialize_new_maze_file_save() -> void:
 	
 	#TODO: get real data from the room of maze selection in lobby
 	var save_dict = {
-		"seed" : "DEBUG" if player.get_player_name() == "DEBUG" else maze_seed, # TODO get the seed choosen by the player !
+		"seed" : "DEBUG" if player.get_player_name() == "DEBUG" else maze_seed,
 		"size" : size,
 		"begin_id" : begin_id,
-		"generation_used" : Polyrinthe.GENERATION_ALGORITHME.values()[algo],
+		"generation_used" : algo,
 		"difficulty" : difficulty, # [-2; 2]
 		"default_tags": [ # TODO: other tags needed !! # [int]
 			1, # wall default collision layers 
