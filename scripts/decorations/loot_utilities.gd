@@ -8,8 +8,12 @@ static func get_loot(is_upgrade: bool, special_seed: String):
 	
 	if !is_upgrade:
 		var loot_options: Array[int] = []
-		print("TODO: setup loot for new runes") # (not -1) cause is debug rune
-		var all_runes = [0, 1, 2, 3] # TODO: get all runes id from file or load in maze or other place
+		
+		var all_runes = []
+		for rune_data in Rune.get_rune_infos():
+			if rune_data["id"] != -1: # (not -1) cause is debug rune
+				all_runes.append(rune_data["id"])
+		
 		for i in range(3):
 			var index = rng.randi_range(0, len(all_runes) - 1)
 			loot_options.append(all_runes[index])

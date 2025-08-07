@@ -8,11 +8,14 @@ friction = 0.0
 bounce = 1.0
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_nsle0"]
+resource_local_to_scene = true
 
 [sub_resource type="SphereMesh" id="SphereMesh_ypha4"]
+resource_local_to_scene = true
 material = ExtResource("2_t6xx2")
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_ykp5w"]
+resource_local_to_scene = true
 
 [node name="DebugProjectile" type="RigidBody3D"]
 collision_layer = 8

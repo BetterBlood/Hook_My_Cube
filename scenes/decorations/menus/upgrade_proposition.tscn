@@ -138,8 +138,6 @@ autowrap_mode = 3
 [node name="Select" type="Button" parent="Panel/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 10
-focus_neighbor_bottom = NodePath("../MainMenu")
-focus_next = NodePath("../MainMenu")
 theme_override_colors/font_disabled_color = Color(0.688595, 0.688595, 0.688595, 1)
 theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 1)
 theme_override_colors/font_hover_color = Color(0, 0, 0, 1)

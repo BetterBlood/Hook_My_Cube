@@ -47,8 +47,8 @@ func light_attack(destination: Vector3, rune_resource_for_projectile: RuneResour
 	rune_upgraded.light_attack(destination, rune_resource_for_projectile)
 
 
-func heavy_attack(destination: Vector3) -> void:
-	rune_upgraded.heavy_attack(destination)
+func heavy_attack(destination: Vector3, rune_resource_for_projectile: RuneResource, ratio: float) -> void:
+	rune_upgraded.heavy_attack(destination, rune_resource_for_projectile, ratio)
 
 
 func get_data_to_performe_attaque() -> RuneResource:

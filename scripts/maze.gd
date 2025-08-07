@@ -35,6 +35,7 @@ const SPHERE = preload("res://addons/polyrinthe/sphere.tscn") # DEBUG
 const PEDESTRAL = preload("res://scenes/decorations/pedestral.tscn")
 const SPAWNER = preload("res://scenes/fight/spawner.tscn")
 const GOLD = preload("res://scenes/decorations/gold.tscn")
+const TORCH = preload("res://scenes/decorations/torch.tscn")
 
 const LOOT_ORBE_ICE_GRAPPLE = preload("res://scenes/decorations/loot_orbe_ice_grapple.tscn")
 
@@ -490,6 +491,12 @@ static func apply_collision_layer(maze: Polyrinthe, material: StandardMaterial3D
 			if col_layer == ICE_WALL_VALUE:
 				wall.get_children()[0].material_override = material
 
+static func add_torch_to(maze: Polyrinthe) -> void:
+	for key in maze.maze.keys():
+		if key%2 == 0:
+			var torch = TORCH.instantiate()
+			torch.position = Vector3(0, -5, 0)
+			maze.maze.get(key).add_child(torch)
 
 func update_spawner(id_spawner: int, mob_ids: Array[int]) -> void:
 	if updated_spawners.has(str(id_spawner)):

@@ -61,6 +61,7 @@ func _ready() -> void:
 	Maze.set_tag_for_collision_layer(polyrinthe)
 	polyrinthe.display()
 	Maze.apply_collision_layer(polyrinthe)
+	Maze.add_torch_to(polyrinthe)
 	
 	
 	if len(all_runes) == 0:
@@ -108,14 +109,13 @@ func _initialize_new_maze_file_save() -> void:
 		push_error("Cannot save maze data. FileAccess error: " + str(save_file.get_error()))
 		return
 	
-	#TODO: get real data from the room of maze selection in lobby
 	var save_dict = {
 		"seed" : "DEBUG" if player.get_player_name() == "DEBUG" else maze_seed,
 		"size" : size,
 		"begin_id" : begin_id,
 		"generation_used" : algo,
 		"difficulty" : difficulty, # [-2; 2]
-		"default_tags": [ # TODO: other tags needed !! # [int]
+		"default_tags": [ # [int]
 			1, # wall default collision layers 
 			0, # color for room near chests
 		],
@@ -234,7 +234,7 @@ func _init_runes_essences_converter() -> void:
 	var positions: Array[Vector3] = [Vector3(-8, 0.6, 20), Vector3(+8, 0.6, -20), Vector3(-8, 0.6, -20)]
 	var rotations: Array[Vector3] = [Vector3(0, 180, 0), Vector3(0, 0, 0), Vector3(0, 0, 0)]
 	
-	for i in [0, 1, 2]:
+	for i in range(len(convert_to)):
 		var pedestal = PEDESTAL_CONVERT_ESSENCES.instantiate()
 		pedestal.maze = null
 		pedestal.is_save_pedestral = false
@@ -253,22 +253,31 @@ func _init_runes_essences_converter() -> void:
 func _on_difficulty_selectionner_difficulty_changed(new_difficulty: int) -> void:
 	#print("lobby::_on_difficulty_selectionner_difficulty_changed new_difficulty: ", new_difficulty)
 	difficulty = new_difficulty
+	_update_hologram()
 
 
 func _on_size_selector_size_changed(new_size: int) -> void:
 	#print("lobby::_on_size_selector_size_changed new_size: ", new_size)
 	size = new_size
+	_update_hologram()
 
 
 func _on_seed_selector_seed_changed(new_seed: String) -> void:
 	#print("lobby::_on_seed_selector_seed_changed new_seed: ", new_seed)
 	maze_seed = new_seed
+	_update_hologram()
 
 
 func _on_algo_selector_algo_changed(new_algo: Polyrinthe.GENERATION_ALGORITHME) -> void:
 	#print("lobby::_on_algo_selector_algo_changed new_algo: ", new_algo)
 	algo = new_algo
+	_update_hologram()
 
+func _update_hologram() -> void:
+	# TODO: on maze param changes, call this to generate a small hologram of 
+	# the maze who's going to be generated, using debug option (need to update 
+	# Polyrinthes asset to reduce the debug pyramide base sizes (who's hardcoded for now))
+	pass
 
 func _on_fake_portal_fake_portal_entered() -> void:
 	#launch_game.emit(player.get_player_name())

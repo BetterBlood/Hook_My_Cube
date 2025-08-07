@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://br883pylmypa7"]
+[gd_scene load_steps=37 format=3 uid="uid://br883pylmypa7"]
 
 [ext_resource type="Script" uid="uid://wdhsttcv1ana" path="res://scripts/demo/lobby.gd" id="1_yr8w2"]
 [ext_resource type="PackedScene" uid="uid://y1yw5naea0tu" path="res://scenes/characters/player.tscn" id="2_pdx53"]
@@ -16,6 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://drrpq2dh7v0b2" path="res://scenes/movement/fake_portal.tscn" id="12_iojra"]
 [ext_resource type="Texture2D" uid="uid://dcjsnb6e48h0p" path="res://images/runes/tsune.png" id="13_y5vlq"]
 [ext_resource type="Texture2D" uid="uid://caxdkceixj6ya" path="res://images/runes/hi2.png" id="14_y0rwf"]
+[ext_resource type="Texture2D" uid="uid://d0qmulsds2tuo" path="res://images/runes/kusa.png" id="15_y0rwf"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_wehoa"]
 sky_top_color = Color(0.0970707, 0.463976, 0.749279, 1)
@@ -88,6 +89,11 @@ height = 50.0
 
 [node name="Lobby" type="Node3D"]
 script = ExtResource("1_yr8w2")
+maze_seed = null
+difficulty = null
+size = null
+algo = null
+begin_id = null
 
 [node name="Player" parent="." instance=ExtResource("2_pdx53")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.9521, 2, 16.6666)
@@ -119,6 +125,7 @@ transform = Transform3D(0.653288, 0.757109, 0, -0.757109, 0.653288, 0, 0, 0, 1, 
 
 [node name="Torch3" parent="." instance=ExtResource("4_u1smo")]
 transform = Transform3D(0.653421, 0.756995, 0, -0.756995, 0.653421, 0, 0, 0, 1, -24.757, 7.5, -15)
+begin_lit = true
 
 [node name="MainFloor" type="Node3D" parent="."]
 
@@ -151,6 +158,10 @@ exit_portal = NodePath("../../../NavigationRegion3D/TrainingFloor/P2 -> Main Lob
 view_direction = 1
 teleport_direction = 0
 
+[node name="Label3D" type="Label3D" parent="MainFloor/P1 -> Fight Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25219, 0.308487)
+text = "Practice Room"
+
 [node name="P9 -> Runes Unlock" parent="MainFloor" instance=ExtResource("5_4of2y")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -22.5, 1.25, -15)
 
@@ -159,6 +170,10 @@ exit_portal = NodePath("../../../RuneUnlockedRoom/P11 -> Lobby Main Room/Portal3
 view_direction = 1
 teleport_direction = 0
 
+[node name="Label3D" type="Label3D" parent="MainFloor/P9 -> Runes Unlock"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25219, 0.308487)
+text = "Rune Unlock Room"
+
 [node name="P10 -> Health Component Upgrades Room" parent="MainFloor" instance=ExtResource("5_4of2y")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -22.5, 1.25, 0)
 
@@ -166,6 +181,10 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -22.5,
 exit_portal = NodePath("../../../HealthComponentUpgradeRoom/P12 -> Lobby Main Room/Portal3D")
 view_direction = 1
 teleport_direction = 0
+
+[node name="Label3D" type="Label3D" parent="MainFloor/P10 -> Health Component Upgrades Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25219, 0.308487)
+text = "Constitution Upgrade Room"
 
 [node name="Real Lab" type="Node" parent="MainFloor"]
 
@@ -176,6 +195,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, -22.5)
 exit_portal = NodePath("../../../../MazeSelectionFloor/P4 -> Lobby Main Room/Portal3D")
 view_direction = 1
 teleport_direction = 0
+
+[node name="Label3D" type="Label3D" parent="MainFloor/Real Lab/P3 -> Maze Selection"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25219, 0.308487)
+text = "Maze Selection Room"
 
 [node name="Debug Lab" type="Node3D" parent="MainFloor"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 45.3371, 0, 0)
@@ -188,6 +211,10 @@ exit_portal = NodePath("../../P6 -> Main Room/Portal3D")
 view_direction = 1
 teleport_direction = 0
 
+[node name="Label3D" type="Label3D" parent="MainFloor/Debug Lab/P5 -> Lab 3x3x3 Entrance"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25219, 0.308487)
+text = "Example maze Entrance"
+
 [node name="P6 -> Main Room" parent="MainFloor/Debug Lab" instance=ExtResource("5_4of2y")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 1.25, -1.306)
 
@@ -195,6 +222,10 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 1.2
 exit_portal = NodePath("../../P5 -> Lab 3x3x3 Entrance/Portal3D")
 view_direction = 1
 teleport_direction = 0
+
+[node name="Label3D" type="Label3D" parent="MainFloor/Debug Lab/P6 -> Main Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25219, 0.308487)
+text = "Return to Lobby"
 
 [node name="P7 -> Return to Lobby" parent="MainFloor/Debug Lab" instance=ExtResource("5_4of2y")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 22.25, 19.5)
@@ -204,6 +235,10 @@ exit_portal = NodePath("../../P8 -> LastRoom 3x3x3/Portal3D")
 view_direction = 1
 teleport_direction = 0
 
+[node name="Label3D" type="Label3D" parent="MainFloor/Debug Lab/P7 -> Return to Lobby"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25219, 0.308487)
+text = "Return to Lobby"
+
 [node name="P8 -> LastRoom 3x3x3" parent="MainFloor/Debug Lab" instance=ExtResource("5_4of2y")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -22.9297, 1.25, 16.911)
 
@@ -211,6 +246,10 @@ transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -22.92
 exit_portal = NodePath("../../P7 -> Return to Lobby/Portal3D")
 view_direction = 1
 teleport_direction = 0
+
+[node name="Label3D" type="Label3D" parent="MainFloor/Debug Lab/P8 -> LastRoom 3x3x3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25219, 0.308487)
+text = "Example Maze Exit"
 
 [node name="Walls" type="Node3D" parent="MainFloor"]
 
@@ -324,6 +363,10 @@ shadow_caster_mask = 4293918751
 spot_range = 25.0
 spot_angle = 80.0
 spot_angle_attenuation = 0.267944
+
+[node name="Label3D" type="Label3D" parent="MazeSelectionFloor/P4 -> Lobby Main Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25219, 0.308487)
+text = "Return to Lobby"
 
 [node name="Wall6" type="StaticBody3D" parent="MazeSelectionFloor"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 15, 25)
@@ -481,7 +524,8 @@ mesh = SubResource("BoxMesh_6728e")
 shape = SubResource("ConcavePolygonShape3D_8d4em")
 
 [node name="Sprite3D" type="Sprite3D" parent="RuneUnlockedRoom/Wall8"]
-transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, -10, 0, -0.16)
+transform = Transform3D(-5, 0, -4.37114e-07, 0, 5, 0, 4.37114e-07, 0, -5, -10, 0, -0.16)
+texture = ExtResource("15_y0rwf")
 
 [node name="Sprite3D2" type="Sprite3D" parent="RuneUnlockedRoom/Wall8"]
 transform = Transform3D(-5, 0, -4.37114e-07, 0, 5, 0, 4.37114e-07, 0, -5, 10, 0, -0.16)
@@ -535,6 +579,10 @@ exit_portal = NodePath("../../../MainFloor/P9 -> Runes Unlock/Portal3D")
 view_direction = 1
 teleport_direction = 0
 
+[node name="Label3D" type="Label3D" parent="RuneUnlockedRoom/P11 -> Lobby Main Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25219, 0.308487)
+text = "Return to Lobby"
+
 [node name="P13 -> Normal Unlock" parent="RuneUnlockedRoom" instance=ExtResource("5_4of2y")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 10, 1.25, 20)
 
@@ -542,6 +590,10 @@ transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 10, 1.
 exit_portal = NodePath("../../../NormalRuneUnlock/P14 -> Return to Unlock Room/Portal3D")
 view_direction = 1
 teleport_direction = 0
+
+[node name="Label3D" type="Label3D" parent="RuneUnlockedRoom/P13 -> Normal Unlock"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25219, 0.308487)
+text = "Unlock Normal Runes"
 
 [node name="P15 ->Fire Unlock" parent="RuneUnlockedRoom" instance=ExtResource("5_4of2y")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -10, 1.25, 20)
@@ -551,6 +603,10 @@ exit_portal = NodePath("../../../FireRuneUnlock/P16 -> Return to Unlock Room/Por
 view_direction = 1
 teleport_direction = 0
 
+[node name="Label3D" type="Label3D" parent="RuneUnlockedRoom/P15 ->Fire Unlock"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25219, 0.308487)
+text = "Unlock Fire Runes"
+
 [node name="P17 -> Plant Unlock" parent="RuneUnlockedRoom" instance=ExtResource("5_4of2y")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1.25, -20)
 
@@ -559,6 +615,10 @@ exit_portal = NodePath("../../../PlantRuneUnlock/P18 -> Return to Unlock Room/Po
 view_direction = 1
 teleport_direction = 0
 
+[node name="Label3D" type="Label3D" parent="RuneUnlockedRoom/P17 -> Plant Unlock"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25219, 0.308487)
+text = "Unlock Plant Runes"
+
 [node name="P19 -> Electic Unlock" parent="RuneUnlockedRoom" instance=ExtResource("5_4of2y")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.25, -20)
 
@@ -566,6 +626,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.25, -20)
 exit_portal = NodePath("../../../ElectricRuneUnlock/P20 -> Return to Unlock Room/Portal3D")
 view_direction = 1
 teleport_direction = 0
+
+[node name="Label3D" type="Label3D" parent="RuneUnlockedRoom/P19 -> Electic Unlock"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25219, 0.308487)
+text = "Unlock Electric Runes"
 
 [node name="P21 -> More Runes" parent="RuneUnlockedRoom" instance=ExtResource("5_4of2y")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -20, 1.25, 0)
@@ -577,6 +641,10 @@ teleport_direction = 0
 
 [node name="Collider" parent="RuneUnlockedRoom/P21 -> More Runes/Portal3D/TeleportArea" index="0"]
 shape = SubResource("BoxShape3D_iojra")
+
+[node name="Label3D" type="Label3D" parent="RuneUnlockedRoom/P21 -> More Runes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25219, 0.308487)
+text = "Other Rune Types"
 
 [node name="NormalRuneUnlock" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -200, 0, -100)
@@ -665,6 +733,10 @@ exit_portal = NodePath("../../../RuneUnlockedRoom/P13 -> Normal Unlock/Portal3D"
 view_direction = 1
 teleport_direction = 0
 
+[node name="Label3D" type="Label3D" parent="NormalRuneUnlock/P14 -> Return to Unlock Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25219, 0.308487)
+text = "Return to Lobby"
+
 [node name="FireRuneUnlock" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -300, 0, -100)
 
@@ -752,6 +824,10 @@ exit_portal = NodePath("../../../RuneUnlockedRoom/P15 ->Fire Unlock/Portal3D")
 view_direction = 1
 teleport_direction = 0
 
+[node name="Label3D" type="Label3D" parent="FireRuneUnlock/P16 -> Return to Unlock Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25219, 0.308487)
+text = "Return to Lobby"
+
 [node name="PlantRuneUnlock" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -200, 0, -200)
 
@@ -788,7 +864,8 @@ mesh = SubResource("BoxMesh_6728e")
 shape = SubResource("ConcavePolygonShape3D_8d4em")
 
 [node name="Sprite3D" type="Sprite3D" parent="PlantRuneUnlock/Wall8"]
-transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, -0.16)
+transform = Transform3D(-10, 0, -8.74228e-07, 0, 10, 0, 8.74228e-07, 0, -10, 0, 0, -0.16)
+texture = ExtResource("15_y0rwf")
 
 [node name="Wall9" type="StaticBody3D" parent="PlantRuneUnlock"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 25, 15, 0)
@@ -837,6 +914,10 @@ transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 1.2
 exit_portal = NodePath("../../../RuneUnlockedRoom/P17 -> Plant Unlock/Portal3D")
 view_direction = 1
 teleport_direction = 0
+
+[node name="Label3D" type="Label3D" parent="PlantRuneUnlock/P18 -> Return to Unlock Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25219, 0.308487)
+text = "Return to Lobby"
 
 [node name="ElectricRuneUnlock" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -300, 0, -200)
@@ -925,6 +1006,10 @@ exit_portal = NodePath("../../../RuneUnlockedRoom/P19 -> Electic Unlock/Portal3D
 view_direction = 1
 teleport_direction = 0
 
+[node name="Label3D" type="Label3D" parent="ElectricRuneUnlock/P20 -> Return to Unlock Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25219, 0.308487)
+text = "Return to Lobby"
+
 [node name="MoreRuneUnlock" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -400, 0, -150)
 
@@ -1005,6 +1090,10 @@ transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 20, 1.
 exit_portal = NodePath("../../../RuneUnlockedRoom/P21 -> More Runes/Portal3D")
 view_direction = 1
 teleport_direction = 0
+
+[node name="Label3D" type="Label3D" parent="MoreRuneUnlock/P22 -> Return To Unlock Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25219, 0.308487)
+text = "Return to Lobby"
 
 [node name="HealthComponentUpgradeRoom" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -100, 0, 50)
@@ -1087,6 +1176,10 @@ exit_portal = NodePath("../../../MainFloor/P10 -> Health Component Upgrades Room
 view_direction = 1
 teleport_direction = 0
 
+[node name="Label3D" type="Label3D" parent="HealthComponentUpgradeRoom/P12 -> Lobby Main Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25219, 0.308487)
+text = "Return to Lobby"
+
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
 navigation_mesh = SubResource("NavigationMesh_br7h5")
 
@@ -1109,6 +1202,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.295662)
 exit_portal = NodePath("../../../../MainFloor/P1 -> Fight Room/Portal3D")
 view_direction = 1
 teleport_direction = 0
+
+[node name="Label3D" type="Label3D" parent="NavigationRegion3D/TrainingFloor/P2 -> Main Lobby"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25219, 0.308487)
+text = "Return to Lobby"
 
 [node name="obstacle" type="StaticBody3D" parent="NavigationRegion3D/TrainingFloor"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.859699, 0.598289, 8.7731)

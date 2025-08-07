@@ -50,6 +50,7 @@ albedo_color = Color(0.577821, 0.304129, 3.85046e-07, 1)
 emission_enabled = true
 emission = Color(0.787377, 0.426414, 0, 1)
 emission_energy_multiplier = 3.0
+disable_receive_shadows = true
 
 [sub_resource type="BoxMesh" id="BoxMesh_4527t"]
 material = SubResource("StandardMaterial3D_g1goi")
@@ -85,7 +86,7 @@ collision_mask = 8
 shape = SubResource("SphereShape3D_fgvbs")
 
 [node name="Light" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.402561, 0)
 visible = false
 light_color = Color(0.883495, 0.475407, 2.69532e-06, 1)
 light_energy = 2.0
@@ -95,6 +96,7 @@ light_cull_mask = 4293918721
 shadow_enabled = true
 shadow_caster_mask = 4293918721
 distance_fade_begin = 50.0
+omni_range = 15.0
 
 [connection signal="finished" from="handle/top/Fire" to="." method="_on_fire_finished"]
 [connection signal="area_entered" from="handle/top/Area3D" to="." method="_on_area_3d_area_entered"]

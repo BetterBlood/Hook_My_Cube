@@ -7,7 +7,7 @@ var cost_type: Enums.DamageType = Enums.DamageType.NORMAL
 var cost_value: int = 1 
 var lobby: Lobby
 
-var materials: Array[Material] = [ # TODO: update on other type or runes
+var materials: Array[Material] = [ # TODO: update on other type or runes added
 	preload("res://materials/projectiles/normal_projectile.tres"),
 	preload("res://materials/projectiles/fire_projectile.tres"),
 	preload("res://materials/projectiles/plant_projectile.tres"),
@@ -17,6 +17,7 @@ var materials: Array[Material] = [ # TODO: update on other type or runes
 func _ready() -> void:
 	super._ready()
 	_set_display() #default display
+	SceneFade.costs_changed.connect(_set_display)
 
 
 func set_cost_value(value: int) -> void:
@@ -49,6 +50,7 @@ func use() -> void:
 		if lobby.unlock_rune(id, cost_value, cost_type):
 			is_used = true
 			animation_tree.set("parameters/Transition/transition_request", "Active")
+			SceneFade.emit_signal("costs_changed")
 	else:
 		var player = get_tree().get_first_node_in_group("Player")
 		player.set_rune_at_placement(id, true)

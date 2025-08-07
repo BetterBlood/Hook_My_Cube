@@ -8,6 +8,10 @@ var target: Creature
 var base_position
 var is_attacking: bool = false
 var player_at_range: bool = false
+@onready var effect: MeshInstance3D = $Effect
+var shader_mat: ShaderMaterial
+
+const TYPE_VISUAL_IDENTIFIER = preload("res://scenes/fight/runes/visualIndicators/rune_visual_identifier.tscn")
 
 func _ready() -> void:
 	super._ready()
@@ -19,6 +23,8 @@ func _ready() -> void:
 	health_component._penetration_resistance = 0.0
 	health_component._max_speed = SPEED
 	health_component.speed = SPEED 
+	
+	shader_mat = effect.mesh.material
 
 func _physics_process(delta: float) -> void:
 	if not base_position:
@@ -42,6 +48,27 @@ func _physics_process(delta: float) -> void:
 		#base_position = null
 		velocity.y += tmp_y_velocity  * delta * 4
 	move_and_slide()
+
+func _on_fire_effect():
+	effect.visible = true
+	#shader_parameter/dissolveSlider
+	var cd: float = StatusEffect.DEFAULT_COOLDOWN / 2
+	shader_mat.set_shader_parameter("shader_parameter/dissolveSlider", 0.0)
+	var tween = get_tree().create_tween()
+	tween.tween_property(shader_mat, "shader_parameter/dissolveSlider", 1.0, cd)
+	var timer = get_tree().create_timer(cd)
+	await timer.timeout
+	effect.visible = false
+
+func set_mob_data(human_seed: String, difficulty: int, depth_ratio: float) -> void:
+	super.set_mob_data(human_seed, difficulty, depth_ratio)
+	#print("Zombie::set_mob_data damage_type: ", damage_type)
+	var mat = [
+		preload("res://materials/projectiles/normal_projectile.tres"),
+		preload("res://materials/projectiles/fire_projectile.tres"),
+		preload("res://materials/projectiles/plant_projectile.tres"),
+		preload("res://materials/projectiles/electric_projectile.tres")]
+	$MeshInstance3D2.mesh.material = mat[get_type()]
 
 func compute_path() -> void:
 	#print("compute_path: ", base_position, ", target: ", target)

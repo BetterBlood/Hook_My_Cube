@@ -82,18 +82,12 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_dddvd")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -470.0
-offset_top = -306.0
-offset_right = 470.0
-offset_bottom = 306.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 20
 
 [node name="Label" type="Label" parent="VBoxContainer"]
 layout_mode = 2
@@ -116,10 +110,50 @@ layout_mode = 2
 [node name="UpgradeProposition3" parent="VBoxContainer/HBoxContainer" instance=ExtResource("1_kukgw")]
 layout_mode = 2
 
-[node name="Close" type="Button" parent="VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
-focus_neighbor_bottom = NodePath("../MainMenu")
-focus_next = NodePath("../MainMenu")
+theme_override_constants/separation = 50
+
+[node name="ActiveRune" type="Button" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_disabled_color = Color(0.688595, 0.688595, 0.688595, 1)
+theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
+theme_override_styles/focus = SubResource("StyleBoxFlat_kukgw")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_rff7d")
+theme_override_styles/hover = SubResource("StyleBoxFlat_uq6u8")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_f5a42")
+theme_override_styles/normal = SubResource("StyleBoxFlat_gglya")
+disabled = true
+text = "Active rune"
+
+[node name="SecondRune" type="Button" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_disabled_color = Color(0.688595, 0.688595, 0.688595, 1)
+theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
+theme_override_styles/focus = SubResource("StyleBoxFlat_kukgw")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_rff7d")
+theme_override_styles/hover = SubResource("StyleBoxFlat_uq6u8")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_f5a42")
+theme_override_styles/normal = SubResource("StyleBoxFlat_gglya")
+text = "Second rune"
+
+[node name="Close" type="Button" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_neighbor_left = NodePath("../SecondRune")
+focus_neighbor_top = NodePath("../../HBoxContainer/UpgradeProposition3")
 theme_override_colors/font_disabled_color = Color(0.688595, 0.688595, 0.688595, 1)
 theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 1)
 theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
@@ -134,7 +168,16 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_f5a42")
 theme_override_styles/normal = SubResource("StyleBoxFlat_gglya")
 text = "Close"
 
+[node name="Label2" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+text = "active rune selected"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [connection signal="select_pressed" from="VBoxContainer/HBoxContainer/UpgradeProposition" to="." method="_on_upgrade_proposition_select_pressed"]
 [connection signal="select_pressed" from="VBoxContainer/HBoxContainer/UpgradeProposition2" to="." method="_on_upgrade_proposition_2_select_pressed"]
 [connection signal="select_pressed" from="VBoxContainer/HBoxContainer/UpgradeProposition3" to="." method="_on_upgrade_proposition_3_select_pressed"]
-[connection signal="pressed" from="VBoxContainer/Close" to="." method="_on_close_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/ActiveRune" to="." method="_on_active_rune_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/SecondRune" to="." method="_on_second_rune_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/Close" to="." method="_on_close_pressed"]

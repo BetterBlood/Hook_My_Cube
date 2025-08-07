@@ -23,6 +23,7 @@ func _ready() -> void:
 		add_child(health_component)
 	
 	health_component.damage_taken.connect(_on_damage_taken)
+	health_component.fire_effect.connect(_on_fire_effect)
 
 
 func _on_damage_taken():
@@ -33,6 +34,9 @@ func _on_damage_taken():
 		
 		# TODO: in herited classes: do something on creature's death !
 
+func _on_fire_effect():
+	# TODO: in herited classes: do something on creature on fire !
+	pass
 
 func can_host_status_effect(id: int = 0) -> bool:
 	return !effect_ids.has(id)

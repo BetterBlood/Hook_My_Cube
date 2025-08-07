@@ -11,6 +11,18 @@ var player: Player
 const update_rotation: float = 0.05
 var rotation_delay: float = 0.0
 
+@onready var effect: MeshInstance3D = $Effect
+var shader_mat: Material
+var shader_mat_2: Material
+var shader_mat_3: Material
+
+@onready var default_material: MeshInstance3D = $"Sketchfab_Scene/Sketchfab_model/Collada visual scene group/Cube/defaultMaterial"
+@onready var default_material_2: MeshInstance3D = $"Sketchfab_Scene/Sketchfab_model/Collada visual scene group/Cube/defaultMaterial2"
+@onready var default_material_3: MeshInstance3D = $"Sketchfab_Scene/Sketchfab_model/Collada visual scene group/Cube/defaultMaterial3"
+const BOSS_ON_FIRE_1 = preload("res://materials/shaders/boss_on_fire_1.tres")
+const BOSS_ON_FIRE_2 = preload("res://materials/shaders/boss_on_fire_2.tres")
+const BOSS_ON_FIRE_3 = preload("res://materials/shaders/boss_on_fire_3.tres")
+
 func _ready() -> void:
 	super._ready()
 	player = get_tree().get_first_node_in_group("Player")
@@ -27,6 +39,45 @@ func _ready() -> void:
 	attack_cd = 2.0
 	id = -1
 	
+
+
+
+func _on_fire_effect(): # TODO: better fire animation
+	#print("fire_effect")
+	default_material.set_surface_override_material(0, BOSS_ON_FIRE_1)
+	shader_mat = default_material.get_surface_override_material(0)
+	
+	default_material_2.set_surface_override_material(0, BOSS_ON_FIRE_2)
+	shader_mat_2 = default_material_2.get_surface_override_material(0)
+	
+	default_material_3.set_surface_override_material(0, BOSS_ON_FIRE_3)
+	shader_mat_3 = default_material_3.get_surface_override_material(0)
+	
+	shader_mat.set_shader_parameter("shader_parameter/dissolveSlider", 0.0)
+	shader_mat_2.set_shader_parameter("shader_parameter/dissolveSlider", 0.0)
+	shader_mat_3.set_shader_parameter("shader_parameter/dissolveSlider", 0.0)
+	
+	#effect.visible = true
+	#shader_parameter/dissolveSlider
+	var cd: float = StatusEffect.DEFAULT_COOLDOWN / 2
+	var tween = get_tree().create_tween()
+	tween.tween_property(shader_mat, "shader_parameter/dissolveSlider", 0.5, cd)
+	tween.tween_property(shader_mat_2, "shader_parameter/dissolveSlider", 0.5, cd)
+	tween.tween_property(shader_mat_3, "shader_parameter/dissolveSlider", 0.5, cd)
+	
+	var timer = get_tree().create_timer(cd)
+	await timer.timeout
+	##effect.visible = false
+	#shader_mat.set_shader_parameter("shader_parameter/dissolveSlider", 0.0)
+	#shader_mat_2.set_shader_parameter("shader_parameter/dissolveSlider", 0.0)
+	#shader_mat_3.set_shader_parameter("shader_parameter/dissolveSlider", 0.0)
+	
+	
+	default_material.set_surface_override_material(0, null)
+	
+	default_material_2.set_surface_override_material(0, null)
+	
+	default_material_3.set_surface_override_material(0, null)
 
 func _physics_process(delta: float) -> void:
 	if can_rotate:
@@ -133,7 +184,7 @@ func _attack_callibrate() -> void:
 	can_rotate = false
 
 func _on_player_listener_area_entered(area: Area3D) -> void:
-	print("player hit: ", area.get_parent())
+	#print("player hit: ", area.get_parent())
 	if area.get_parent().is_in_group("Player"):
 		var creature = (area.get_parent() as Creature)
 		if 	creature and creature.has_method("get_health_component") and \
@@ -143,9 +194,9 @@ func _on_player_listener_area_entered(area: Area3D) -> void:
 func _attack_touch_ground() -> void:
 	var direction: Vector3 = player.position - position
 	direction.y = 0
-	print(direction)
+	#print(direction)
 	if on_knockback_area:
-		print("too close -> apply velocity")
+		#print("too close -> apply velocity")
 		player.velocity += direction.normalized() * 120
 
 

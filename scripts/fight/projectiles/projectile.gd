@@ -104,6 +104,10 @@ func set_data(rune_resource_for_projectile: RuneResource) -> void:
 	effect_duration = rune_resource_for_projectile.projectile_effect_duration
 	effect_area_range_transmission = rune_resource_for_projectile.projectile_effect_area_range_transmission
 	_set_radius(rune_resource_for_projectile.projectile_radius)
+	
+	var tween = get_tree().create_tween()
+	$MeshInstance3D.scale = Vector3(0.01, 0.01, 0.01)
+	tween.tween_property($MeshInstance3D, "scale", Vector3(1, 1, 1), 0.5)
 
 
 func _set_radius(radius: float) -> void:

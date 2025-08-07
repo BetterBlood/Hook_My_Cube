@@ -4,7 +4,8 @@
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4pydp"]
 
-[sub_resource type="SphereMesh" id="SphereMesh_k12lw"]
+[sub_resource type="SphereMesh" id="SphereMesh_ngaev"]
+resource_local_to_scene = true
 material = SubResource("StandardMaterial3D_4pydp")
 radius = 0.1
 height = 0.2
@@ -18,7 +19,7 @@ script = ExtResource("1_ngaev")
 metadata/_custom_type_script = "uid://c40yxgjle2l7x"
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("SphereMesh_k12lw")
+mesh = SubResource("SphereMesh_ngaev")
 
 [node name="Area3D" type="Area3D" parent="."]
 collision_layer = 0

@@ -38,6 +38,8 @@ var health_regen_timer: Timer = Timer.new()
 
 var speed_effects = {}
 
+signal fire_effect()
+
 func _ready() -> void:
 	health_regen_timer.wait_time = health_regen_timer_reset
 	health_regen_timer.autostart = true
@@ -108,7 +110,7 @@ func _passive_heal() -> void:
 func take_fire_effect(value: float) -> float:
 	var damage: float = value * _get_grid_modifier(Enums.DamageType.FIRE, get_parent().get_type())
 	#print(get_parent(), "::HealthComponent: I'm literally on fire.... taking (", value, ") -> ", damage, " damages.")
-	
+	fire_effect.emit()
 	health = max(health - damage, 0.0)
 	damage_taken.emit()
 	
@@ -146,15 +148,15 @@ func take_damage(	value: float,
 	var damage: float = value * _get_grid_modifier(att_type, def_type)
 	#print("HealthComponent::take_damage (with grid modifier): ", damage)
 	damage -= max(get_armor() - max((1.0 - get_penetration_resistance()), 0.0) * armor_pen, 0.0)
-	print("HealthComponent::take_damage ", value, " ", att_type, " ", def_type, " ", armor_pen, " ", damage)
+	#print("HealthComponent::take_damage ", value, " ", att_type, " ", def_type, " ", armor_pen, " ", damage)
 	
 	if damage <= 0:
 		damage = 0.1 # <( not impossible to make damage, but really hard ) 
 	
-	print("HealthComponent:: health: ", health, ", armor: ", _armor)
+	#print("HealthComponent:: health: ", health, ", armor: ", _armor)
 	health = max(health - damage, 0.0)
 	damage_taken.emit()
-	print("HealthComponent:: health: ", health)
+	#print("HealthComponent:: health: ", health)
 	return damage
 
 func _get_grid_modifier(

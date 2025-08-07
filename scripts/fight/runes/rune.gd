@@ -256,8 +256,15 @@ func get_layet_to_hit() -> int:
 func set_layet_to_hit(value: int) -> void:
 	projectile_layer_to_hit = value
 
-func heavy_attack(destination: Vector3) -> void:
-	pass
+func heavy_attack(destination: Vector3, rune_resource_for_projectile: RuneResource, ratio: float) -> void:
+	ratio = max(ratio, 0.0)
+	ratio = min(ratio, 1.0)
+	#print("Rune::heavy_attack ratio: ", ratio)
+	var tmp: RuneResource = RuneResource.new()
+	tmp.projectile_radius = rune_resource_for_projectile.projectile_radius * ratio
+	tmp.projectile_damage = rune_resource_for_projectile.projectile_damage * ratio
+	tmp.projectile_speed = (rune_resource_for_projectile.projectile_speed * ratio) / -4 # cause we add so we need a negative speed to slow down the projetile (bigger stronger but slower)
+	light_attack(destination, RuneResource.add(rune_resource_for_projectile, tmp))
 
 
 func get_rune_id() -> int:

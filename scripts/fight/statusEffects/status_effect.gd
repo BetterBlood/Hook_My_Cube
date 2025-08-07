@@ -3,8 +3,8 @@ extends Node
 class_name StatusEffect
 
 var effect_id: int
-
-var cooldown: float = 0.5 # all status Effect tick clock !
+static var DEFAULT_COOLDOWN: float = 0.5 # all status Effect tick clock !
+var cooldown: float = DEFAULT_COOLDOWN
 var cooldown_timer: Timer
 
 var target: Creature

@@ -50,6 +50,10 @@ var essences: Array[int] = [0, 0, 0, 0]
 signal try_lvl_up(maze_seed: String)
 signal leveling_phase_ended()
 
+var attack_timer: float = 0.0
+var hold_attack: bool = true
+var is_able_to_attack: bool = true
+
 func _ready():
 	super._ready()
 	#print("player::_ready current_player_name: " + current_player_name)
@@ -161,10 +165,20 @@ func _unhandled_input(event):
 
 
 func _physics_process(delta):
+	if hold_attack:
+		attack_timer += delta
+		# TODO: animation at 0.25 holding time, shader on the visual rune indicator something shinning idk
+		# TODO: animation at 2.0 holding time, shader on the visual rune indicator something (more) shinning idk
+	
 	if Input.is_action_just_pressed("SwapRune"):
 		_swap_runes()# TODO: animations !!
 	
-	if Input.is_action_just_pressed("attack"):
+	if Input.is_action_just_pressed("attack") and is_able_to_attack:
+		attack_timer = 0.0
+		hold_attack = true
+	
+	if Input.is_action_just_released("attack") and is_able_to_attack:
+		hold_attack = false
 		#print("orphan:")
 		#print_orphan_nodes() # DEBUG
 		#print("---")
@@ -180,9 +194,21 @@ func _physics_process(delta):
 			$Head/RayCast3D/Marker3D.position = ray_cast_3d.target_position
 			destination = $Head/RayCast3D/Marker3D.global_position
 		
-		#print(active_rune.get_data_to_performe_attaque().projectile_damage)
-		active_rune.light_attack(destination, active_rune.get_data_to_performe_attaque())
-		
+		var rune_resource: RuneResource = active_rune.get_data_to_performe_attaque()
+		#print(rune_resource.projectile_damage)
+		if attack_timer/2.0 < 0.25:
+			active_rune.light_attack(destination, rune_resource)
+		else:
+			active_rune.heavy_attack(destination, rune_resource, attack_timer/2.0) # 2 second or more = biggest strongest attack
+		is_able_to_attack = false
+		var cd: float = active_rune.cooldown * (1.0 - min(rune_resource.cooldown_reduction, 0.5)) if not is_in_lobby else 0.1;
+		#print("cds: ", active_rune.cooldown, " ", rune_resource.cooldown_reduction, " ", cd)
+		var timer: SceneTreeTimer = get_tree().create_timer(cd)
+		timer.timeout.connect(
+			func ():
+				#print("cd ended time: ", cd)
+				is_able_to_attack = true
+		)
 		#print("active_rune save infos: ", active_rune.get_save_infos())
 		#active_rune = RuneUpgradeDamage.new(active_rune)
 		#active_rune = RuneUpgradeSpeed.new(active_rune)
@@ -330,6 +356,7 @@ func propose_upgrades(upgrades: Array, call_after: Signal) -> void:
 	var prop_2 = ["Player upgrade", "res://icon.svg", "Description:\nSelect 1 of 3 upgrades for the health component"]
 	var prop_3 = ["Grapple upgrade", "res://icon.svg", "Description:\nSelect 1 of 3 upgrades for the grapple"]
 	$CanvasLayer/UpgradeMenu.set_up_propositions(prop_1, prop_2, prop_3, select_upgrade_proposition_type, call_after)
+	$CanvasLayer/UpgradeMenu.set_title("Select an upgrade (rune, health, grapple)")
 	$CanvasLayer/UpgradeMenu.show()
 	$CanvasLayer/UpgradeMenu._init_focus()
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
@@ -344,6 +371,8 @@ func propose_new_runes(new_runes: Array, call_on_finish: Signal) -> void:
 	var rune_2 = ["rune 2", "res://icon.svg", "Description:\nid: " + str(new_runes[1])]
 	var rune_3 = ["rune 3", "res://icon.svg", "Description:\nid: " + str(new_runes[2])]
 	$CanvasLayer/UpgradeMenu.set_up_propositions(rune_1, rune_2, rune_3, set_new_rune_at_placement, call_on_finish)
+	$CanvasLayer/UpgradeMenu.set_title("Select a new Rune")
+	$CanvasLayer/UpgradeMenu.set_adding_new_rune()
 	$CanvasLayer/UpgradeMenu.show()
 	$CanvasLayer/UpgradeMenu._init_focus()
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
@@ -355,7 +384,10 @@ func propose_new_rune(new_rune_data, call_on_finish: Signal) -> void:
 	get_tree().paused = true
 	var rune_2 = ["rune id:" + str(new_rune_data["rune_id"]), "res://icon.svg", "Description:\ndata: " + str(new_rune_data["rune_upgrades"])]
 	$CanvasLayer/UpgradeMenu.set_up_propositions(null, rune_2, null, set_old_rune_at_placement, call_on_finish)
+	$CanvasLayer/UpgradeMenu.set_title("Swap rune with selected slot")
+	$CanvasLayer/UpgradeMenu.set_adding_new_rune()
 	$CanvasLayer/UpgradeMenu.show()
+	$CanvasLayer/UpgradeMenu._init_focus()
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 
@@ -412,6 +444,7 @@ func select_upgrade_proposition_type(proposition_type_index: int, _no_active_pla
 		props.append(gold_proposal)
 	#print(props)
 	$CanvasLayer/UpgradeMenu.set_up_propositions(props[0], props[1], props[2], func_to_call[proposition_type_index], call_on_finished)
+	$CanvasLayer/UpgradeMenu.set_title("Select an upgrade (1 of 3)")
 	$CanvasLayer/UpgradeMenu.show()
 	$CanvasLayer/UpgradeMenu._init_focus()
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
@@ -448,7 +481,7 @@ func select_grapple_upgrade(grapple_upgrade_index: int, _active_placement: bool,
 
 func gain_xp(value: float) -> void:
 	xp_left += value
-	print("Player gain xp amount: ", value, ", total: ", xp_left)
+	#print("Player gain xp amount: ", value, ", total: ", xp_left)
 
 
 func leveling_phase(maze_seed: String) -> void:
@@ -483,7 +516,7 @@ func gain_gold(value: int) -> void:
 
 func gain_essence(essence_type: Enums.DamageType, value: int) -> void:
 	essences[essence_type] += value
-	print("Player gain essence_type: '", essence_type, "',  amount: ", value, ", total: ", essences)
+	#print("Player gain essence_type: '", essence_type, "',  amount: ", value, ", total: ", essences)
 
 
 func gain_ice_wall_grab_upgrade() -> void:

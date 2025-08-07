@@ -28,6 +28,7 @@ func _on_damage_taken():
 		if health_component.health <= 0:
 			_death_sequence()
 
+
 ## depth_ratio: [0.0; 1.0] => determines enemy lvl
 ## difficulty: [-2; 2] => determines all stats accordingly with the lvl
 func set_mob_data(human_seed: String, difficulty: int, depth_ratio: float) -> void:
