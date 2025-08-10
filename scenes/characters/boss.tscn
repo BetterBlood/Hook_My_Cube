@@ -1,8 +1,7 @@
-[gd_scene load_steps=15 format=3 uid="uid://dd2lchxcdgs6m"]
+[gd_scene load_steps=17 format=3 uid="uid://dd2lchxcdgs6m"]
 
 [ext_resource type="Script" uid="uid://disolp4bnher6" path="res://scripts/characters/boss.gd" id="1_imw47"]
 [ext_resource type="PackedScene" uid="uid://dnbcx272f5ff4" path="res://addons/octopus_tentacle/scene.gltf" id="2_edpq3"]
-[ext_resource type="Material" uid="uid://88benesqoco8" path="res://materials/shaders/boss_on_fire_1.tres" id="3_j30ar"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_edpq3"]
 height = 5.0
@@ -83,7 +82,7 @@ tracks/4/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0, 10, 0)]
+"values": [Vector3(0, 0, 0)]
 }
 tracks/5/type = "value"
 tracks/5/imported = false
@@ -92,30 +91,6 @@ tracks/5/path = NodePath("KnockBackArea:rotation")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath("Effect:position")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
-}
-tracks/7/type = "value"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath("Effect:rotation")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
@@ -217,30 +192,6 @@ tracks/6/keys = {
 "update": 0,
 "values": [Vector3(0, 0, 0), Vector3(0.907152, 0, 0), Vector3(1.65806, 0, 0), Vector3(1.65806, 0, 0), Vector3(0, 0, 0)]
 }
-tracks/7/type = "value"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath("Effect:position")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
-"times": PackedFloat32Array(0, 0.5, 1, 1.1, 1.19, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 1.99, 3.99),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [Vector3(0, 10, 0), Vector3(0, 6.16131, 6.7768), Vector3(0, 0.746733, 9.19211), Vector3(0.1, 0.747, 9.192), Vector3(-0.1, 0.747, 9.192), Vector3(0.1, 0.747, 9.192), Vector3(-0.1, 0.747, 9.192), Vector3(0.1, 0.747, 9.192), Vector3(-0.1, 0.747, 9.192), Vector3(0.1, 0.747, 9.192), Vector3(-0.1, 0.747, 9.192), Vector3(0.1, 0.747, 9.192), Vector3(0, 0.747, 9.192), Vector3(0, 10, 0)]
-}
-tracks/8/type = "value"
-tracks/8/imported = false
-tracks/8/enabled = true
-tracks/8/path = NodePath("Effect:rotation")
-tracks/8/interp = 1
-tracks/8/loop_wrap = true
-tracks/8/keys = {
-"times": PackedFloat32Array(0, 0.5, 1.01, 1.99, 3.99),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
-"update": 0,
-"values": [Vector3(0, 0, 0), Vector3(0.907152, 0, 0), Vector3(1.65806, 0, 0), Vector3(1.65806, 0, 0), Vector3(0, 0, 0)]
-}
 
 [sub_resource type="Animation" id="Animation_edpq3"]
 resource_name = "idle"
@@ -294,30 +245,6 @@ tracks/3/keys = {
 "update": 0,
 "values": [Vector3(0, 0, 0), Vector3(0, 0, -0.282743), Vector3(0, 0, 0), Vector3(0, 0, 0.298451), Vector3(0, 0, 0)]
 }
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("Effect:position")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0.00999999, 1.01, 1.97667, 3, 4),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
-"update": 0,
-"values": [Vector3(0, 10, 0), Vector3(0, 10, 0), Vector3(0, 10, 0), Vector3(0, 10, 0), Vector3(0, 10, 0)]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("Effect:rotation")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0, 1, 1.96667, 3, 4),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
-"update": 0,
-"values": [Vector3(0, 0, 0), Vector3(0, 0, -0.282743), Vector3(0, 0, 0), Vector3(0, 0, 0.298451), Vector3(0, 0, 0)]
-}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_hxcvo"]
 _data = {
@@ -330,11 +257,20 @@ _data = {
 height = 20.0
 radius = 3.0
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_hxcvo"]
-material = ExtResource("3_j30ar")
-top_radius = 0.45
-bottom_radius = 1.9
-height = 20.0
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u6mvt"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_edpq3"]
+material = SubResource("StandardMaterial3D_u6mvt")
+radius = 0.1
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c44uy"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_r8uym"]
+material = SubResource("StandardMaterial3D_c44uy")
+radius = 0.01
+height = 0.02
 
 [node name="Boss" type="CharacterBody3D"]
 collision_layer = 0
@@ -368,25 +304,37 @@ shape = SubResource("CylinderShape3D_hxcvo")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.75, 0)
 shape = SubResource("CylinderShape3D_j30ar")
 
-[node name="Marker3D" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
-
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
 &"": SubResource("AnimationLibrary_hxcvo")
 }
 
 [node name="KnockBackArea" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0)
 collision_layer = 0
 collision_mask = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="KnockBackArea"]
 shape = SubResource("CylinderShape3D_qryem")
 
-[node name="Effect" type="MeshInstance3D" parent="."]
+[node name="Eye" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.171618, 18.571, 0.441664)
 visible = false
-mesh = SubResource("CylinderMesh_hxcvo")
+mesh = SubResource("SphereMesh_edpq3")
+skeleton = NodePath("")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Eye"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.102719)
+mesh = SubResource("SphereMesh_r8uym")
+
+[node name="Eye2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.153504, 18.571, 0.441664)
+visible = false
+mesh = SubResource("SphereMesh_edpq3")
+skeleton = NodePath("")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Eye2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.102719)
+mesh = SubResource("SphereMesh_r8uym")
 
 [connection signal="area_entered" from="PlayerListener" to="." method="_on_player_listener_area_entered"]
 [connection signal="area_entered" from="KnockBackArea" to="." method="_on_knock_back_area_area_entered"]

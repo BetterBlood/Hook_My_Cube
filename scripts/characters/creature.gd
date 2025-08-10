@@ -13,6 +13,8 @@ var xp:float = 0.0
 var layer: int = 0
 var effect_ids: Dictionary = {}
 
+var instant_speed: float = 0.0
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -25,14 +27,21 @@ func _ready() -> void:
 	health_component.damage_taken.connect(_on_damage_taken)
 	health_component.fire_effect.connect(_on_fire_effect)
 
-
 func _on_damage_taken():
+	if is_in_lobby:
+		_lobby_damage_taken() 
+	else:
+		if health_component.health <= 0:
+			_death_sequence()
+
+func _lobby_damage_taken():
 	if health_component.health <= 0:
-		print(self, " is dead ! Regeneration activated !!! health: ", health_component.health)
+		print(self, " is dead ! Regeneration activated !!! health: ", health_component.health, " -> ", health_component.get_max_health())
 		health_component.health = health_component.get_max_health()
-		#print(self, " Regenerated, health: ", health_component.health)
-		
-		# TODO: in herited classes: do something on creature's death !
+
+func _death_sequence() -> void:
+	# TODO: in herited classes: do something on creature's death !
+	pass
 
 func _on_fire_effect():
 	# TODO: in herited classes: do something on creature on fire !
@@ -68,3 +77,6 @@ func add_effect_id(id: int = 0) -> void:
 # TODO: remove
 func get_status_ids() -> Array:
 	return effect_ids.keys()
+
+func get_instant_speed() -> float:
+	return instant_speed

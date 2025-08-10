@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://bualks0wajs8i"]
+[gd_scene load_steps=20 format=3 uid="uid://bualks0wajs8i"]
 
 [ext_resource type="Script" uid="uid://veoyspye5l5q" path="res://scripts/characters/zombie.gd" id="1_fulqv"]
 [ext_resource type="Material" uid="uid://pcviwwdbpg5g" path="res://materials/shaders/zombie_on_fire.tres" id="2_u6mvt"]
@@ -116,6 +116,21 @@ resource_local_to_scene = true
 radius = 0.1
 height = 0.2
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u6mvt"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_pg0rp"]
+material = SubResource("StandardMaterial3D_u6mvt")
+radius = 0.1
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pg0rp"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_2nful"]
+material = SubResource("StandardMaterial3D_pg0rp")
+radius = 0.01
+height = 0.02
+
 [node name="Zombie" type="CharacterBody3D"]
 collision_layer = 0
 script = ExtResource("1_fulqv")
@@ -177,12 +192,29 @@ libraries = {
 visible = false
 mesh = SubResource("CapsuleMesh_fyi4w")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+[node name="TypeVisualIndicator" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 mesh = SubResource("SphereMesh_u6mvt")
 
+[node name="Eye" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.171618, 0.558517, 0.441664)
+mesh = SubResource("SphereMesh_pg0rp")
+skeleton = NodePath("")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Eye"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.102719)
+mesh = SubResource("SphereMesh_2nful")
+
+[node name="Eye2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.153504, 0.558517, 0.441664)
+mesh = SubResource("SphereMesh_pg0rp")
+skeleton = NodePath("")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Eye2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.102719)
+mesh = SubResource("SphereMesh_2nful")
+
 [connection signal="body_entered" from="EnemyArea3D" to="." method="_on_enemy_area_3d_body_entered"]
-[connection signal="timeout" from="Navigation/UpdateNavigation" to="." method="_on_update_navigation_timeout"]
 [connection signal="area_entered" from="ChaseArea" to="." method="_on_chase_area_area_entered"]
 [connection signal="area_exited" from="ReleaseChaseArea" to="." method="_on_release_chase_area_area_exited"]
 [connection signal="area_entered" from="AttackArea" to="." method="_on_attack_area_area_entered"]

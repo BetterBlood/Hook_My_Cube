@@ -5,13 +5,11 @@ class_name Zombie
 const SPEED:float = 3.0
 @onready var navigation_agent_3d: NavigationAgent3D = $Navigation/NavigationAgent3D
 var target: Creature
-var base_position
+var base_position: Vector3
 var is_attacking: bool = false
 var player_at_range: bool = false
 @onready var effect: MeshInstance3D = $Effect
 var shader_mat: ShaderMaterial
-
-const TYPE_VISUAL_IDENTIFIER = preload("res://scenes/fight/runes/visualIndicators/rune_visual_identifier.tscn")
 
 func _ready() -> void:
 	super._ready()
@@ -25,19 +23,21 @@ func _ready() -> void:
 	health_component.speed = SPEED 
 	
 	shader_mat = effect.mesh.material
+	
+	$Navigation/UpdateNavigation.timeout.connect(compute_path)
 
 func _physics_process(delta: float) -> void:
-	if not base_position:
-		$Navigation/UpdateNavigation.stop()
+	if not base_position and not $Navigation/UpdateNavigation.is_stopped():
+		$Navigation/UpdateNavigation.stop() # while not base position, stop the computation
 	elif $Navigation/UpdateNavigation.is_stopped():
 		$Navigation/UpdateNavigation.start()
 	
-	var tmp_y_velocity = velocity.y 
+	var prev_gravity = velocity.y
+	
 	var direction = Vector3()
 	if target or not navigation_agent_3d.is_navigation_finished():
 		direction = (navigation_agent_3d.get_next_path_position() - global_position).normalized()
 	velocity = velocity.lerp(direction * health_component.speed, delta * 10)
-	
 	
 	if player_at_range:
 		velocity = Vector3()
@@ -46,12 +46,12 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta * 4
 		#base_position = null
-		velocity.y += tmp_y_velocity  * delta * 4
+		velocity.y += prev_gravity  * delta * 4
+	
 	move_and_slide()
 
 func _on_fire_effect():
 	effect.visible = true
-	#shader_parameter/dissolveSlider
 	var cd: float = StatusEffect.DEFAULT_COOLDOWN / 2
 	shader_mat.set_shader_parameter("shader_parameter/dissolveSlider", 0.0)
 	var tween = get_tree().create_tween()
@@ -68,7 +68,7 @@ func set_mob_data(human_seed: String, difficulty: int, depth_ratio: float) -> vo
 		preload("res://materials/projectiles/fire_projectile.tres"),
 		preload("res://materials/projectiles/plant_projectile.tres"),
 		preload("res://materials/projectiles/electric_projectile.tres")]
-	$MeshInstance3D2.mesh.material = mat[get_type()]
+	$TypeVisualIndicator.mesh.material = mat[get_type()]
 
 func compute_path() -> void:
 	#print("compute_path: ", base_position, ", target: ", target)
@@ -77,6 +77,10 @@ func compute_path() -> void:
 		navigation_agent_3d.target_position = target.global_position
 	elif base_position:
 		navigation_agent_3d.target_position = base_position
+	
+	var look_direction = Vector3(navigation_agent_3d.target_position.x, global_position.y, navigation_agent_3d.target_position.z)
+	if (look_direction - global_position).length() > 0.2: # avoid errors on look_at himself
+		look_at(look_direction, Vector3.UP, true)
 
 func _on_enemy_area_3d_body_entered(_body: Node3D) -> void:
 	#print("enemy collide with: ", _body, ", groups: ", _body.get_groups())
@@ -88,10 +92,6 @@ func _on_enemy_area_3d_body_entered(_body: Node3D) -> void:
 		if 	creature and creature.has_method("get_health_component") and \
 			creature.has_method("take_damage"):
 				creature.take_damage(damage, get_type(), armor_pen)
-
-
-func _on_update_navigation_timeout() -> void:
-	compute_path()
 
 
 func _on_chase_area_area_entered(area: Area3D) -> void:
@@ -119,7 +119,7 @@ func try_attack() -> void:
 		is_attacking = true
 		$AnimationPlayer.play("attack")
 
-func recover_after_attaque() -> void:
+func recover_after_attack() -> void:
 	$AnimationPlayer.play("recover")
 
 func end_attack() -> void:

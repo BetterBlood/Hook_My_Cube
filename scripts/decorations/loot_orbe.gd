@@ -28,9 +28,9 @@ func _interact() -> void:
 	var player = get_tree().get_first_node_in_group("Player")
 	if player:
 		if loot_is_upgrade:
-			var nothing: Signal
-			player.propose_upgrades(other_upgrades, nothing)
-			queue_free()
+			#var nothing: Signal
+			player.propose_upgrades(other_upgrades, action_after_interation)
+			#queue_free()
 		else:
 			player.propose_new_runes(new_runes, action_after_interation)
 	else:

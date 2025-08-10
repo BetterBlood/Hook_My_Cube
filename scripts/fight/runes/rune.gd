@@ -93,7 +93,7 @@ static func save_rune_infos() -> void: # TODO: on update, don't forget to update
 		
 		config.set_value(rune_id_as_str, "cooldown", float(rune_data["cooldown"]))
 		
-		config.set_value(rune_id_as_str, "cooldown_reduction", float(rune_data["cooldown"]))
+		config.set_value(rune_id_as_str, "cooldown_reduction", float(rune_data["cooldown_reduction"]))
 		config.set_value(rune_id_as_str, "p_perforation_count", int(rune_data["p_perforation_count"]))
 		config.set_value(rune_id_as_str, "p_bounce_count", int(rune_data["p_bounce_count"]))
 		config.set_value(rune_id_as_str, "p_penetration", float(rune_data["p_penetration"]))
@@ -280,6 +280,10 @@ func get_damage_type() -> Enums.DamageType:
 func get_data_to_performe_attaque() -> RuneResource:
 	#print("get_data_to_performe_attaque()::Rune")
 	return rune_resource
+
+
+func get_initial_cooldown() -> float:
+	return cooldown
 
 
 func get_save_infos() -> Dictionary:

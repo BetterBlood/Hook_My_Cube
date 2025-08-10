@@ -12,7 +12,7 @@ extends Control
 @onready var second_rune: Button = $VBoxContainer/HBoxContainer2/SecondRune
 
 var function_to_call_on_selection: Callable
-var is_active_selected: bool = true # TODO: set the choice for the user (default(false) select the second rune)
+var is_active_selected: bool = true
 var allow_second_rune: bool = false
 var call_to_potentially_free_orbe: Signal
 

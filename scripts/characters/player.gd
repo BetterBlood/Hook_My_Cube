@@ -53,6 +53,7 @@ signal leveling_phase_ended()
 var attack_timer: float = 0.0
 var hold_attack: bool = true
 var is_able_to_attack: bool = true
+var last_delta_position: Vector3 = Vector3()
 
 func _ready():
 	super._ready()
@@ -112,7 +113,7 @@ func initialize_player(meta_data, game_data) -> void:
 	#print(rune1_data)
 	#print(rune2_data)
 	
-	active_rune = Rune.create_rune(rune1_data, self) # this override meta_data active_rune
+	active_rune = Rune.create_rune(rune1_data, self) # this override meta_data active_rune )> (~.O)
 	_init_active_rune_visual_spot()
 	second_rune = Rune.create_rune(rune2_data, self)
 	if second_rune:
@@ -165,50 +166,59 @@ func _unhandled_input(event):
 
 
 func _physics_process(delta):
+	instant_speed = (position - last_delta_position).length() / delta
+	
 	if hold_attack:
 		attack_timer += delta
 		# TODO: animation at 0.25 holding time, shader on the visual rune indicator something shinning idk
 		# TODO: animation at 2.0 holding time, shader on the visual rune indicator something (more) shinning idk
+		#if attack_timer >= 2.0: # mmmmm don't know what I prefer: release on 2 sec holding or give information to player and let him release by himself ?
+			#_attack()
 	
 	if Input.is_action_just_pressed("SwapRune"):
-		_swap_runes()# TODO: animations !!
+		_swap_runes() # TODO: animations !!
 	
 	if Input.is_action_just_pressed("attack") and is_able_to_attack:
+		#print("Input.is_action_just_pressed")
 		attack_timer = 0.0
 		hold_attack = true
 	
-	if Input.is_action_just_released("attack") and is_able_to_attack:
-		hold_attack = false
-		#print("orphan:")
-		#print_orphan_nodes() # DEBUG
-		#print("---")
+	if Input.is_action_just_released("attack") and is_able_to_attack and hold_attack:
+		#print("Input.is_action_just_released")
 		
-		ray_cast_3d.collision_mask = 7
-		ray_cast_3d.target_position = Vector3(0, 0, -100)
-		ray_cast_3d.force_raycast_update()
-		var destination = Vector3()
+		_attack()
 		
-		if ray_cast_3d.is_colliding():
-			destination = ray_cast_3d.get_collision_point()
-		else:
-			$Head/RayCast3D/Marker3D.position = ray_cast_3d.target_position
-			destination = $Head/RayCast3D/Marker3D.global_position
-		
-		var rune_resource: RuneResource = active_rune.get_data_to_performe_attaque()
-		#print(rune_resource.projectile_damage)
-		if attack_timer/2.0 < 0.25:
-			active_rune.light_attack(destination, rune_resource)
-		else:
-			active_rune.heavy_attack(destination, rune_resource, attack_timer/2.0) # 2 second or more = biggest strongest attack
-		is_able_to_attack = false
-		var cd: float = active_rune.cooldown * (1.0 - min(rune_resource.cooldown_reduction, 0.5)) if not is_in_lobby else 0.1;
-		#print("cds: ", active_rune.cooldown, " ", rune_resource.cooldown_reduction, " ", cd)
-		var timer: SceneTreeTimer = get_tree().create_timer(cd)
-		timer.timeout.connect(
-			func ():
-				#print("cd ended time: ", cd)
-				is_able_to_attack = true
-		)
+		#hold_attack = false
+		##print("orphan:")
+		##print_orphan_nodes() # DEBUG
+		##print("---")
+		#
+		#ray_cast_3d.collision_mask = 7
+		#ray_cast_3d.target_position = Vector3(0, 0, -100)
+		#ray_cast_3d.force_raycast_update()
+		#var destination = Vector3()
+		#
+		#if ray_cast_3d.is_colliding():
+			#destination = ray_cast_3d.get_collision_point()
+		#else:
+			#$Head/RayCast3D/Marker3D.position = ray_cast_3d.target_position
+			#destination = $Head/RayCast3D/Marker3D.global_position
+		#
+		#var rune_resource: RuneResource = active_rune.get_data_to_performe_attaque()
+		##print(rune_resource.projectile_damage)
+		#if attack_timer/2.0 < 0.25:
+			#active_rune.light_attack(destination, rune_resource)
+		#else:
+			#active_rune.heavy_attack(destination, rune_resource, attack_timer/2.0) # 2 second or more = biggest strongest attack
+		#is_able_to_attack = false
+		#var cd: float = active_rune.get_initial_cooldown() * (1.0 - min(rune_resource.cooldown_reduction, 0.5)) if not is_in_lobby else 0.1;
+		##print("cds: ", active_rune.get_initial_cooldown(), " ", rune_resource.cooldown_reduction, " ", cd)
+		#var timer: SceneTreeTimer = get_tree().create_timer(cd)
+		#timer.timeout.connect(
+			#func ():
+				##print("cd ended time: ", cd)
+				#is_able_to_attack = true
+		#)
 		#print("active_rune save infos: ", active_rune.get_save_infos())
 		#active_rune = RuneUpgradeDamage.new(active_rune)
 		#active_rune = RuneUpgradeSpeed.new(active_rune)
@@ -234,7 +244,7 @@ func _physics_process(delta):
 			destination = $Head/RayCast3D/Marker3D.global_position
 			hit = false
 		
-		ray_cast_3d.collision_mask = 32768 - 1
+		ray_cast_3d.collision_mask = 32768 - 1 - 8 # -8 to avoid collision with projectiles
 		ray_cast_3d.target_position = Vector3(0, 0, -grapple.get_distance() - 1)
 		ray_cast_3d.force_raycast_update()
 		
@@ -308,8 +318,55 @@ func _physics_process(delta):
 		else:
 			velocity.y = move_toward(velocity.y, 0, health_component.speed)
 	
+	last_delta_position = position
+	
 	move_and_slide()
 
+func _attack() -> void:
+	#print("Input.is_action_just_released")
+	hold_attack = false
+	#print("orphan:")
+	#print_orphan_nodes() # DEBUG
+	#print("---")
+	
+	ray_cast_3d.collision_mask = 7
+	ray_cast_3d.target_position = Vector3(0, 0, -100)
+	ray_cast_3d.force_raycast_update()
+	var destination = Vector3()
+	
+	if ray_cast_3d.is_colliding():
+		destination = ray_cast_3d.get_collision_point()
+	else:
+		$Head/RayCast3D/Marker3D.position = ray_cast_3d.target_position
+		destination = $Head/RayCast3D/Marker3D.global_position
+	
+	var rune_resource: RuneResource = active_rune.get_data_to_performe_attaque()
+	#print(rune_resource.projectile_damage)
+	if attack_timer/2.0 < 0.25:
+		active_rune.light_attack(destination, rune_resource)
+	else:
+		active_rune.heavy_attack(destination, rune_resource, attack_timer/2.0) # 2 second or more = biggest strongest attack
+	is_able_to_attack = false
+	var cd: float = active_rune.get_initial_cooldown() * (1.0 - min(rune_resource.cooldown_reduction, 0.5)) if not is_in_lobby else 0.1;
+	#print("cds: ", active_rune.get_initial_cooldown(), " ", rune_resource.cooldown_reduction, " ", cd)
+	var timer: SceneTreeTimer = get_tree().create_timer(cd)
+	timer.timeout.connect(
+		func ():
+			#print("cd ended time: ", cd)
+			is_able_to_attack = true
+	)
+	#print("active_rune save infos: ", active_rune.get_save_infos())
+	#active_rune = RuneUpgradeDamage.new(active_rune)
+	#active_rune = RuneUpgradeSpeed.new(active_rune)
+
+	#var sphere = SPHERE.instantiate()
+	#get_parent().add_child(sphere)
+	#sphere.position = destination
+	#sphere.scale = Vector3(0.2, 0.2, 0.2)
+
+func _on_damage_taken():
+	super._on_damage_taken()
+	$CanvasLayer/UI.damage_tick()
 
 func _on_player_area_3d_body_entered(body: Node3D) -> void:
 	print("_on_player_area_3d_body_entered: ", body)
@@ -534,13 +591,8 @@ func get_interaction_label() -> Label:
 	return $CanvasLayer/UI.get_children()[1]
 
 
-func _on_damage_taken():
-	if is_in_lobby:
-		super._on_damage_taken() # TODO: probably remove this later
-	else:
-		if health_component.health <= 0:
-			is_dead.emit(-1) # id not used here
-
+func _death_sequence() -> void:
+	is_dead.emit(-1) # id not used for player
 
 func set_rune_at_placement(rune_id: int, active_placement: bool = true) -> void:
 	if active_placement:

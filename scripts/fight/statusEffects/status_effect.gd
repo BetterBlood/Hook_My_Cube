@@ -70,7 +70,9 @@ func _try_propagate_effect() -> void:
 	propagateArea.add_child(collision_shape)
 	collision_shape.shape = SphereShape3D.new()
 	collision_shape.shape.radius = 0.01
+	propagateArea.collision_layer = 0 # to avoid collision with projectile (default is 1, and player raycast attack collide with -> projectiles were send to narnia)
 	propagateArea.collision_mask = target.get_layer()
+	#print(target.get_layer())
 	propagateArea.area_entered.connect(
 		func (area):
 			var target_tmp = area.get_parent()

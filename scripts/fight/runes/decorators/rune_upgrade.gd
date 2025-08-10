@@ -75,7 +75,10 @@ func get_projectile_source() -> Creature:
 
 func get_layet_to_hit() -> int:
 	return rune_upgraded.get_layet_to_hit()
-	
+
+func get_initial_cooldown() -> float:
+	return rune_upgraded.get_initial_cooldown()
+
 func set_layet_to_hit(value: int) -> void:
 	rune_upgraded.set_layet_to_hit(value)
 

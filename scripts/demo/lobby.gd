@@ -80,6 +80,9 @@ func _ready() -> void:
 	
 	#call_deferred("load_meta")
 	load_meta()
+	
+	_update_hologram()
+	
 	SceneFade.emit_signal("lobby_loaded")
 
 
@@ -98,6 +101,7 @@ func _process(_delta: float) -> void:
 		#initialise the file containing maze info
 		_initialize_new_maze_file_save()
 		# player initialisation needed to keep the lobby rune
+		player.health_component.health = player.health_component.get_max_health()
 		player.save_progression(begin_id)
 		SceneFade.change_scene(maze_scene, SceneFade.maze_loaded)
 		#get_tree().change_scene_to_packed(maze_scene)
@@ -211,6 +215,20 @@ func _init_runes_unlocker() -> void:
 	for rune_data in all_runes:
 		#print("rune_data: ", rune_data)
 		if rune_data["id"] == -1: # DEBUG RUNE
+			if player.get_player_name() == "DEBUG":
+				var pedestal = PEDESTRAL_RUNE_UNLOCKER.instantiate()
+				pedestal.maze = null
+				pedestal.is_save_pedestral = false
+				pedestal.id = rune_data["id"]
+				pedestal.rune_name = rune_data["name"]
+				pedestal.lobby = self
+				$RuneUnlockedRoom.get_children()[0].add_child(pedestal)
+				pedestal.set_cost_value(rune_data["cost_value"])
+				pedestal.set_cost_type(rune_data["type"])
+				pedestal.set_debug()
+				pedestal.set_used(true)
+				pedestal.position = Vector3(0, 30.75, 0)
+				pedestal.rotation_degrees = Vector3(0, 90, 0)
 			continue
 		
 		var pedestal = PEDESTRAL_RUNE_UNLOCKER.instantiate()
@@ -274,7 +292,7 @@ func _on_algo_selector_algo_changed(new_algo: Polyrinthe.GENERATION_ALGORITHME) 
 	_update_hologram()
 
 func _update_hologram() -> void:
-	# TODO: on maze param changes, call this to generate a small hologram of 
+	# TODO: on maze param changes (and on lobby _ready function), call this to generate a small hologram of 
 	# the maze who's going to be generated, using debug option (need to update 
 	# Polyrinthes asset to reduce the debug pyramide base sizes (who's hardcoded for now))
 	pass
@@ -285,6 +303,7 @@ func _on_fake_portal_fake_portal_entered() -> void:
 	#initialise the file containing maze info
 	_initialize_new_maze_file_save()
 	# player initialisation needed to keep the lobby rune
+	player.health_component.health = player.health_component.get_max_health() # regen before initialising progression save
 	player.save_progression(begin_id)
 	SceneFade.change_scene(maze_scene, SceneFade.maze_loaded)
 
@@ -294,7 +313,6 @@ func unlock_rune(id: int, cost_value: int, cost_type: Enums.DamageType) -> bool:
 		essences[cost_type] -= cost_value
 		unlocked_runes.append(id)
 		save_meta()
-		# TODO: update other pedestal of same type with the new essences possesion
 		return true
 	return false
 
@@ -303,6 +321,5 @@ func convert_essences(cost_value: int, cost_type: Enums.DamageType, give_value: 
 		essences[cost_type] -= cost_value
 		essences[give_type] += give_value
 		save_meta()
-		# TODO: update other pedestal of same type with the new essences possesion
 		return true
 	return false

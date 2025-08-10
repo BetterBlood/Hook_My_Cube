@@ -89,11 +89,6 @@ height = 50.0
 
 [node name="Lobby" type="Node3D"]
 script = ExtResource("1_yr8w2")
-maze_seed = null
-difficulty = null
-size = null
-algo = null
-begin_id = null
 
 [node name="Player" parent="." instance=ExtResource("2_pdx53")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.9521, 2, 16.6666)
@@ -138,6 +133,82 @@ skeleton = NodePath("../..")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MainFloor/Floor"]
 shape = SubResource("ConcavePolygonShape3D_6728e")
+
+[node name="Label3D" type="Label3D" parent="MainFloor/Floor"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -11.944, 0.11, 12.062)
+modulate = Color(1, 0, 1, 1)
+text = "Hey...
+
+Listen...
+
+ I mean read these words if you feel lost                           ======>                                                                                                               these words,              okey this seams to doesn't help you. Maybe try pressing \"Escape\" ? "
+horizontal_alignment = 0
+
+[node name="Label3D2" type="Label3D" parent="MainFloor/Floor"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -11.944, 0.11, 14.429)
+modulate = Color(1, 0, 1, 1)
+text = "\"wasd\" or \"left joystick\" to move, what ever it means....
+
+Ho and the right one is to look outthere, or the mouse they said 
+
+ (o . O) < ( no idea how a mouse could help you to move your vision...)"
+horizontal_alignment = 0
+
+[node name="Label3D3" type="Label3D" parent="MainFloor/Floor"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 4.012, 0.11, 14.429)
+modulate = Color(1, 0, 1, 1)
+text = "Okey now let's try your grapple, mmm.... let me remember                                    should be \"right trigger\" or \"right clic\", try pointing this   => o <= and hold it, when you hook something then  release it a speed bonus is granted ;)"
+horizontal_alignment = 0
+
+[node name="Label3D4" type="Label3D" parent="MainFloor/Floor"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 17.998, 0.11, 16.7919)
+modulate = Color(1, 0, 1, 1)
+text = "WARNING !!!  ===> 
+
+Yes just here on your right, it's a portal =>
+
+You can take it to teleport you to an other place
+
+But this one is the exit of a small maze we'll see later
+
+
+Go this way is you need more information "
+horizontal_alignment = 0
+
+[node name="Label3D5" type="Label3D" parent="MainFloor/Floor"]
+transform = Transform3D(-4.37114e-08, -1, -4.37114e-08, 0, -4.37114e-08, 1, -1, 4.37114e-08, 1.91069e-15, 21.4565, 0.11, 17.9551)
+modulate = Color(1, 0, 1, 1)
+text = "====>"
+horizontal_alignment = 0
+
+[node name="Label3D6" type="Label3D" parent="MainFloor/Floor"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 16.6397, 0.11, 8.75644)
+modulate = Color(1, 0, 1, 1)
+text = "Okey now let's try to \"left clic\" or \"left trigger\".
+
+It's your rune, if you read this for the first time it's probably standard rune with normal damage.
+
+You can see the visual indicator on the left of your vision.
+
+Please proceed your way up there"
+horizontal_alignment = 0
+
+[node name="Label3D7" type="Label3D" parent="MainFloor/Floor"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 15.2203, 0.11, -1.65598)
+modulate = Color(1, 0, 1, 1)
+text = "Perfect
+
+For now all you need to know is that I don't have time to write more information for you.
+
+
+All I can do is wishing you       ( GOOD LUCK ! ) > (^ . ^)"
+horizontal_alignment = 0
+
+[node name="Label3D8" type="Label3D" parent="MainFloor/Floor"]
+transform = Transform3D(0.6024, -0.798194, -3.48902e-08, 0, -4.37114e-08, 1, -0.798194, -0.6024, -2.63318e-08, 6.26857, 0.11, -4.77005)
+modulate = Color(1, 0, 1, 1)
+text = "Ho one last things, there is a practice room an unlock rune room and a maze preparation room, I think you are smart enought to find them by yourself     xoxo"
+horizontal_alignment = 0
 
 [node name="Ceil" type="StaticBody3D" parent="MainFloor"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 100, 0)
@@ -341,6 +412,46 @@ light_cull_mask = 4293918721
 shadow_caster_mask = 4293918721
 distance_fade_begin = 50.0
 omni_range = 45.0
+
+[node name="MainLobbyLight2" type="OmniLight3D" parent="MainFloor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 62.1592, 6.77681, -1.30189)
+light_color = Color(0.207843, 0.690196, 0.509804, 1)
+light_energy = 16.0
+light_bake_mode = 1
+light_cull_mask = 4293918721
+shadow_caster_mask = 4293918721
+distance_fade_begin = 50.0
+omni_range = 20.0
+
+[node name="MainLobbyLight5" type="OmniLight3D" parent="MainFloor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 65.0747, 7.03252, 22.1222)
+light_color = Color(0.207843, 0.690196, 0.509804, 1)
+light_energy = 16.0
+light_bake_mode = 1
+light_cull_mask = 4293918721
+shadow_caster_mask = 4293918721
+distance_fade_begin = 50.0
+omni_range = 20.0
+
+[node name="MainLobbyLight3" type="OmniLight3D" parent="MainFloor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 70.2313, 27.1765, 20.8903)
+light_color = Color(0.207843, 0.690196, 0.509804, 1)
+light_energy = 16.0
+light_bake_mode = 1
+light_cull_mask = 4293918721
+shadow_caster_mask = 4293918721
+distance_fade_begin = 50.0
+omni_range = 20.0
+
+[node name="MainLobbyLight4" type="OmniLight3D" parent="MainFloor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 47.1549, 27.1765, 12.3921)
+light_color = Color(0.207843, 0.690196, 0.509804, 1)
+light_energy = 16.0
+light_bake_mode = 1
+light_cull_mask = 4293918721
+shadow_caster_mask = 4293918721
+distance_fade_begin = 50.0
+omni_range = 20.0
 
 [node name="MazeSelectionFloor" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -100)

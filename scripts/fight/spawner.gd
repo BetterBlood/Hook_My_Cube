@@ -10,7 +10,10 @@ var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
 var debug_id: int = 49
 
-var possible_mobs: Array[PackedScene] = [preload("res://scenes/characters/zombie.tscn")]
+var possible_mobs: Array[PackedScene] = [
+	preload("res://scenes/characters/zombie.tscn"),
+	#TODO : add other mobs availlable
+]
 var current_mobs: Array
 var spawned: bool = false
 
@@ -73,6 +76,7 @@ func initialise_mobs_list(human_seed: String, mob_id_to_avoid: Array[int]) -> vo
 	if id == debug_id:
 		print("Spawner::initialise_mobs_list::id: ", id, ", human_seed: ", human_seed, ", mob_id_to_avoid: ", mob_id_to_avoid, ", difficulty: ", maze.difficulty)
 	
+	var depth_ratio: float = float(maze.polyrinthe.cubeGraph.getDepth(id))/maze.polyrinthe.cubeGraph.get_deepest()
 	for i in range(NBR_MOB_BY_SPAWNER):
 		var new_id = Enemy.get_next_id()
 		if id == debug_id:
@@ -87,15 +91,15 @@ func initialise_mobs_list(human_seed: String, mob_id_to_avoid: Array[int]) -> vo
 			new_mob.id = new_id
 			new_mob.is_dead.connect(_on_mob_death)
 			current_mobs.append(new_mob)
-			new_mob.set_mob_data(new_human_seed, maze.difficulty, 
-				float(maze.polyrinthe.cubeGraph.getDepth(id))/maze.polyrinthe.cubeGraph.get_deepest())
+			new_mob.set_mob_data(new_human_seed, maze.difficulty, depth_ratio)
 		else:
 			if id == debug_id:
 				print("nothing to do, mob '", new_id, "' is dead")
 
 
 func _on_mob_death(mob_id: int) -> void:
-	mob_dead.append(mob_id)
+	if mob_id not in mob_dead:
+		mob_dead.append(mob_id)
 	maze.update_spawner(id, mob_dead)
 	print("Spawner:: mobs_dead: ", mob_dead)
 	

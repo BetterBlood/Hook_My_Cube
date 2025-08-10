@@ -21,14 +21,6 @@ func _ready() -> void:
 	layer = 4
 
 
-func _on_damage_taken():
-	if is_in_lobby:
-		super._on_damage_taken() # TODO: probably remove this later
-	else:
-		if health_component.health <= 0:
-			_death_sequence()
-
-
 ## depth_ratio: [0.0; 1.0] => determines enemy lvl
 ## difficulty: [-2; 2] => determines all stats accordingly with the lvl
 func set_mob_data(human_seed: String, difficulty: int, depth_ratio: float) -> void:
@@ -41,7 +33,7 @@ func set_mob_data(human_seed: String, difficulty: int, depth_ratio: float) -> vo
 	if depth_ratio + new_diff >= 1/3.0: # typed mobs appears nearer to begin with high difficulty
 		var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 		rng.seed = hash(human_seed)
-		damage_type = Enums.DamageType.values()[rng.randi_range(0, len(Enums.damage_type_grid) - 1)] 
+		damage_type = Enums.DamageType.values()[rng.randi_range(0, len(Enums.damage_type_grid) - 1)]
 	
 	var lvl_max = (difficulty + 3) * 10 # [10; 50]
 	lvl = max(1, int(lvl_max * depth_ratio)) # at least lvl 1, max [10, 20, 30, 40, 50]

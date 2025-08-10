@@ -365,7 +365,7 @@ func _apply_maze_modifications(maze: Polyrinthe) -> void: # TODO
 		pedestral.position = maze.maze[save_point_id].position - save_pedestral_position
 	
 	SceneFade.emit_signal("save_id_changed", last_save_id) # set_up animation for player's spwan point
-	
+	var max_rune_pedestal: int = 2
 	for chests_id: int in chests_room_ids: # chests_room_ids is correct, already cleaned
 		var pedestral = PEDESTRAL.instantiate()
 		pedestral.maze = self
@@ -373,27 +373,31 @@ func _apply_maze_modifications(maze: Polyrinthe) -> void: # TODO
 		pedestral.id = chests_id
 		#pedestral.set_color(Color(0, 0, 1, 1))
 		#pedestral.is_rune = maze.maze[chests_id].position.y == 0
-		pedestral.is_rune = Polyrinthe.is_id_on_first_floor(size, chests_id)
+		if max_rune_pedestal > 0 and Polyrinthe.is_id_on_first_floor(maze.size, chests_id):
+			pedestral.is_rune = true
+			max_rune_pedestal -= 1
+		else:
+			pedestral.is_rune = false
 		navigation_region_3d.add_child(pedestral)
 		pedestral.position = maze.maze[chests_id].position - chest_pedestral_position
 	
 	#print("spawners_room_ids: ", spawners_room_ids)
 	for spawner_id: int in spawners_room_ids:
-		var sphere = SPHERE.instantiate() # DEBUG
+		#var sphere = SPHERE.instantiate() # DEBUG
 		#add_child(sphere) # DEBUG
-		sphere.position = maze.maze[spawner_id].position # DEBUG
+		#sphere.position = maze.maze[spawner_id].position # DEBUG
 		
 		var mob_id_to_avoid: Array[int] = []
 		if str(spawner_id) in updated_spawners.keys():
 			mob_id_to_avoid = updated_spawners[str(spawner_id)]
-			sphere.get_child(0).mesh.material.albedo_color = Color(1, 0, float(len(mob_id_to_avoid))/Spawner.NBR_MOB_BY_SPAWNER, 1) # DEBUG
+			#sphere.get_child(0).mesh.material.albedo_color = Color(1, 0, float(len(mob_id_to_avoid))/Spawner.NBR_MOB_BY_SPAWNER, 1) # DEBUG
 			if len(mob_id_to_avoid) >= 3:
 				print("spawner '", spawner_id, "' skipped, all mobs are dead") # DEBUG
 				for i in range(Spawner.NBR_MOB_BY_SPAWNER):
 					Enemy.get_next_id()
 				continue
-		else:
-			sphere.get_child(0).mesh.material.albedo_color = Color(1, 0, 0, 1) # DEBUG
+		#else:
+			#sphere.get_child(0).mesh.material.albedo_color = Color(1, 0, 0, 1) # DEBUG
 		
 		var spawner = SPAWNER.instantiate()
 		spawner.setMaze(self)

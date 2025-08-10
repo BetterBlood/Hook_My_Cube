@@ -13,6 +13,7 @@ var materials: Array[Material] = [ # TODO: update on other type or runes added
 	preload("res://materials/projectiles/plant_projectile.tres"),
 	preload("res://materials/projectiles/electric_projectile.tres"),
 ]
+var debug_color = preload("res://materials/projectiles/debug_projectile.tres")
 
 func _ready() -> void:
 	super._ready()
@@ -30,6 +31,8 @@ func set_cost_type(type: Enums.DamageType) -> void:
 	_set_display()
 	set_color(materials[type % len(materials)].albedo_color)
 
+func set_debug() -> void:
+	set_color(debug_color.albedo_color)
 
 func _set_display() -> void:
 	interactionToDisplay = "E or X\n\nUnlock cost for " + rune_name + " is " + str(cost_value) + " " + Enums.DamageType.keys()[cost_type] + ". You have " + str(lobby.essences[cost_type]) + "."
