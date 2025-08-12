@@ -91,7 +91,7 @@ height = 50.0
 script = ExtResource("1_yr8w2")
 
 [node name="Player" parent="." instance=ExtResource("2_pdx53")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.9521, 2, 16.6666)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48.0098, 2, -0.66855)
 is_in_lobby = true
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
@@ -138,7 +138,7 @@ skeleton = NodePath("../..")
 shape = SubResource("ConcavePolygonShape3D_6728e")
 
 [node name="Label3D" type="Label3D" parent="MainFloor/Floor"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -11.944, 0.11, 12.062)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 47.5, 3.703, -4.761)
 modulate = Color(1, 0, 1, 1)
 text = "Hey...
 
@@ -148,7 +148,7 @@ Listen...
 horizontal_alignment = 0
 
 [node name="Label3D2" type="Label3D" parent="MainFloor/Floor"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -11.944, 0.11, 14.429)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 47.5, 2.13, -4.761)
 modulate = Color(1, 0, 1, 1)
 text = "\"wasd\" or \"left joystick\" to move, what ever it means....
 
@@ -158,34 +158,44 @@ Ho and the right one is to look outthere, or the mouse they said
 horizontal_alignment = 0
 
 [node name="Label3D3" type="Label3D" parent="MainFloor/Floor"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 4.012, 0.11, 14.429)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 66.9954, 3.783, -4.761)
 modulate = Color(1, 0, 1, 1)
-text = "Okey now let's try your grapple, mmm.... let me remember                                    should be \"right trigger\" or \"right clic\", try pointing this   => o <= and hold it, when you hook something then  release it a speed bonus is granted ;)"
+text = "Okey now let's try your grapple, mmm.... let me remember                                    
+
+
+should be \"right trigger\" or \"right clic\", try pointing this   => o <= and hold it,
+when you hook something then  release it a speed bonus is granted ;)"
 horizontal_alignment = 0
 
 [node name="Label3D4" type="Label3D" parent="MainFloor/Floor"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 17.998, 0.11, 16.7919)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 45.0973, 23.0684, 25.0861)
 modulate = Color(1, 0, 1, 1)
 text = "WARNING !!!  ===> 
 
-Yes just here on your right, it's a portal =>
+Yes just here on right, it's a portal =>
 
 You can take it to teleport you to an other place
 
-But this one is the exit of a small maze we'll see later
+But this one is the exit of this small maze
 
-
-Go this way is you need more information "
+Go this way if you want more information 
+or return bellow to practice your grabs"
 horizontal_alignment = 0
 
 [node name="Label3D5" type="Label3D" parent="MainFloor/Floor"]
-transform = Transform3D(-4.37114e-08, -1, -4.37114e-08, 0, -4.37114e-08, 1, -1, 4.37114e-08, 1.91069e-15, 21.4565, 0.11, 17.9551)
+transform = Transform3D(-1, 8.74228e-08, 0, 3.82137e-15, 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, 72.0259, 20.553, 8.85909)
 modulate = Color(1, 0, 1, 1)
-text = "====>"
+text = "You need an ice grapple upgrade to grab ice wall"
 horizontal_alignment = 0
 
+[node name="Label3D5_2" type="Label3D" parent="MainFloor/Floor"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 54.3156, 20.7108, 10.9903)
+modulate = Color(1, 0, 1, 1)
+text = ">> o <<
+Hook here to pass !"
+
 [node name="Label3D6" type="Label3D" parent="MainFloor/Floor"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 16.6397, 0.11, 8.75644)
+transform = Transform3D(-4.37114e-08, -1, -4.37114e-08, 0, -4.37114e-08, 1, -1, 4.37114e-08, 1.91069e-15, 16.6397, 0.11, 19.679)
 modulate = Color(1, 0, 1, 1)
 text = "Okey now let's try to \"left clic\" or \"left trigger\".
 
@@ -197,7 +207,7 @@ Please proceed your way up there"
 horizontal_alignment = 0
 
 [node name="Label3D7" type="Label3D" parent="MainFloor/Floor"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 15.2203, 0.11, -1.65598)
+transform = Transform3D(-4.37114e-08, -1, -4.37114e-08, 0, -4.37114e-08, 1, -1, 4.37114e-08, 1.91069e-15, 4.99074, 0.11, 18.8838)
 modulate = Color(1, 0, 1, 1)
 text = "Perfect
 
@@ -208,10 +218,50 @@ All I can do is wishing you       ( GOOD LUCK ! ) > (^ . ^)"
 horizontal_alignment = 0
 
 [node name="Label3D8" type="Label3D" parent="MainFloor/Floor"]
-transform = Transform3D(0.6024, -0.798194, -3.48902e-08, 0, -4.37114e-08, 1, -0.798194, -0.6024, -2.63318e-08, 6.26857, 0.11, -4.77005)
+transform = Transform3D(0.6024, -0.798194, -3.48902e-08, 0, -4.37114e-08, 1, -0.798194, -0.6024, -2.63318e-08, -15.0825, 0.109999, 16.3175)
 modulate = Color(1, 0, 1, 1)
-text = "Ho one last things, there is a practice room an unlock rune room and a maze preparation room, I think you are smart enought to find them by yourself     xoxo"
+text = "Ho one last things, there is a practice room 
+an unlock rune room and a maze preparation room.
+ I think you are smart enought to find them by yourself     xoxo"
 horizontal_alignment = 0
+
+[node name="Label3D9" type="Label3D" parent="MainFloor/Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2266, 8.52665, -24.4285)
+modulate = Color(1, 0, 1, 1)
+text = "MAZE ROOM SELECTION
+
+\\/
+\\/
+\\/
+\\/
+\\/"
+font_size = 128
+outline_size = 48
+
+[node name="Label3D10" type="Label3D" parent="MainFloor/Floor"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 24.1395, 8.52665, -100.578)
+modulate = Color(1, 0, 1, 1)
+text = "When you have a seconde rune
+you can swap using \"Q\" or \"left small trigger\""
+font_size = 128
+outline_size = 48
+
+[node name="Label3D11" type="Label3D" parent="MainFloor/Floor"]
+transform = Transform3D(0.913055, -0.407836, -1.78271e-08, 0, -4.37114e-08, 1, -0.407836, -0.913055, -3.99109e-08, -6.28676, 0.226136, -90.9179)
+modulate = Color(1, 0, 1, 1)
+text = "try using your rune to update maze paramettre"
+
+[node name="Label3D12" type="Label3D" parent="MainFloor/Floor"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -24.652, 5, 0)
+modulate = Color(1, 0, 1, 1)
+text = "not availlable for now
+
+\\/
+\\/
+\\/
+\\/"
+font_size = 64
+outline_size = 24
 
 [node name="Ceil" type="StaticBody3D" parent="MainFloor"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 100, 0)
