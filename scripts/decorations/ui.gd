@@ -9,5 +9,8 @@ func damage_tick() -> void:
 	tween.tween_property($ColorRect, "modulate:a", 1, 0.1)
 	await tween.finished
 	
-	tween = get_tree().create_tween()
-	tween.tween_property($ColorRect, "modulate:a", 0, 0.1)
+	if self:
+		var tree = get_tree()
+		if tree:
+			tween = tree.create_tween()
+			tween.tween_property($ColorRect, "modulate:a", 0, 0.1)

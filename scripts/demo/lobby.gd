@@ -26,6 +26,9 @@ var maze_scene: PackedScene = preload("res://scenes/maze.tscn")
 const PEDESTRAL_RUNE_UNLOCKER = preload("res://scenes/decorations/pedestral_rune_unlock.tscn")
 const PEDESTAL_CONVERT_ESSENCES = preload("res://scenes/decorations/pedestal_convert_essences.tscn")
 
+# Practice room
+var bird: PackedScene = preload("res://scenes/characters/bird.tscn")
+
 
 func _ready() -> void:
 	$MainFloor/Ceil.position = $MainFloor/Ceil.position - Vector3(0, 40, 0)
@@ -78,10 +81,11 @@ func _ready() -> void:
 	if not FileAccess.file_exists("user://" + player.get_player_name() + "/meta.save"):
 		save_meta() # initialise the save on first time with this username
 	
-	#call_deferred("load_meta")
 	load_meta()
 	
 	_update_hologram()
+	
+	call_deferred("_init_birds")
 	
 	SceneFade.emit_signal("lobby_loaded")
 
@@ -106,6 +110,30 @@ func _process(_delta: float) -> void:
 		SceneFade.change_scene(maze_scene, SceneFade.maze_loaded)
 		#get_tree().change_scene_to_packed(maze_scene)
 
+
+func _init_birds() -> void:
+	print(maze_seed)
+	var max_spawn_radius = 10
+	
+	# boid 1
+	for i in range(4):
+		var new_bird = bird.instantiate()
+		new_bird.id = i
+		new_bird.set_mob_data(maze_seed + "bird" + str(i), 0, 1)
+		new_bird.position = Vector3(randf_range(-1, 1) * max_spawn_radius, randf_range(-9, -1), randf_range(-1, 1) * max_spawn_radius)
+		add_child(new_bird)
+		new_bird.set_boids(range(4))
+		new_bird.is_in_lobby = true
+	
+	# boid 2
+	for i in range(4, 8):
+		var new_bird = bird.instantiate()
+		new_bird.id = i
+		new_bird.set_mob_data(maze_seed + "bird" + str(i), 0, 1)
+		new_bird.position = Vector3(randf_range(-1, 1) * max_spawn_radius, randf_range(-9, -1), randf_range(-1, 1) * max_spawn_radius)
+		add_child(new_bird)
+		new_bird.set_boids(range(4, 8))
+		new_bird.is_in_lobby = true
 
 func _initialize_new_maze_file_save() -> void:
 	var save_file = FileAccess.open("user://" + player.get_player_name() + "/maze.save", FileAccess.WRITE)
@@ -216,19 +244,19 @@ func _init_runes_unlocker() -> void:
 		#print("rune_data: ", rune_data)
 		if rune_data["id"] == -1: # DEBUG RUNE
 			if player.get_player_name() == "DEBUG":
-				var pedestal = PEDESTRAL_RUNE_UNLOCKER.instantiate()
-				pedestal.maze = null
-				pedestal.is_save_pedestral = false
-				pedestal.id = rune_data["id"]
-				pedestal.rune_name = rune_data["name"]
-				pedestal.lobby = self
-				$RuneUnlockedRoom.get_children()[0].add_child(pedestal)
-				pedestal.set_cost_value(rune_data["cost_value"])
-				pedestal.set_cost_type(rune_data["type"])
-				pedestal.set_debug()
-				pedestal.set_used(true)
-				pedestal.position = Vector3(0, 30.75, 0)
-				pedestal.rotation_degrees = Vector3(0, 90, 0)
+				var debug_pedestal = PEDESTRAL_RUNE_UNLOCKER.instantiate()
+				debug_pedestal.maze = null
+				debug_pedestal.is_save_pedestral = false
+				debug_pedestal.id = rune_data["id"]
+				debug_pedestal.rune_name = rune_data["name"]
+				debug_pedestal.lobby = self
+				$RuneUnlockedRoom.get_children()[0].add_child(debug_pedestal)
+				debug_pedestal.set_cost_value(rune_data["cost_value"])
+				debug_pedestal.set_cost_type(rune_data["type"])
+				debug_pedestal.set_debug()
+				debug_pedestal.set_used(true)
+				debug_pedestal.position = Vector3(0, 30.75, 0)
+				debug_pedestal.rotation_degrees = Vector3(0, 90, 0)
 			continue
 		
 		var pedestal = PEDESTRAL_RUNE_UNLOCKER.instantiate()

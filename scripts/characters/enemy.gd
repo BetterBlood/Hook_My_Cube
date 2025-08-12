@@ -3,7 +3,7 @@ extends Creature
 class_name Enemy
 
 static var next_id = 0
-var id: int
+@export var id: int
 
 var damage_type: Enums.DamageType = Enums.DamageType.NORMAL
 var damage: float = 3
@@ -74,6 +74,8 @@ static func get_next_id() -> int:
 	next_id += 1
 	return next_id - 1
 
+func get_id() -> int:
+	return id
 
 func get_type() -> Enums.DamageType:
 	return damage_type

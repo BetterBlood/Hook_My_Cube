@@ -42,7 +42,7 @@ func _ready() -> void:
 	grappling_hook.add_child(IMPACT.instantiate())
 
 
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	if is_dragging: # apply movement on the owner
 		#print("is_dragging")
 		

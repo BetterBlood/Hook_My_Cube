@@ -105,14 +105,17 @@ environment = SubResource("Environment_4d0q1")
 
 [node name="Enemy" parent="." instance=ExtResource("3_d1p01")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.7913, -17.7606, -7.26184)
+id = 11
 is_in_lobby = true
 
 [node name="Enemy2" parent="." instance=ExtResource("3_d1p01")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.2531, -17.2201, -4.26082)
+id = 12
 is_in_lobby = true
 
 [node name="Enemy3" parent="." instance=ExtResource("3_d1p01")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.25537, -17.3363, 2.54891)
+id = 13
 is_in_lobby = true
 
 [node name="Torch2" parent="." instance=ExtResource("4_u1smo")]

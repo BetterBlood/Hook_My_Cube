@@ -175,6 +175,21 @@ func _physics_process(delta):
 		#if attack_timer >= 2.0: # mmmmm don't know what I prefer: release on 2 sec holding or give information to player and let him release by himself ?
 			#_attack()
 	
+	if Input.is_action_just_pressed("auto_ignite"): # DEBUG
+		var effect = preload("res://scenes/fight/statusEffects/burn_effect.tscn")
+		var target = self
+		var tmp_id = 17427
+		target.add_effect_id(tmp_id)
+		var effect_instance = effect.instantiate()
+		effect_instance.same_effect = effect
+		effect_instance.value = 1
+		effect_instance.effect_id = tmp_id
+		effect_instance.target = target
+		effect_instance.total_duration = 1.0
+		effect_instance.total_duration_fixe = 1.0
+		effect_instance.effect_area_range_transmission = 1.0
+		target.add_child(effect_instance)
+	
 	if Input.is_action_just_pressed("SwapRune"):
 		_swap_runes() # TODO: animations !!
 	

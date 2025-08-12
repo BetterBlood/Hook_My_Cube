@@ -400,7 +400,7 @@ func _apply_maze_modifications(maze: Polyrinthe) -> void: # TODO
 			#sphere.get_child(0).mesh.material.albedo_color = Color(1, 0, 0, 1) # DEBUG
 		
 		var spawner = SPAWNER.instantiate()
-		spawner.setMaze(self)
+		spawner.set_maze(self)
 		add_child(spawner)
 		spawner.id = spawner_id
 		spawner.position = maze.maze[spawner_id].position

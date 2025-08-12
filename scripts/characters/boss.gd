@@ -18,6 +18,8 @@ const BOSS_ON_FIRE_1 = preload("res://materials/shaders/boss_on_fire_1.tres")
 const BOSS_ON_FIRE_2 = preload("res://materials/shaders/boss_on_fire_2.tres")
 const BOSS_ON_FIRE_3 = preload("res://materials/shaders/boss_on_fire_3.tres")
 
+var bird: PackedScene = preload("res://scenes/characters/bird.tscn")
+
 func _ready() -> void:
 	super._ready()
 	
@@ -79,6 +81,8 @@ func _physics_process(delta: float) -> void:
 			current_cd = 0.0
 			attack_cd = randf_range(0.5, 3.0)
 			$AnimationPlayer.play("attack")
+			if randf() < 0.2:
+				_spawn_boid()
 		
 		var to_player = player.global_transform.origin - global_transform.origin
 		to_player.y = 0
@@ -90,6 +94,19 @@ func _physics_process(delta: float) -> void:
 		
 		rotation.y = new_y
 
+
+func _spawn_boid() -> void:
+	var max_spawn_radius = 10
+	
+	for i in range(5):
+		var new_bird = bird.instantiate()
+		new_bird.id = i
+		new_bird.set_mob_data("boss_bird" + str(i), 0, 1)
+		get_parent().add_child(new_bird)
+		new_bird.position = Vector3(randf_range(-1, 1) * max_spawn_radius, randf_range(1, max_spawn_radius), randf_range(-1, 1) * max_spawn_radius)
+		new_bird.set_boids(range(5))
+		new_bird.set_color(Color.CRIMSON)
+		new_bird.set_target(player)
 
 func _attack_end() -> void:
 	can_rotate = true
