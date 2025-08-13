@@ -25,6 +25,9 @@ func _ready() -> void:
 	shader_mat = effect.mesh.material
 	
 	$Navigation/UpdateNavigation.timeout.connect(compute_path)
+	
+	damage_area = $MeshInstance3D
+
 
 func _physics_process(delta: float) -> void:
 	if not base_position and not $Navigation/UpdateNavigation.is_stopped():

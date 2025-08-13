@@ -28,6 +28,8 @@ func change_scene(scene: PackedScene, await_loading: Signal) -> void:
 	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	tween.tween_property($ColorRect, "modulate:a", 0, 0.5)
 	$ColorRect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	
+	get_tree().paused = false # prevent pause on changing scene, fake freeze
 
 func change_scene_with_file(scene: String, await_loading: Signal) -> void:
 	$ColorRect.mouse_filter = Control.MOUSE_FILTER_STOP

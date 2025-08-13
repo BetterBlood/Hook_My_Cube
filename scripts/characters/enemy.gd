@@ -15,11 +15,20 @@ const XP_ORBE = preload("res://scenes/decorations/xp.tscn")
 const GOLD_ORBE = preload("res://scenes/decorations/gold.tscn")
 const ESSENCE_ORBE = preload("res://scenes/decorations/essence.tscn")
 
+var damage_area: Node3D = null
+var material_damage_tick: StandardMaterial3D = preload("res://materials/creatures/mob_damage_tick.tres")
 
 func _ready() -> void:
 	super._ready()
 	layer = 4
 
+func _on_damage_taken():
+	super._on_damage_taken()
+	
+	if damage_area:
+		damage_area.set_surface_override_material(0, material_damage_tick)
+		await get_tree().create_timer(0.1).timeout
+		damage_area.set_surface_override_material(0, null)
 
 ## depth_ratio: [0.0; 1.0] => determines enemy lvl
 ## difficulty: [-2; 2] => determines all stats accordingly with the lvl

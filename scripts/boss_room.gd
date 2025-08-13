@@ -10,6 +10,7 @@ func _ready() -> void:
 	$Ceil.position = $Ceil.position - Vector3(0, 100, 0)
 	player.current_player_name = SceneFade.player_name
 	_initialise_player()
+	_init_difficulty()
 	
 	#TODO : init boss
 	$Boss.is_dead.connect(_on_boss_defeated)
@@ -19,6 +20,29 @@ func _ready() -> void:
 	SceneFade.emit_signal("boss_room_loaded")
 	
 	# animation for player entrance and boss entrance
+
+# TODO: be carefull, duplicated code part, see maze _generate_maze methode
+func _init_difficulty() -> void:
+	if not FileAccess.file_exists("user://" + player.get_player_name() + "/maze.save"):
+		push_error("file:'" + player.get_player_name() + "/maze.save' not found")
+	
+	# read file info to initialize difficulty
+	var maze_file = FileAccess.open(
+		"user://" + player.get_player_name() + "/maze.save", 
+		FileAccess.READ)
+	
+	while maze_file.get_position() < maze_file.get_length():
+		var json_string = maze_file.get_line()
+		
+		var json = JSON.new()
+		
+		var parse_result = json.parse(json_string)
+		if not parse_result == OK:
+			push_warning("JSON Parse Error: " + json.get_error_message() + " in " + json_string + " at line " + str(json.get_error_line()))
+			continue
+		
+		var maze_data = json.data
+		player.set_difficulty(int(maze_data["difficulty"]))
 
 # TODO: be carefull, duplicated code, see maze _initialise_player methode
 func _initialise_player():
@@ -120,6 +144,8 @@ func _on_boss_defeated(_id: int) -> void:
 	player.gain_gold(50)
 	player.gain_essence(Enums.DamageType.NORMAL, 3) #TODO: based on boss type !
 	
+	player.set_ressource_on_boss_win()
+	
 	# transfert values to the meta save
 	save_meta()
 	
@@ -132,7 +158,9 @@ func _on_boss_defeated(_id: int) -> void:
 	portal_end.position = Vector3(0, 1.25, -20)
 	portal_end.fake_portal_entered.connect(_go_to_lobby)
 
+
 func _on_player_death(_id: int) -> void:
+	player.set_ressource_on_death()
 	SceneFade._erase_player_progress(player.get_player_name())
 	_go_to_lobby()
 

@@ -51,6 +51,8 @@ func _ready() -> void:
 	ray_casts.add_child(ray_cast)
 	
 	base_position = global_position
+	
+	damage_area = $Meshes/Body
 
 
 func _physics_process(delta: float) -> void:
@@ -69,8 +71,8 @@ func _physics_process(delta: float) -> void:
 	#var top_direction = right_direction.cross(front_direction)
 
 	if delta_last_tick > tick_ray_cast:
-		if id == debug_id:
-			print()
+		#if id == debug_id:
+			#print()
 		
 		delta_last_tick = 0.0
 		var max_i: int = 10
@@ -79,8 +81,8 @@ func _physics_process(delta: float) -> void:
 		ray_cast.target_position = new_target
 		#total_direction = to_global(new_target)
 		ray_cast.force_raycast_update()
-		if id == debug_id:
-			print("i: ", i, ", new_target: ", new_target, " -> global: ", to_global(new_target))
+		#if id == debug_id:
+			#print("i: ", i, ", new_target: ", new_target, " -> global: ", to_global(new_target))
 		
 		#var sphere2 = SPHERE.instantiate()
 		#get_parent().add_child(sphere2)
@@ -99,12 +101,12 @@ func _physics_process(delta: float) -> void:
 					prev_target.scale *= 0.05
 					prev_target.get_children()[0].mesh.material.albedo_color = Color(1,0,0,0.5)
 					prev_target.get_children()[0].mesh.material.transparency = true
-					print("\tray_cast.target_position: ", ray_cast.target_position)
+					#print("\tray_cast.target_position: ", ray_cast.target_position)
 				
 				if cohesion_birds or avoidance_birds:
 					var diff = _compute_boids_target_position()
 					if id == debug_id:
-						print("\t_compute_boids_target: ", diff, ", to local: ", to_local(diff))
+						#print("\t_compute_boids_target: ", diff, ", to local: ", to_local(diff))
 						var end_target = SPHERE.instantiate()
 						get_parent().add_child(end_target)
 						end_target.position = global_position + diff
@@ -121,8 +123,8 @@ func _physics_process(delta: float) -> void:
 					#print("\t", i, " target: ", ray_cast.target_position)
 					
 				if id == debug_id:
-					print("\tray_cast.target_position: ", ray_cast.target_position)
-					print("\t", i, " not colliding -> should go forward")
+					#print("\tray_cast.target_position: ", ray_cast.target_position)
+					#print("\t", i, " not colliding -> should go forward")
 					
 					var real_target = SPHERE.instantiate()
 					get_parent().add_child(real_target)
@@ -134,15 +136,15 @@ func _physics_process(delta: float) -> void:
 				if to_global(ray_cast.target_position).normalized().abs() != Vector3.UP: # avoid 1/1000000 error when the target is in the same direction
 					look_at(to_global(ray_cast.target_position), Vector3.UP, true) # TODO: smooth rotation
 				break
-			if id == debug_id:
-				print("\t", ray_cast.get_collider())
+			#if id == debug_id:
+				#print("\t", ray_cast.get_collider())
 			i += 1
 			new_target = _compute_new_target_position(i, max_i)
 			#total_direction = new_target
 			ray_cast.target_position = new_target
 			ray_cast.force_raycast_update()
-			if id == debug_id:
-				print("i: ", i, ", new_target: ", new_target)
+			#if id == debug_id:
+				#print("i: ", i, ", new_target: ", new_target)
 			
 			#var sphere2 = SPHERE.instantiate()
 			#get_parent().add_child(sphere2)
@@ -175,22 +177,22 @@ func _damage_taken() -> void:
 	if spawner: spawner._bird_taking_damage(id)
 
 func set_target(new_target: Creature) -> void:
-	print("Bird::set_target: ", new_target)
+	#print("Bird::set_target: ", new_target)
 	target = new_target
 	$Meshes/Eye.mesh.material.albedo_color = Color.RED
 	$Meshes/Eye2.mesh.material.albedo_color = Color.RED
 
 func set_creature_to_listen(new_target: Creature) -> void:
-	print("Bird::set_creature_to_listen: ", new_target)
+	#print("Bird::set_creature_to_listen: ", new_target)
 	potential_target = new_target
 	potential_target.health_component.damage_taken.connect(potential_target_take_damage)
 
 func potential_target_take_damage() -> void:
-	print("Bird::potential_target_take_damage")
+	#print("Bird::potential_target_take_damage")
 	if spawner: spawner.damage_taken_close_to_bird(potential_target, id)
 
 func remove_creature_to_listen() -> void:
-	print("Bird::remove_creature_to_listen")
+	#print("Bird::remove_creature_to_listen")
 	potential_target.health_component.damage_taken.disconnect(potential_target_take_damage)
 	potential_target = null
 

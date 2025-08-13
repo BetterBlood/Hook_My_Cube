@@ -55,6 +55,8 @@ var hold_attack: bool = true
 var is_able_to_attack: bool = true
 var last_delta_position: Vector3 = Vector3()
 
+var difficulty: int = 0
+
 func _ready():
 	super._ready()
 	#print("player::_ready current_player_name: " + current_player_name)
@@ -121,6 +123,10 @@ func initialize_player(meta_data, game_data) -> void:
 	
 	health_component.set_up_temp_with_data(game_data["health_component_upgrades"])
 	grapple.set_up_with_data(game_data["grappin_upgrades"])
+
+
+func set_difficulty(new_difficulty: int) -> void:
+	difficulty = min(2, max(-2, new_difficulty))
 
 
 func save_progression(save_point_id: int = 0) -> void:
@@ -605,6 +611,17 @@ func get_player_name() -> String:
 func get_interaction_label() -> Label:
 	return $CanvasLayer/UI.get_children()[1]
 
+func set_ressource_on_boss_win() -> void:
+	_update_resources(1.0)
+
+func set_ressource_on_death() -> void:
+	_update_resources(0.3)
+		
+func _update_resources(mult_factor: float) -> void:
+	var diff_mult: float = mult_factor + difficulty / 10.0
+	gold = int(diff_mult * gold)
+	for i in range(len(essences)):
+		essences[i] = int(essences[i] * diff_mult)
 
 func _death_sequence() -> void:
 	is_dead.emit(-1) # id not used for player
@@ -615,3 +632,14 @@ func set_rune_at_placement(rune_id: int, active_placement: bool = true) -> void:
 		_init_active_rune_visual_spot()
 	else:
 		second_rune = Rune.create_rune_with_id(rune_id, self)
+
+
+# TODO: be carefull when removing an effect pls be certain to correctly clean effect
+func remove_all_status_effect() -> void:
+	for node in get_children():
+		if node is StatusEffect:
+			print("Player::remove_all_status_effect node: ", node)
+			if node is SpeedEffect:
+				health_component.remove_speed_effect(node.effect_id)
+			node.queue_free()
+	

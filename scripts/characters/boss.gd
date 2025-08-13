@@ -68,6 +68,8 @@ func _on_fire_effect(): # TODO: better fire animation
 	default_material.set_surface_override_material(0, null)
 	default_material_2.set_surface_override_material(0, null)
 	default_material_3.set_surface_override_material(0, null)
+	
+	damage_area = $"Sketchfab_Scene/Sketchfab_model/Collada visual scene group/Cube/defaultMaterial2"
 
 
 func _physics_process(delta: float) -> void:

@@ -265,6 +265,7 @@ func _find_last_dead_end_before_ice(maze: Polyrinthe) -> int:
 
 # called on save point: save maze and player progression with the current save point id
 func _save_point_activated(save_point_id: int = 0) -> void:
+	player.remove_all_status_effect()
 	player.save_progression(save_point_id)
 	_save_maze()
 
@@ -321,6 +322,7 @@ func _initialise_player():
 	last_save_id = int(game_data["save_spot_id"])
 	
 	player.initialize_player(meta_data, game_data)
+	player.set_difficulty(difficulty)
 	player.position = get_position_for_player_save_point(int(game_data["save_spot_id"]))
 
 
@@ -519,5 +521,7 @@ func _on_last_room_portal_passed(room_id: int) -> void:
 
 
 func _on_player_death(_id: int) -> void:
+	player.set_ressource_on_death()
+	
 	SceneFade._erase_player_progress(player.get_player_name())
 	SceneFade.change_scene_with_file("res://scenes/demo/lobby.tscn", SceneFade.lobby_loaded)
