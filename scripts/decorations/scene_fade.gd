@@ -52,3 +52,9 @@ func change_scene_with_file(scene: String, await_loading: Signal) -> void:
 func _erase_player_progress(player_name_to_erase_progression: String) -> void:
 	DirAccess.remove_absolute("user://" + player_name_to_erase_progression + "/progression.save")
 	DirAccess.remove_absolute("user://" + player_name_to_erase_progression + "/maze.save")
+
+func _remove_player(player_name_to_remove: String) -> void:
+	_erase_player_progress(player_name_to_remove)
+	DirAccess.remove_absolute("user://" + player_name_to_remove + "/meta.save")
+	DirAccess.remove_absolute("user://" + player_name_to_remove)
+	

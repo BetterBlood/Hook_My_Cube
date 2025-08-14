@@ -2,6 +2,7 @@ extends CanvasLayer
 
 signal continue_game(player_name: String)
 signal return_to_main_menu()
+signal erase_player(player_name: String)
 
 @onready var player_name: LineEdit = $MainPanel/VBoxContainer/HBoxContainer/PlayerName
 @onready var continue_button: Button = $MainPanel/VBoxContainer/Continue
@@ -30,19 +31,30 @@ func _init_focus() -> void:
 	
 	var player_names: Array[String] = get_players_names()
 	for player_n in player_names:
+		var player_line: HBoxContainer = HBoxContainer.new()
+		
 		var line_edit: LineEdit = LineEdit.new()
 		line_edit.text = player_n
 		line_edit.editable = false
 		line_edit.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-		known_player.add_child(line_edit)
+		player_line.add_child(line_edit)
+		
+		var del_button: Button = Button.new()
+		del_button.text = "DEL"
+		player_line.add_child(del_button)
+		
+		known_player.add_child(player_line)
 	
 	if len(player_names) > 1:
 		player_name.focus_neighbor_right = known_player.get_child(1).get_path()
 		continue_button.focus_neighbor_right = known_player.get_child(1).get_path()
 		$MainPanel/VBoxContainer/Return.focus_neighbor_right = known_player.get_child(1).get_path()
-		for child_id in range(1, len(known_player.get_children())):
-			known_player.get_child(child_id).focus_entered.connect(
-				func (): player_name.text = known_player.get_child(child_id).text
+		for child_id in range(1, len(known_player.get_children())): # 1, 
+			known_player.get_child(child_id).get_child(0).focus_entered.connect(
+				func (): player_name.text = known_player.get_child(child_id).get_child(0).text
+			)
+			(known_player.get_child(child_id).get_child(1) as Button).pressed.connect(
+				func (): erase_player.emit(known_player.get_child(child_id).get_child(0).text)
 			)
 
 

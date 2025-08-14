@@ -12,6 +12,7 @@ func _ready() -> void:
 	$NewGameMenu.return_to_main_menu.connect(_return_to_main_menu)
 	$ContinueMenu.continue_game.connect(_continue_game)
 	$ContinueMenu.return_to_main_menu.connect(_return_to_main_menu)
+	$ContinueMenu.erase_player.connect(_remove_player)
 	
 	_return_to_main_menu()
 
@@ -100,3 +101,17 @@ func _add_new_player(player_name: String = "default") -> void:
 	players_config.set_value(player_name, "sfx", 50)
 	
 	players_config.save("user://players.cfg")
+
+func _remove_player(player_name: String) -> void:
+	var players_configs = get_players_config()
+	
+	if !players_configs:
+		push_warning("no config file found, so nothing is deleted")
+		return
+	
+	players_configs.erase_section(player_name)
+	players_configs.save("user://players.cfg")
+	SceneFade._remove_player(player_name)
+
+	
+	_continue_game_menu()
