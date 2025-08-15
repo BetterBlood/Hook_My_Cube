@@ -10,9 +10,9 @@ static func get_loot(is_upgrade: bool, special_seed: String):
 		var loot_options: Array[int] = []
 		
 		var all_runes = []
-		for rune_data in Rune.get_rune_infos():
-			if rune_data["id"] != -1: # (not -1) cause is debug rune
-				all_runes.append(rune_data["id"])
+		for rune_data in Rune.get_runes_infos():
+			if rune_data["rune_id"] != -1: # (not -1) cause is debug rune
+				all_runes.append(rune_data["rune_id"])
 		
 		for i in range(3):
 			var index = rng.randi_range(0, len(all_runes) - 1)

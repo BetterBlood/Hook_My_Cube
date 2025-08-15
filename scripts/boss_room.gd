@@ -14,7 +14,7 @@ func _ready() -> void:
 	
 	#TODO : init boss
 	$Boss.is_dead.connect(_on_boss_defeated)
-	$Boss.lvl = 50
+	$Boss.lvl = (player.difficulty + 3) * 10
 	player.is_dead.connect(_on_player_death)
 	
 	SceneFade.emit_signal("boss_room_loaded")

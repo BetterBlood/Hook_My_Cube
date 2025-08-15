@@ -52,13 +52,13 @@ func get_active_mat() -> StandardMaterial3D:
 func _set_rune() -> void:
 	#print("Rune::_set_rune all_rune: ", all_runes)
 	if len(all_runes) <= 0:
-		#print("Rune::_set_rune call 'get_rune_infos'")
-		get_rune_infos(true)
+		#print("Rune::_set_rune call 'get_runes_infos'")
+		get_runes_infos(true)
 	
-	#print("Rune::_set_rune 'get_rune_infos' called")
+	#print("Rune::_set_rune 'get_runes_infos' called")
 	
 	for rune_data in all_runes:
-		if int(rune_data["id"]) == get_rune_id():
+		if int(rune_data["rune_id"]) == get_rune_id():
 			_set_rune_data(rune_data)
 
 func _set_rune_data(rune_data: Dictionary) -> void:
@@ -80,7 +80,7 @@ static func get_default_rune_data() -> Dictionary:
 	push_warning("Pls be carefull, this methode is designed to be overriden in subclasses, or not being called")
 	return {}
 
-static func save_rune_infos() -> void: # TODO: on update, don't forget to update get_rune_infos
+static func save_rune_infos() -> void: # TODO: on update, don't forget to update get_runes_infos
 	var config = ConfigFile.new()
 	for i in range(len(all_default_rune_classes)):
 		var rune_data = all_default_rune_classes[i].get_default_rune_data()
@@ -123,14 +123,20 @@ static func save_rune_infos() -> void: # TODO: on update, don't forget to update
 	
 	config.save("user://all_runes.cfg")
 
+static func get_rune_info(id: int) -> Dictionary:
+	for rune in all_runes:
+		if rune["rune_id"] == id:
+			return rune
+	return {}
+
  # TODO: on update, don't forget to update save_rune_infos
-static func get_rune_infos(erase_current: bool = false) -> Array:
-	#print("Rune::get_rune_infos")
+static func get_runes_infos(erase_current: bool = false) -> Array:
+	#print("Rune::get_runes_infos")
 	var config = ConfigFile.new()
 	var err = config.load("user://all_runes.cfg")
 	
 	if err != OK:
-		#print("Rune::get_rune_infos:: err: ", str(err))
+		#print("Rune::get_runes_infos:: err: ", str(err))
 		if erase_current:
 			push_warning("Rune info unreadable, set to default")
 			#print("Rune::_set_rune call 'save_rune_infos'")
@@ -158,7 +164,7 @@ static func get_rune_infos(erase_current: bool = false) -> Array:
 	for section in config.get_sections():
 		all_runes.append(
 			{
-				"id" : int(section), 
+				"rune_id" : int(section), 
 				"name" : config.get_value(section, "name"), 
 				"type" : int(config.get_value(section, "type")),
 				"cost_value" : int(config.get_value(section, "cost_value")),

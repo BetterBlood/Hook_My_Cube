@@ -36,13 +36,14 @@ var grapple: Grapple
 
 var current_player_name: String = "Peter"
 var gold: int = 0
-var xp_to_lvl_up:float = 10.0 # TODO: compute in function of lvl
-var xp_left: float = 0.0
+var xp_to_lvl_up:float = 10.0 # computed in function of lvl
+var xp_left: float = 0.0 # used during lvl up
 
 const LOOT_ORBE_RUNE = preload("res://scenes/decorations/loot_orbe_rune.tscn")
 
+ # used during upgrades
 var tmp_new_runes: Array[int] = []
-var tmp_old_rune
+var tmp_new_rune
 var tmp_upgrades: Array = []
 
 var essences: Array[int] = [0, 0, 0, 0]
@@ -51,7 +52,7 @@ signal try_lvl_up(maze_seed: String)
 signal leveling_phase_ended()
 
 var attack_timer: float = 0.0
-var hold_attack: bool = true
+var hold_attack: bool = false
 var is_able_to_attack: bool = true
 var last_delta_position: Vector3 = Vector3()
 
@@ -63,6 +64,7 @@ func _ready():
 	godMode = false
 	collisionShape.disabled = false
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	
 	active_rune = NormalRune1.new(self)
 	_init_active_rune_visual_spot()
 	
@@ -105,7 +107,6 @@ func initialize_player(meta_data, game_data) -> void:
 		essences.append(int(essence))
 	health_component.health = game_data["hp"]
 	lvl = game_data["lvl"]
-	#TODO : initialise xp_to_lvl_up based on lvl
 	xp = game_data["xp"]
 	xp_to_lvl_up = get_xp_for_leveling_up(lvl)
 	
@@ -206,48 +207,7 @@ func _physics_process(delta):
 	
 	if Input.is_action_just_released("attack") and is_able_to_attack and hold_attack:
 		#print("Input.is_action_just_released")
-		
 		_attack()
-		
-		#hold_attack = false
-		##print("orphan:")
-		##print_orphan_nodes() # DEBUG
-		##print("---")
-		#
-		#ray_cast_3d.collision_mask = 7
-		#ray_cast_3d.target_position = Vector3(0, 0, -100)
-		#ray_cast_3d.force_raycast_update()
-		#var destination = Vector3()
-		#
-		#if ray_cast_3d.is_colliding():
-			#destination = ray_cast_3d.get_collision_point()
-		#else:
-			#$Head/RayCast3D/Marker3D.position = ray_cast_3d.target_position
-			#destination = $Head/RayCast3D/Marker3D.global_position
-		#
-		#var rune_resource: RuneResource = active_rune.get_data_to_performe_attaque()
-		##print(rune_resource.projectile_damage)
-		#if attack_timer/2.0 < 0.25:
-			#active_rune.light_attack(destination, rune_resource)
-		#else:
-			#active_rune.heavy_attack(destination, rune_resource, attack_timer/2.0) # 2 second or more = biggest strongest attack
-		#is_able_to_attack = false
-		#var cd: float = active_rune.get_initial_cooldown() * (1.0 - min(rune_resource.cooldown_reduction, 0.5)) if not is_in_lobby else 0.1;
-		##print("cds: ", active_rune.get_initial_cooldown(), " ", rune_resource.cooldown_reduction, " ", cd)
-		#var timer: SceneTreeTimer = get_tree().create_timer(cd)
-		#timer.timeout.connect(
-			#func ():
-				##print("cd ended time: ", cd)
-				#is_able_to_attack = true
-		#)
-		#print("active_rune save infos: ", active_rune.get_save_infos())
-		#active_rune = RuneUpgradeDamage.new(active_rune)
-		#active_rune = RuneUpgradeSpeed.new(active_rune)
-	
-		#var sphere = SPHERE.instantiate()
-		#get_parent().add_child(sphere)
-		#sphere.position = destination
-		#sphere.scale = Vector3(0.2, 0.2, 0.2)
 	
 	if Input.is_action_just_pressed("grapple"):
 		ray_cast_3d.collision_mask = grapple.get_collision_mask()
@@ -300,7 +260,7 @@ func _physics_process(delta):
 	# Add the gravity.
 	if not is_on_floor() && !godMode:
 		velocity.y -= gravity * delta * 2
-
+	
 	directionnalInputs = Vector3(0,0,0)
 	
 	# Handle Jump.
@@ -343,6 +303,7 @@ func _physics_process(delta):
 	
 	move_and_slide()
 
+
 func _attack() -> void:
 	#print("Input.is_action_just_released")
 	hold_attack = false
@@ -379,17 +340,20 @@ func _attack() -> void:
 	#print("active_rune save infos: ", active_rune.get_save_infos())
 	#active_rune = RuneUpgradeDamage.new(active_rune)
 	#active_rune = RuneUpgradeSpeed.new(active_rune)
-
+	
 	#var sphere = SPHERE.instantiate()
 	#get_parent().add_child(sphere)
 	#sphere.position = destination
 	#sphere.scale = Vector3(0.2, 0.2, 0.2)
 
+
 func _on_damage_taken():
 	super._on_damage_taken()
 	$CanvasLayer/UI.damage_tick()
 
+
 func _on_player_area_3d_body_entered(body: Node3D) -> void:
+	# TODO: unused for the moment, could be used when the player need to react to something physical hitting him
 	print("_on_player_area_3d_body_entered: ", body)
 
 
@@ -405,6 +369,7 @@ func _swap_runes() -> void:
 		second_rune = tmp_rune
 	
 	_init_active_rune_visual_spot()
+
 
 func _init_active_rune_visual_spot() -> void:
 	active_rune.activate()
@@ -444,11 +409,20 @@ func propose_new_runes(new_runes: Array, call_on_finish: Signal) -> void:
 	#print(new_runes)
 	tmp_new_runes = new_runes
 	get_tree().paused = true
+	#print(str(Rune.all_runes[new_runes[0]]))
 	# TODO: read description of runes proposed and provide informations for menu display
-	var rune_1 = ["rune 1", "res://icon.svg", "Description:\nid: " + str(new_runes[0])]
-	var rune_2 = ["rune 2", "res://icon.svg", "Description:\nid: " + str(new_runes[1])]
-	var rune_3 = ["rune 3", "res://icon.svg", "Description:\nid: " + str(new_runes[2])]
-	$CanvasLayer/UpgradeMenu.set_up_propositions(rune_1, rune_2, rune_3, set_new_rune_at_placement, call_on_finish)
+	var runes: Array = []
+	for i in range(3):
+		var rune_data: Dictionary = Rune.get_rune_info(int(new_runes[i]))
+		runes.append([rune_data["name"], "res://icon.svg", 
+			"Cooldown: " + str(rune_data["cooldown"]) +
+			"\nDamage: " + str(rune_data["p_damage"]) +
+			"\nPerforation: " + str(rune_data["p_perforation_count"]) +
+			"\nBounce: " + str(rune_data["p_bounce_count"]) +
+			"\nPenetration: " + str(rune_data["p_penetration"]) +
+			"\nSpeed: " + str(rune_data["p_speed"])
+		])
+	$CanvasLayer/UpgradeMenu.set_up_propositions(runes[0], runes[1], runes[2], set_new_rune_at_placement, call_on_finish)
 	$CanvasLayer/UpgradeMenu.set_title("Select a new Rune")
 	$CanvasLayer/UpgradeMenu.set_adding_new_rune()
 	$CanvasLayer/UpgradeMenu.show()
@@ -458,8 +432,9 @@ func propose_new_runes(new_runes: Array, call_on_finish: Signal) -> void:
 
 func propose_new_rune(new_rune_data, call_on_finish: Signal) -> void:
 	#print(new_rune_data)
-	tmp_old_rune = new_rune_data
+	tmp_new_rune = new_rune_data
 	get_tree().paused = true
+	print(new_rune_data)
 	var rune_2 = ["rune id:" + str(new_rune_data["rune_id"]), "res://icon.svg", "Description:\ndata: " + str(new_rune_data["rune_upgrades"])]
 	$CanvasLayer/UpgradeMenu.set_up_propositions(null, rune_2, null, set_old_rune_at_placement, call_on_finish)
 	$CanvasLayer/UpgradeMenu.set_title("Swap rune with selected slot")
@@ -468,7 +443,7 @@ func propose_new_rune(new_rune_data, call_on_finish: Signal) -> void:
 	$CanvasLayer/UpgradeMenu._init_focus()
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
-
+# TODO: update name for set_new_rune_id_at_placement
 func set_new_rune_at_placement(rune_index: int, active_placement: bool, call_on_finish: Signal) -> void:
 	var loot_orbe_rune = LOOT_ORBE_RUNE.instantiate()
 	loot_orbe_rune.position = position
@@ -484,8 +459,9 @@ func set_new_rune_at_placement(rune_index: int, active_placement: bool, call_on_
 			get_parent().add_child(loot_orbe_rune)
 		second_rune = Rune.create_rune_with_id(tmp_new_runes[rune_index], self)
 	call_on_finish.emit(true)
+	#_set_new_rune_at_placement(tmp_new_runes[rune_index], active_placement, call_on_finish)
 
-
+#TODO: update name for set_new_rune_at_placement (after updating set_new_rune_id_at_placement bellow) 
 func set_old_rune_at_placement(_not_used: int, active_placement: bool, call_on_finish: Signal) -> void:
 	var loot_orbe_rune = LOOT_ORBE_RUNE.instantiate()
 	loot_orbe_rune.position = position
@@ -493,14 +469,32 @@ func set_old_rune_at_placement(_not_used: int, active_placement: bool, call_on_f
 	if active_placement: # for the moment copy whole rune with upgrades, maybe swap upgrades on the new rune
 		loot_orbe_rune.init_with_rune(active_rune.get_save_infos())
 		get_parent().add_child(loot_orbe_rune)
-		active_rune = Rune.create_rune(tmp_old_rune, self)
+		active_rune = Rune.create_rune(tmp_new_rune, self)
 		_init_active_rune_visual_spot()
 	else:
 		if second_rune:
 			loot_orbe_rune.init_with_rune(second_rune.get_save_infos())
 			get_parent().add_child(loot_orbe_rune)
-		second_rune = Rune.create_rune(tmp_old_rune, self)
+		second_rune = Rune.create_rune(tmp_new_rune, self)
 	call_on_finish.emit(true)
+	#_set_new_rune_at_placement(tmp_new_rune, active_placement, call_on_finish)
+
+
+#func _set_new_rune_at_placement(new_rune, active_placement: bool, call_on_finish: Signal) -> void:
+	#var loot_orbe_rune = LOOT_ORBE_RUNE.instantiate()
+	#loot_orbe_rune.position = position
+	#loot_orbe_rune.rotation = rotation
+	#if active_placement: # for the moment copy whole rune with upgrades, maybe swap upgrades on the new rune
+		#loot_orbe_rune.init_with_rune(active_rune.get_save_infos())
+		#get_parent().add_child(loot_orbe_rune)
+		#active_rune = Rune.create_rune(new_rune, self)
+		#_init_active_rune_visual_spot()
+	#else:
+		#if second_rune:
+			#loot_orbe_rune.init_with_rune(second_rune.get_save_infos())
+			#get_parent().add_child(loot_orbe_rune)
+		#second_rune = Rune.create_rune(new_rune, self)
+	#call_on_finish.emit(true)
 
 
 func select_upgrade_proposition_type(proposition_type_index: int, _no_active_placement: bool, call_on_finished: Signal) -> void:
@@ -538,6 +532,7 @@ func select_rune_upgrade(rune_upgrade_index: int, active_placement: bool, call_o
 	
 	call_on_finished.emit(true)
 
+
 func select_health_upgrade(health_upgrade_index: int, _active_placement: bool, call_on_finished: Signal):
 	health_component.add_temp_upgrade(tmp_upgrades[1][health_upgrade_index][0], tmp_upgrades[1][health_upgrade_index][1])
 	call_on_finished.emit(true)
@@ -571,8 +566,8 @@ func leveling_phase(maze_seed: String) -> void:
 	
 	if xp >= xp_to_lvl_up:
 		#print("Player::leveling_phase:: lvl up !!")
+		propose_upgrades(LootUtilities.get_loot(true, maze_seed + "lvl" + str(lvl)), try_lvl_up)
 		xp -= xp_to_lvl_up
-		propose_upgrades(LootUtilities.get_loot(true, maze_seed + str(lvl)), try_lvl_up)
 		lvl += 1
 		xp_to_lvl_up = get_xp_for_leveling_up(lvl)
 		await try_lvl_up
@@ -583,9 +578,11 @@ func leveling_phase(maze_seed: String) -> void:
 		#print("Player::leveling_phase:: lvl up end")
 		leveling_phase_ended.emit()
 
+
 func get_xp_for_leveling_up(current_lvl: int) -> float:
 	# TODO: find a great formula to set xp for next lvl
 	return 5.0 + 5.0 * current_lvl * current_lvl
+
 
 func gain_gold(value: int) -> void:
 	gold += value
@@ -600,6 +597,7 @@ func gain_essence(essence_type: Enums.DamageType, value: int) -> void:
 func gain_ice_wall_grab_upgrade() -> void:
 	grapple.upgrade_wall()
 
+
 func get_fire_projectile_spot() -> Marker3D:
 	return rune_spot
 
@@ -611,20 +609,25 @@ func get_player_name() -> String:
 func get_interaction_label() -> Label:
 	return $CanvasLayer/UI.get_children()[1]
 
+
 func set_ressource_on_boss_win() -> void:
 	_update_resources(1.0)
 
+
 func set_ressource_on_death() -> void:
 	_update_resources(0.3)
-		
+
+
 func _update_resources(mult_factor: float) -> void:
 	var diff_mult: float = mult_factor + difficulty / 10.0
 	gold = int(diff_mult * gold)
 	for i in range(len(essences)):
 		essences[i] = int(essences[i] * diff_mult)
 
+
 func _death_sequence() -> void:
 	is_dead.emit(-1) # id not used for player
+
 
 func set_rune_at_placement(rune_id: int, active_placement: bool = true) -> void:
 	if active_placement:
@@ -632,7 +635,6 @@ func set_rune_at_placement(rune_id: int, active_placement: bool = true) -> void:
 		_init_active_rune_visual_spot()
 	else:
 		second_rune = Rune.create_rune_with_id(rune_id, self)
-
 
 # TODO: be carefull when removing an effect pls be certain to correctly clean effect
 func remove_all_status_effect() -> void:

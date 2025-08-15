@@ -31,6 +31,7 @@ var bird: PackedScene = preload("res://scenes/characters/bird.tscn")
 
 
 func _ready() -> void:
+	# auto closing room
 	$MainFloor/Ceil.position = $MainFloor/Ceil.position - Vector3(0, 40, 0)
 	$MainFloor/Walls/Wall5.position = $MainFloor/Walls/Wall5.position - Vector3(0, 0, 100)
 	$MainFloor/Walls/Wall8.position = $MainFloor/Walls/Wall8.position - Vector3(100, 0, 0)
@@ -68,7 +69,7 @@ func _ready() -> void:
 	
 	
 	if len(all_runes) == 0:
-		all_runes = Rune.get_rune_infos()
+		all_runes = Rune.get_runes_infos()
 	
 	if !Enums.damage_type_loaded:
 		var config = ConfigFile.new()
@@ -103,11 +104,11 @@ func _process(_delta: float) -> void:
 		#launch_game.emit(player.get_player_name())
 		
 		#initialise the file containing maze info
-		_initialize_new_maze_file_save()
+		#_initialize_new_maze_file_save()
 		# player initialisation needed to keep the lobby rune
-		player.health_component.health = player.health_component.get_max_health()
-		player.save_progression(begin_id)
-		SceneFade.change_scene(maze_scene, SceneFade.maze_loaded)
+		#player.health_component.health = player.health_component.get_max_health()
+		#player.save_progression(begin_id)
+		#SceneFade.change_scene(maze_scene, SceneFade.maze_loaded)
 		#get_tree().change_scene_to_packed(maze_scene)
 
 
@@ -134,6 +135,7 @@ func _init_birds() -> void:
 		add_child(new_bird)
 		new_bird.set_boids(range(4, 8))
 		new_bird.is_in_lobby = true
+
 
 func _initialize_new_maze_file_save() -> void:
 	var save_file = FileAccess.open("user://" + player.get_player_name() + "/maze.save", FileAccess.WRITE)
@@ -242,12 +244,12 @@ func _init_runes_unlocker() -> void:
 	
 	for rune_data in all_runes:
 		#print("rune_data: ", rune_data)
-		if rune_data["id"] == -1: # DEBUG RUNE
+		if rune_data["rune_id"] == -1: # DEBUG RUNE
 			if player.get_player_name() == "DEBUG":
 				var debug_pedestal = PEDESTRAL_RUNE_UNLOCKER.instantiate()
 				debug_pedestal.maze = null
 				debug_pedestal.is_save_pedestral = false
-				debug_pedestal.id = rune_data["id"]
+				debug_pedestal.id = rune_data["rune_id"]
 				debug_pedestal.rune_name = rune_data["name"]
 				debug_pedestal.lobby = self
 				$RuneUnlockedRoom.get_children()[0].add_child(debug_pedestal)
@@ -262,15 +264,15 @@ func _init_runes_unlocker() -> void:
 		var pedestal = PEDESTRAL_RUNE_UNLOCKER.instantiate()
 		pedestal.maze = null
 		pedestal.is_save_pedestral = false
-		pedestal.id = rune_data["id"]
+		pedestal.id = rune_data["rune_id"]
 		pedestal.rune_name = rune_data["name"]
 		pedestal.lobby = self
-		parents[rune_data["id"] % len(parents)].get_children()[0].add_child(pedestal)
+		parents[rune_data["rune_id"] % len(parents)].get_children()[0].add_child(pedestal)
 		pedestal.set_cost_value(rune_data["cost_value"])
 		pedestal.set_cost_type(rune_data["type"])
-		pedestal.set_used(rune_data["id"] in unlocked_runes)
+		pedestal.set_used(rune_data["rune_id"] in unlocked_runes)
 		pedestal.position = Vector3(0, 1.25, 0) # TODO: when more rune of type normal fire plant or elec: change position x and z
-		pedestal.rotation_degrees = Vector3(0, rotation_deg[rune_data["id"] % len(rotation_deg)], 0)
+		pedestal.rotation_degrees = Vector3(0, rotation_deg[rune_data["rune_id"] % len(rotation_deg)], 0)
 
 
 func _init_runes_essences_converter() -> void:
@@ -319,11 +321,13 @@ func _on_algo_selector_algo_changed(new_algo: Polyrinthe.GENERATION_ALGORITHME) 
 	algo = new_algo
 	_update_hologram()
 
+
 func _update_hologram() -> void:
 	# TODO: on maze param changes (and on lobby _ready function), call this to generate a small hologram of 
 	# the maze who's going to be generated, using debug option (need to update 
 	# Polyrinthes asset to reduce the debug pyramide base sizes (who's hardcoded for now))
 	pass
+
 
 func _on_fake_portal_fake_portal_entered() -> void:
 	#launch_game.emit(player.get_player_name())
