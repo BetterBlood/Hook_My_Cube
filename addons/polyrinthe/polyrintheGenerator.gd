@@ -68,7 +68,9 @@ enum GENERATION_ALGORITHME {
 	DFS_LBL_ALT_6 
 }
 
-var deepest_id: int  = 0
+var deepest_id: int = 0
+var reduce_wall: bool = true
+
 
 func _ready(): # (backward, forward, left, right, down, up)
 	coord_first.position = Vector3()
@@ -242,7 +244,7 @@ func display() -> void:
 		
 		var cube = CubeCustom.new(
 			curr_pos, 
-			_reduce_connection_for_generation(i, cubeGraph.getNeighborsConnection(i), cubeGraph.getNeighbors(i)), 
+			_reduce_connection_for_generation(i, cubeGraph.getNeighborsConnection(i), cubeGraph.getNeighbors(i)) if reduce_wall else cubeGraph.getNeighborsConnection(i), 
 			cubeGraph.getColor(i), 
 			depthReached,
 			debug,
