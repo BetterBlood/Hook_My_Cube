@@ -65,7 +65,7 @@ func _ready() -> void:
 	Maze.set_tag_for_collision_layer(polyrinthe)
 	polyrinthe.display()
 	Maze.apply_collision_layer(polyrinthe)
-	Maze.add_torch_to(polyrinthe)
+	Maze.add_torch_to(polyrinthe, true)
 	
 	
 	if len(all_runes) == 0:

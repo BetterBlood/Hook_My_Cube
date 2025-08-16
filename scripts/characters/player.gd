@@ -58,6 +58,9 @@ var last_delta_position: Vector3 = Vector3()
 
 var difficulty: int = 0
 
+var icons_path: String = "res://images/icons/lvl"
+var icons_name: String = "_icon.svg"
+
 func _ready():
 	super._ready()
 	#print("player::_ready current_player_name: " + current_player_name)
@@ -395,9 +398,9 @@ func propose_upgrades(upgrades: Array, call_after: Signal) -> void:
 	
 	get_tree().paused = true
 	# TODO: maybe show the levels but not the upgrade here
-	var prop_1 = ["Rune upgrade", "res://icon.svg", "Description:\nSelect 1 of 3 upgrades for selected rune"]
-	var prop_2 = ["Player upgrade", "res://icon.svg", "Description:\nSelect 1 of 3 upgrades for the health component"]
-	var prop_3 = ["Grapple upgrade", "res://icon.svg", "Description:\nSelect 1 of 3 upgrades for the grapple"]
+	var prop_1 = ["Rune upgrade", "res://images/icons/icon.svg", "Description:\nSelect 1 of 3 upgrades for selected rune"]
+	var prop_2 = ["Player upgrade", "res://images/icons/icon.svg", "Description:\nSelect 1 of 3 upgrades for the health component"]
+	var prop_3 = ["Grapple upgrade", "res://images/icons/icon.svg", "Description:\nSelect 1 of 3 upgrades for the grapple"]
 	$CanvasLayer/UpgradeMenu.set_up_propositions(prop_1, prop_2, prop_3, select_upgrade_proposition_type, call_after)
 	$CanvasLayer/UpgradeMenu.set_title("Select an upgrade (rune, health, grapple)")
 	$CanvasLayer/UpgradeMenu.show()
@@ -414,7 +417,7 @@ func propose_new_runes(new_runes: Array, call_on_finish: Signal) -> void:
 	var runes: Array = []
 	for i in range(3):
 		var rune_data: Dictionary = Rune.get_rune_info(int(new_runes[i]))
-		runes.append([rune_data["name"], "res://icon.svg", 
+		runes.append([rune_data["name"], "res://images/icons/icon.svg", 
 			"Cooldown: " + str(rune_data["cooldown"]) +
 			"\nDamage: " + str(rune_data["p_damage"]) +
 			"\nPerforation: " + str(rune_data["p_perforation_count"]) +
@@ -435,7 +438,7 @@ func propose_new_rune(new_rune_data, call_on_finish: Signal) -> void:
 	tmp_new_rune = new_rune_data
 	get_tree().paused = true
 	print(new_rune_data)
-	var rune_2 = ["rune id:" + str(new_rune_data["rune_id"]), "res://icon.svg", "Description:\ndata: " + str(new_rune_data["rune_upgrades"])]
+	var rune_2 = ["rune id:" + str(new_rune_data["rune_id"]), "res://images/icons/icon.svg", "Description:\ndata: " + str(new_rune_data["rune_upgrades"])]
 	$CanvasLayer/UpgradeMenu.set_up_propositions(null, rune_2, null, set_old_rune_at_placement, call_on_finish)
 	$CanvasLayer/UpgradeMenu.set_title("Swap rune with selected slot")
 	$CanvasLayer/UpgradeMenu.set_adding_new_rune()
@@ -503,16 +506,16 @@ func select_upgrade_proposition_type(proposition_type_index: int, _no_active_pla
 	get_tree().paused = true
 	var props: Array = []
 	var func_to_call = [select_rune_upgrade, select_health_upgrade, select_grapple_upgrade]
-	var gold_proposal = ["Golds", "res://icon.svg", "Description:\nquantité: 20"]
+	var gold_proposal = ["Golds", "res://images/icons/lvl3_icon.svg", "Description:\nquantité: 20"]
 	if proposition_type_index == 0:
 		for i in range(3):
-			props.append([str(RuneUpgrade.RuneUpgradeType.keys()[tmp_upgrades[0][i][0]]), "res://icon.svg", "Description:\nlvl: " + str(tmp_upgrades[0][i][1] + 1)])
+			props.append([str(RuneUpgrade.RuneUpgradeType.keys()[tmp_upgrades[0][i][0]]), icons_path + str(tmp_upgrades[0][i][1] + 1) + icons_name, "Description:\nlvl: " + str(tmp_upgrades[0][i][1] + 1)])
 	elif proposition_type_index == 1:
 		for i in range(3):
-			props.append([str(tmp_upgrades[proposition_type_index][i][0]), "res://icon.svg", "Description:\nlvl: " + str(tmp_upgrades[proposition_type_index][i][1] + 1)])
+			props.append([str(tmp_upgrades[proposition_type_index][i][0]), icons_path + str(tmp_upgrades[proposition_type_index][i][1] + 1) + icons_name, "Description:\nlvl: " + str(tmp_upgrades[proposition_type_index][i][1] + 1)])
 	else:
 		for i in range(2):
-			props.append([str(tmp_upgrades[proposition_type_index][i][0]), "res://icon.svg", "Description:\nlvl: " + str(tmp_upgrades[proposition_type_index][i][1] + 1)])
+			props.append([str(tmp_upgrades[proposition_type_index][i][0]), icons_path + str(tmp_upgrades[proposition_type_index][i][1] + 1) + icons_name, "Description:\nlvl: " + str(tmp_upgrades[proposition_type_index][i][1] + 1)])
 		props.append(gold_proposal)
 	#print(props)
 	$CanvasLayer/UpgradeMenu.set_up_propositions(props[0], props[1], props[2], func_to_call[proposition_type_index], call_on_finished)

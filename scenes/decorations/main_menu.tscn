@@ -196,7 +196,7 @@ theme_override_styles/disabled = SubResource("StyleBoxFlat_nl711")
 theme_override_styles/hover = SubResource("StyleBoxFlat_3b1u5")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_me0qa")
 theme_override_styles/normal = SubResource("StyleBoxFlat_d3wwc")
-text = "Alt + F4"
+text = "EXIT"
 
 [connection signal="pressed" from="MainPanel/VBoxContainer/NewGame" to="." method="_on_new_game_pressed"]
 [connection signal="pressed" from="MainPanel/VBoxContainer/Continue" to="." method="_on_continue_pressed"]

@@ -13,7 +13,7 @@ config_version=5
 config/name="Hook_My_Cube"
 run/main_scene="uid://dwm3bngj0v645"
 config/features=PackedStringArray("4.4", "C#", "GL Compatibility")
-config/icon="res://icon.svg"
+config/icon="res://images/icons/icon.svg"
 
 [autoload]
 

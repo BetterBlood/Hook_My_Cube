@@ -100,7 +100,7 @@ func _initialise_world() -> void:
 		if not FileAccess.file_exists("user://" + player.get_player_name() + "/meta.save"):
 			push_error("player: " + player.get_player_name() + " does not exist. Player meta load failed. Progression may fail")
 		else:
-			_save_player_progress(polyrinthe.begin_id)
+			_save_player_progress(polyrinthe.begin_id) # init player with position (room id)
 	
 	# once polyrinthe generated:
 	set_tag_for_collision_layer(polyrinthe) # ice Wall
@@ -152,6 +152,8 @@ func _generate_maze() -> void:
 		var maze_data = json.data
 		polyrinthe.begin_id = int(maze_data["begin_id"])
 		polyrinthe.algo = polyrinthe.GENERATION_ALGORITHME.values()[maze_data["generation_used"]]
+		if polyrinthe.algo < polyrinthe.GENERATION_ALGORITHME.DFS_LBL:
+			polyrinthe.reduce_wall = false
 		
 		difficulty = int(maze_data["difficulty"])
 		for val in maze_data["default_tags"]:
@@ -223,7 +225,7 @@ func _init_tabs(
 		new_seed: String) -> void:
 	
 	if nbr_occurence > nbr_room_total:
-		# TODO : check this case
+		push_error("bad_initialisation: maze initialized without any spawners, save pointsand other stuff added")
 		return
 	
 	var rng = RandomNumberGenerator.new()
@@ -272,6 +274,7 @@ func _save_point_activated(save_point_id: int = 0) -> void:
 # save player progression with the current save point id
 func _save_player_progress(save_point_id: int = 0) -> void: 
 	player.save_progression(save_point_id)
+
 
 func _initialise_player():
 	if not FileAccess.file_exists("user://" + player.get_player_name() + "/meta.save"):
@@ -325,7 +328,6 @@ func _initialise_player():
 	player.set_difficulty(difficulty)
 	player.position = get_position_for_player_save_point(int(game_data["save_spot_id"]))
 
-
 # save maze data
 func _save_maze() -> void:
 	var save_file = FileAccess.open("user://" + player.get_player_name() + "/maze.save", FileAccess.WRITE)
@@ -354,8 +356,7 @@ func _save_maze() -> void:
 	save_file.store_line(json_string)
 
 
-func _apply_maze_modifications(maze: Polyrinthe) -> void: # TODO
-	
+func _apply_maze_modifications(maze: Polyrinthe) -> void:
 	for save_point_id: int in save_points_room_ids:
 		var pedestral = PEDESTRAL.instantiate()
 		pedestral.maze = self
@@ -390,7 +391,7 @@ func _apply_maze_modifications(maze: Polyrinthe) -> void: # TODO
 		#sphere.position = maze.maze[spawner_id].position # DEBUG
 		
 		var mob_id_to_avoid: Array[int] = []
-		if str(spawner_id) in updated_spawners.keys():
+		if str(spawner_id) in updated_spawners.keys(): #cleaning process
 			mob_id_to_avoid = updated_spawners[str(spawner_id)]
 			#sphere.get_child(0).mesh.material.albedo_color = Color(1, 0, float(len(mob_id_to_avoid))/Spawner.NBR_MOB_BY_SPAWNER, 1) # DEBUG
 			if len(mob_id_to_avoid) >= 3:
@@ -420,7 +421,7 @@ func _apply_maze_modifications(maze: Polyrinthe) -> void: # TODO
 		#add_child(sphere)
 		#sphere.get_child(0).mesh.material.albedo_color = Color(0, 0.8, 0.8, 1)
 		#sphere.position = maze.maze[grapple_ice_upgrade_room_id].position - Vector3(0, 5, 0)
-	else:
+	else: # the player has already loot the ice upgrade
 		player.grapple.upgrade_ice_grapple_color()
 	
 	#var sphere_end = SPHERE.instantiate()
@@ -434,7 +435,7 @@ func _apply_maze_modifications(maze: Polyrinthe) -> void: # TODO
 	portal_end.position = maze.maze[maze.deepest_id].position - Vector3(0, 8.8, 5)
 	portal_end.fake_portal_entered.connect(_on_last_room_portal_passed.bind(maze.deepest_id))
 	
-	
+	# gold near chests :
 	var gold_factor: Vector3 = Vector3(16, 16, 16)
 	for key in maze.maze.keys():
 		var chests_closure = maze.cubeGraph.get_tag(key, 3)
@@ -464,9 +465,8 @@ func _apply_maze_modifications(maze: Polyrinthe) -> void: # TODO
 				add_child(gold)
 				gold.get_child(0).scale = gold_factor * gold_scale
 				gold.set_amount(int(chests_closure/20.0))
-			
 
-
+## polyrinthe need to be generated before calling this method
 func get_position_for_player_save_point(save_point_id: int) -> Vector3:
 	return polyrinthe.maze[save_point_id].position
 
@@ -485,24 +485,26 @@ static func _generate_array_for_ice_wall_tags(array_size: int, normal_value: int
 
 static func set_tag_for_collision_layer(maze: Polyrinthe) -> void:
 	var max_depth = maze.cubeGraph.get_deepest()
-	maze.tag_spreads_wide_way(0, 2, max_depth, _generate_array_for_ice_wall_tags(max_depth + 1, NORMAL_WALL_VALUE, ICE_WALL_VALUE))
+	maze.tag_spreads_wide_way(maze.begin_id, 2, max_depth, _generate_array_for_ice_wall_tags(max_depth + 1, NORMAL_WALL_VALUE, ICE_WALL_VALUE))
 
 
 static func apply_collision_layer(maze: Polyrinthe, material: StandardMaterial3D = ICE) -> void:
 	for key in maze.maze.keys():
-		var cube: CubeCustom = maze.maze.get(key)
 		var col_layer = maze.cubeGraph.get_tag(key, 2)
-		for wall: Node3D in cube.get_children():
+		for wall: Node3D in maze.maze.get(key).get_children():
 			wall.collision_layer = col_layer
 			if col_layer == ICE_WALL_VALUE:
 				wall.get_children()[0].material_override = material
 
-static func add_torch_to(maze: Polyrinthe) -> void:
+
+static func add_torch_to(maze: Polyrinthe, begin_lit: bool = false, modulo: int = 2) -> void:
 	for key in maze.maze.keys():
-		if key%2 == 0:
+		if key%modulo == 0:
 			var torch = TORCH.instantiate()
 			torch.position = Vector3(0, -5, 0)
+			torch.begin_lit = begin_lit
 			maze.maze.get(key).add_child(torch)
+
 
 func update_spawner(id_spawner: int, mob_ids: Array[int]) -> void:
 	if updated_spawners.has(str(id_spawner)):

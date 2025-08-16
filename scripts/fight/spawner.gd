@@ -8,7 +8,7 @@ var mob_dead: Array[int] = []
 var maze: Maze
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
-var debug_id: int = 49
+var debug_id: int = -1
 
 var possible_mobs: Array[PackedScene] = [
 	preload("res://scenes/characters/zombie.tscn"),
@@ -100,7 +100,7 @@ func initialise_mobs_list(human_seed: String, mob_id_to_avoid: Array[int]) -> vo
 	
 	rng.seed = hash(human_seed)
 	boids_behavior = Behavior.values()[rng.randi_range(0, len(Behavior.values()) - 1)]
-	print("Spawner::initialise_mobs_list::id: ", id, ", ", str(boids_behavior), " ", Behavior.keys()[boids_behavior])
+	#print("Spawner::initialise_mobs_list::id: ", id, ", ", str(boids_behavior), " ", Behavior.keys()[boids_behavior])
 	
 	var depth_ratio: float = float(maze.polyrinthe.cubeGraph.getDepth(id))/maze.polyrinthe.cubeGraph.get_deepest()
 	for i in range(NBR_MOB_BY_SPAWNER):
@@ -124,7 +124,7 @@ func initialise_mobs_list(human_seed: String, mob_id_to_avoid: Array[int]) -> vo
 		else:
 			if id == debug_id:
 				print("nothing to do, mob '", new_id, "' is dead")
-	print("Spawner::initialise_mobs_list::id: ", id, ", potential_boids_id", potential_boids_id)
+	#print("Spawner::initialise_mobs_list::id: ", id, ", potential_boids_id", potential_boids_id)
 
 func _bird_taking_damage(bird_id: int) -> void:
 	action_on_damage_taken[boids_behavior].call(get_tree().get_first_node_in_group("Player"), bird_id)
@@ -172,7 +172,7 @@ func _on_mob_death(mob_id: int) -> void:
 	if mob_id not in mob_dead:
 		mob_dead.append(mob_id)
 	maze.update_spawner(id, mob_dead)
-	print("Spawner:: mobs_dead: ", mob_dead)
+	#print("Spawner:: mobs_dead: ", mob_dead)
 	
 	if len(mob_dead) >= NBR_MOB_BY_SPAWNER: # no more mob available
 		queue_free()

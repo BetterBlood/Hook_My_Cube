@@ -1,6 +1,6 @@
 [gd_scene load_steps=11 format=3 uid="uid://vkdb0nc6kpk7"]
 
-[ext_resource type="Texture2D" uid="uid://3lvtq8xvy6hw" path="res://icon.svg" id="1_4eons"]
+[ext_resource type="Texture2D" uid="uid://3lvtq8xvy6hw" path="res://images/icons/icon.svg" id="1_4eons"]
 [ext_resource type="Script" uid="uid://vxk8h8430on4" path="res://scripts/decorations/menus/upgrade_proposition.gd" id="1_qxve2"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qxve2"]
@@ -11,7 +11,7 @@ corner_radius_bottom_right = 32
 corner_radius_bottom_left = 32
 
 [sub_resource type="Theme" id="Theme_rkp7e"]
-Label/font_sizes/font_size = 32
+Label/font_sizes/font_size = 24
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6ej1p"]
 content_margin_left = 16.0
@@ -119,9 +119,11 @@ layout_mode = 2
 text = "Title"
 horizontal_alignment = 1
 vertical_alignment = 1
+clip_text = true
 
 [node name="Illustration" type="TextureRect" parent="Panel/VBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 4
 texture = ExtResource("1_4eons")
 stretch_mode = 3
 

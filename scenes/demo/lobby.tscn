@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://br883pylmypa7"]
+[gd_scene load_steps=38 format=3 uid="uid://br883pylmypa7"]
 
 [ext_resource type="Script" uid="uid://wdhsttcv1ana" path="res://scripts/demo/lobby.gd" id="1_yr8w2"]
 [ext_resource type="PackedScene" uid="uid://y1yw5naea0tu" path="res://scenes/characters/player.tscn" id="2_pdx53"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://dvkq4hwixk2m8" path="res://scenes/decorations/torch.tscn" id="4_u1smo"]
 [ext_resource type="PackedScene" uid="uid://canga3dhywbr3" path="res://scenes/portal_with_frame.tscn" id="5_4of2y"]
 [ext_resource type="Texture2D" uid="uid://c5xwgucqr4fk6" path="res://images/runes/den.png" id="6_cdc4y"]
+[ext_resource type="Texture2D" uid="uid://du4dygxrs4rmf" path="res://images/runes/typesDiag.png" id="6_nv4q3"]
 [ext_resource type="Material" uid="uid://dla2uqqdaue2e" path="res://materials/projectiles/debug_projectile.tres" id="6_pdx53"]
 [ext_resource type="PackedScene" uid="uid://cgkf7mglet062" path="res://scenes/decorations/seed_selector.tscn" id="6_u1smo"]
 [ext_resource type="Material" uid="uid://penbwn0i2in" path="res://materials/ice.tres" id="6_yr8w2"]
@@ -277,8 +278,9 @@ shape = SubResource("ConcavePolygonShape3D_6728e")
 [node name="P1 -> Fight Room" parent="MainFloor" instance=ExtResource("5_4of2y")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -22.5, 1.25, 15)
 
-[node name="Portal3D" parent="MainFloor/P1 -> Fight Room" index="0" node_paths=PackedStringArray("exit_portal")]
+[node name="Portal3D" parent="MainFloor/P1 -> Fight Room" index="0" node_paths=PackedStringArray("exit_portal", "player_camera")]
 exit_portal = NodePath("../../../NavigationRegion3D/TrainingFloor/P2 -> Main Lobby/Portal3D")
+player_camera = NodePath("../../../Player/Head/Camera3D")
 view_direction = 1
 teleport_direction = 0
 
@@ -289,8 +291,9 @@ text = "Practice Room"
 [node name="P9 -> Runes Unlock" parent="MainFloor" instance=ExtResource("5_4of2y")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -22.5, 1.25, -15)
 
-[node name="Portal3D" parent="MainFloor/P9 -> Runes Unlock" index="0" node_paths=PackedStringArray("exit_portal")]
+[node name="Portal3D" parent="MainFloor/P9 -> Runes Unlock" index="0" node_paths=PackedStringArray("exit_portal", "player_camera")]
 exit_portal = NodePath("../../../RuneUnlockedRoom/P11 -> Lobby Main Room/Portal3D")
+player_camera = NodePath("../../../Player/Head/Camera3D")
 view_direction = 1
 teleport_direction = 0
 
@@ -301,8 +304,9 @@ text = "Rune Unlock Room"
 [node name="P10 -> Health Component Upgrades Room" parent="MainFloor" instance=ExtResource("5_4of2y")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -22.5, 1.25, 0)
 
-[node name="Portal3D" parent="MainFloor/P10 -> Health Component Upgrades Room" index="0" node_paths=PackedStringArray("exit_portal")]
+[node name="Portal3D" parent="MainFloor/P10 -> Health Component Upgrades Room" index="0" node_paths=PackedStringArray("exit_portal", "player_camera")]
 exit_portal = NodePath("../../../HealthComponentUpgradeRoom/P12 -> Lobby Main Room/Portal3D")
+player_camera = NodePath("../../../Player/Head/Camera3D")
 view_direction = 1
 teleport_direction = 0
 
@@ -315,8 +319,9 @@ text = "Constitution Upgrade Room"
 [node name="P3 -> Maze Selection" parent="MainFloor/Real Lab" instance=ExtResource("5_4of2y")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, -22.5)
 
-[node name="Portal3D" parent="MainFloor/Real Lab/P3 -> Maze Selection" index="0" node_paths=PackedStringArray("exit_portal")]
+[node name="Portal3D" parent="MainFloor/Real Lab/P3 -> Maze Selection" index="0" node_paths=PackedStringArray("exit_portal", "player_camera")]
 exit_portal = NodePath("../../../../MazeSelectionFloor/P4 -> Lobby Main Room/Portal3D")
+player_camera = NodePath("../../../../Player/Head/Camera3D")
 view_direction = 1
 teleport_direction = 0
 
@@ -330,8 +335,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 45.3371, 0, 0)
 [node name="P5 -> Lab 3x3x3 Entrance" parent="MainFloor/Debug Lab" instance=ExtResource("5_4of2y")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -22.9297, 1.25, -1.306)
 
-[node name="Portal3D" parent="MainFloor/Debug Lab/P5 -> Lab 3x3x3 Entrance" index="0" node_paths=PackedStringArray("exit_portal")]
+[node name="Portal3D" parent="MainFloor/Debug Lab/P5 -> Lab 3x3x3 Entrance" index="0" node_paths=PackedStringArray("exit_portal", "player_camera")]
 exit_portal = NodePath("../../P6 -> Main Room/Portal3D")
+player_camera = NodePath("../../../../Player/Head/Camera3D")
 view_direction = 1
 teleport_direction = 0
 
@@ -342,8 +348,9 @@ text = "Example maze Entrance"
 [node name="P6 -> Main Room" parent="MainFloor/Debug Lab" instance=ExtResource("5_4of2y")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 1.25, -1.306)
 
-[node name="Portal3D" parent="MainFloor/Debug Lab/P6 -> Main Room" index="0" node_paths=PackedStringArray("exit_portal")]
+[node name="Portal3D" parent="MainFloor/Debug Lab/P6 -> Main Room" index="0" node_paths=PackedStringArray("exit_portal", "player_camera")]
 exit_portal = NodePath("../../P5 -> Lab 3x3x3 Entrance/Portal3D")
+player_camera = NodePath("../../../../Player/Head/Camera3D")
 view_direction = 1
 teleport_direction = 0
 
@@ -354,8 +361,9 @@ text = "Return to Lobby"
 [node name="P7 -> Return to Lobby" parent="MainFloor/Debug Lab" instance=ExtResource("5_4of2y")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 22.25, 19.5)
 
-[node name="Portal3D" parent="MainFloor/Debug Lab/P7 -> Return to Lobby" index="0" node_paths=PackedStringArray("exit_portal")]
+[node name="Portal3D" parent="MainFloor/Debug Lab/P7 -> Return to Lobby" index="0" node_paths=PackedStringArray("exit_portal", "player_camera")]
 exit_portal = NodePath("../../P8 -> LastRoom 3x3x3/Portal3D")
+player_camera = NodePath("../../../../Player/Head/Camera3D")
 view_direction = 1
 teleport_direction = 0
 
@@ -366,8 +374,9 @@ text = "Return to Lobby"
 [node name="P8 -> LastRoom 3x3x3" parent="MainFloor/Debug Lab" instance=ExtResource("5_4of2y")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -22.9297, 1.25, 16.911)
 
-[node name="Portal3D" parent="MainFloor/Debug Lab/P8 -> LastRoom 3x3x3" index="0" node_paths=PackedStringArray("exit_portal")]
+[node name="Portal3D" parent="MainFloor/Debug Lab/P8 -> LastRoom 3x3x3" index="0" node_paths=PackedStringArray("exit_portal", "player_camera")]
 exit_portal = NodePath("../../P7 -> Return to Lobby/Portal3D")
+player_camera = NodePath("../../../../Player/Head/Camera3D")
 view_direction = 1
 teleport_direction = 0
 
@@ -386,6 +395,10 @@ mesh = SubResource("BoxMesh_6728e")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MainFloor/Walls/Wall1"]
 shape = SubResource("ConcavePolygonShape3D_8d4em")
+
+[node name="Sprite3D" type="Sprite3D" parent="MainFloor/Walls/Wall1"]
+transform = Transform3D(-5, 0, -4.37114e-07, 0, 5, 0, 4.37114e-07, 0, -5, 0, 0, -0.16)
+texture = ExtResource("6_nv4q3")
 
 [node name="Wall2" type="StaticBody3D" parent="MainFloor/Walls"]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 15, 0)
@@ -512,8 +525,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -100)
 [node name="P4 -> Lobby Main Room" parent="MazeSelectionFloor" instance=ExtResource("5_4of2y")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 1.25, 20)
 
-[node name="Portal3D" parent="MazeSelectionFloor/P4 -> Lobby Main Room" index="0" node_paths=PackedStringArray("exit_portal")]
+[node name="Portal3D" parent="MazeSelectionFloor/P4 -> Lobby Main Room" index="0" node_paths=PackedStringArray("exit_portal", "player_camera")]
 exit_portal = NodePath("../../../MainFloor/Real Lab/P3 -> Maze Selection/Portal3D")
+player_camera = NodePath("../../../Player/Head/Camera3D")
 view_direction = 1
 teleport_direction = 0
 
@@ -705,6 +719,10 @@ mesh = SubResource("BoxMesh_6728e")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RuneUnlockedRoom/Wall9"]
 shape = SubResource("ConcavePolygonShape3D_8d4em")
 
+[node name="Sprite3D" type="Sprite3D" parent="RuneUnlockedRoom/Wall9"]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0.16)
+texture = ExtResource("6_nv4q3")
+
 [node name="MazeSelectionLight" type="OmniLight3D" parent="RuneUnlockedRoom"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, 0)
 light_energy = 16.0
@@ -738,8 +756,9 @@ shape = SubResource("ConcavePolygonShape3D_6728e")
 [node name="P11 -> Lobby Main Room" parent="RuneUnlockedRoom" instance=ExtResource("5_4of2y")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 20, 1.25, 0)
 
-[node name="Portal3D" parent="RuneUnlockedRoom/P11 -> Lobby Main Room" index="0" node_paths=PackedStringArray("exit_portal")]
+[node name="Portal3D" parent="RuneUnlockedRoom/P11 -> Lobby Main Room" index="0" node_paths=PackedStringArray("exit_portal", "player_camera")]
 exit_portal = NodePath("../../../MainFloor/P9 -> Runes Unlock/Portal3D")
+player_camera = NodePath("../../../Player/Head/Camera3D")
 view_direction = 1
 teleport_direction = 0
 
@@ -750,8 +769,9 @@ text = "Return to Lobby"
 [node name="P13 -> Normal Unlock" parent="RuneUnlockedRoom" instance=ExtResource("5_4of2y")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 10, 1.25, 20)
 
-[node name="Portal3D" parent="RuneUnlockedRoom/P13 -> Normal Unlock" index="0" node_paths=PackedStringArray("exit_portal")]
+[node name="Portal3D" parent="RuneUnlockedRoom/P13 -> Normal Unlock" index="0" node_paths=PackedStringArray("exit_portal", "player_camera")]
 exit_portal = NodePath("../../../NormalRuneUnlock/P14 -> Return to Unlock Room/Portal3D")
+player_camera = NodePath("../../../Player/Head/Camera3D")
 view_direction = 1
 teleport_direction = 0
 
@@ -762,8 +782,9 @@ text = "Unlock Normal Runes"
 [node name="P15 ->Fire Unlock" parent="RuneUnlockedRoom" instance=ExtResource("5_4of2y")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -10, 1.25, 20)
 
-[node name="Portal3D" parent="RuneUnlockedRoom/P15 ->Fire Unlock" index="0" node_paths=PackedStringArray("exit_portal")]
+[node name="Portal3D" parent="RuneUnlockedRoom/P15 ->Fire Unlock" index="0" node_paths=PackedStringArray("exit_portal", "player_camera")]
 exit_portal = NodePath("../../../FireRuneUnlock/P16 -> Return to Unlock Room/Portal3D")
+player_camera = NodePath("../../../Player/Head/Camera3D")
 view_direction = 1
 teleport_direction = 0
 
@@ -774,8 +795,9 @@ text = "Unlock Fire Runes"
 [node name="P17 -> Plant Unlock" parent="RuneUnlockedRoom" instance=ExtResource("5_4of2y")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1.25, -20)
 
-[node name="Portal3D" parent="RuneUnlockedRoom/P17 -> Plant Unlock" index="0" node_paths=PackedStringArray("exit_portal")]
+[node name="Portal3D" parent="RuneUnlockedRoom/P17 -> Plant Unlock" index="0" node_paths=PackedStringArray("exit_portal", "player_camera")]
 exit_portal = NodePath("../../../PlantRuneUnlock/P18 -> Return to Unlock Room/Portal3D")
+player_camera = NodePath("../../../Player/Head/Camera3D")
 view_direction = 1
 teleport_direction = 0
 
@@ -786,8 +808,9 @@ text = "Unlock Plant Runes"
 [node name="P19 -> Electic Unlock" parent="RuneUnlockedRoom" instance=ExtResource("5_4of2y")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.25, -20)
 
-[node name="Portal3D" parent="RuneUnlockedRoom/P19 -> Electic Unlock" index="0" node_paths=PackedStringArray("exit_portal")]
+[node name="Portal3D" parent="RuneUnlockedRoom/P19 -> Electic Unlock" index="0" node_paths=PackedStringArray("exit_portal", "player_camera")]
 exit_portal = NodePath("../../../ElectricRuneUnlock/P20 -> Return to Unlock Room/Portal3D")
+player_camera = NodePath("../../../Player/Head/Camera3D")
 view_direction = 1
 teleport_direction = 0
 
@@ -798,8 +821,9 @@ text = "Unlock Electric Runes"
 [node name="P21 -> More Runes" parent="RuneUnlockedRoom" instance=ExtResource("5_4of2y")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -20, 1.25, 0)
 
-[node name="Portal3D" parent="RuneUnlockedRoom/P21 -> More Runes" index="0" node_paths=PackedStringArray("exit_portal")]
+[node name="Portal3D" parent="RuneUnlockedRoom/P21 -> More Runes" index="0" node_paths=PackedStringArray("exit_portal", "player_camera")]
 exit_portal = NodePath("../../../MoreRuneUnlock/P22 -> Return To Unlock Room/Portal3D")
+player_camera = NodePath("../../../Player/Head/Camera3D")
 view_direction = 1
 teleport_direction = 0
 
@@ -892,8 +916,9 @@ shape = SubResource("ConcavePolygonShape3D_6728e")
 [node name="P14 -> Return to Unlock Room" parent="NormalRuneUnlock" instance=ExtResource("5_4of2y")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, -20)
 
-[node name="Portal3D" parent="NormalRuneUnlock/P14 -> Return to Unlock Room" index="0" node_paths=PackedStringArray("exit_portal")]
+[node name="Portal3D" parent="NormalRuneUnlock/P14 -> Return to Unlock Room" index="0" node_paths=PackedStringArray("exit_portal", "player_camera")]
 exit_portal = NodePath("../../../RuneUnlockedRoom/P13 -> Normal Unlock/Portal3D")
+player_camera = NodePath("../../../Player/Head/Camera3D")
 view_direction = 1
 teleport_direction = 0
 
@@ -983,8 +1008,9 @@ shape = SubResource("ConcavePolygonShape3D_6728e")
 [node name="P16 -> Return to Unlock Room" parent="FireRuneUnlock" instance=ExtResource("5_4of2y")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, -20)
 
-[node name="Portal3D" parent="FireRuneUnlock/P16 -> Return to Unlock Room" index="0" node_paths=PackedStringArray("exit_portal")]
+[node name="Portal3D" parent="FireRuneUnlock/P16 -> Return to Unlock Room" index="0" node_paths=PackedStringArray("exit_portal", "player_camera")]
 exit_portal = NodePath("../../../RuneUnlockedRoom/P15 ->Fire Unlock/Portal3D")
+player_camera = NodePath("../../../Player/Head/Camera3D")
 view_direction = 1
 teleport_direction = 0
 
@@ -1074,8 +1100,9 @@ shape = SubResource("ConcavePolygonShape3D_6728e")
 [node name="P18 -> Return to Unlock Room" parent="PlantRuneUnlock" instance=ExtResource("5_4of2y")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 1.25, 20)
 
-[node name="Portal3D" parent="PlantRuneUnlock/P18 -> Return to Unlock Room" index="0" node_paths=PackedStringArray("exit_portal")]
+[node name="Portal3D" parent="PlantRuneUnlock/P18 -> Return to Unlock Room" index="0" node_paths=PackedStringArray("exit_portal", "player_camera")]
 exit_portal = NodePath("../../../RuneUnlockedRoom/P17 -> Plant Unlock/Portal3D")
+player_camera = NodePath("../../../Player/Head/Camera3D")
 view_direction = 1
 teleport_direction = 0
 
@@ -1165,8 +1192,9 @@ shape = SubResource("ConcavePolygonShape3D_6728e")
 [node name="P20 -> Return to Unlock Room" parent="ElectricRuneUnlock" instance=ExtResource("5_4of2y")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 1.25, 20)
 
-[node name="Portal3D" parent="ElectricRuneUnlock/P20 -> Return to Unlock Room" index="0" node_paths=PackedStringArray("exit_portal")]
+[node name="Portal3D" parent="ElectricRuneUnlock/P20 -> Return to Unlock Room" index="0" node_paths=PackedStringArray("exit_portal", "player_camera")]
 exit_portal = NodePath("../../../RuneUnlockedRoom/P19 -> Electic Unlock/Portal3D")
+player_camera = NodePath("../../../Player/Head/Camera3D")
 view_direction = 1
 teleport_direction = 0
 
@@ -1250,8 +1278,9 @@ shape = SubResource("ConcavePolygonShape3D_6728e")
 [node name="P22 -> Return To Unlock Room" parent="MoreRuneUnlock" instance=ExtResource("5_4of2y")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 20, 1.25, 0)
 
-[node name="Portal3D" parent="MoreRuneUnlock/P22 -> Return To Unlock Room" index="0" node_paths=PackedStringArray("exit_portal")]
+[node name="Portal3D" parent="MoreRuneUnlock/P22 -> Return To Unlock Room" index="0" node_paths=PackedStringArray("exit_portal", "player_camera")]
 exit_portal = NodePath("../../../RuneUnlockedRoom/P21 -> More Runes/Portal3D")
+player_camera = NodePath("../../../Player/Head/Camera3D")
 view_direction = 1
 teleport_direction = 0
 
@@ -1335,8 +1364,9 @@ shape = SubResource("ConcavePolygonShape3D_6728e")
 [node name="P12 -> Lobby Main Room" parent="HealthComponentUpgradeRoom" instance=ExtResource("5_4of2y")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 20, 1.25, 0)
 
-[node name="Portal3D" parent="HealthComponentUpgradeRoom/P12 -> Lobby Main Room" index="0" node_paths=PackedStringArray("exit_portal")]
+[node name="Portal3D" parent="HealthComponentUpgradeRoom/P12 -> Lobby Main Room" index="0" node_paths=PackedStringArray("exit_portal", "player_camera")]
 exit_portal = NodePath("../../../MainFloor/P10 -> Health Component Upgrades Room/Portal3D")
+player_camera = NodePath("../../../Player/Head/Camera3D")
 view_direction = 1
 teleport_direction = 0
 
@@ -1361,9 +1391,10 @@ shape = SubResource("ConcavePolygonShape3D_7x35k")
 [node name="P2 -> Main Lobby" parent="NavigationRegion3D/TrainingFloor" instance=ExtResource("5_4of2y")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 22.5, 1.29, 15)
 
-[node name="Portal3D" parent="NavigationRegion3D/TrainingFloor/P2 -> Main Lobby" index="0" node_paths=PackedStringArray("exit_portal")]
+[node name="Portal3D" parent="NavigationRegion3D/TrainingFloor/P2 -> Main Lobby" index="0" node_paths=PackedStringArray("exit_portal", "player_camera")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.295662)
 exit_portal = NodePath("../../../../MainFloor/P1 -> Fight Room/Portal3D")
+player_camera = NodePath("../../../../Player/Head/Camera3D")
 view_direction = 1
 teleport_direction = 0
 
@@ -1482,6 +1513,7 @@ shape = SubResource("CylinderShape3D_6728e")
 [connection signal="algo_changed" from="MazeSelectionFloor/Algo/AlgoSelector" to="." method="_on_algo_selector_algo_changed"]
 [connection signal="fake_portal_entered" from="MazeSelectionFloor/FakePortal" to="." method="_on_fake_portal_fake_portal_entered"]
 
+[editable path="Player"]
 [editable path="MainFloor/P1 -> Fight Room"]
 [editable path="MainFloor/P9 -> Runes Unlock"]
 [editable path="MainFloor/P10 -> Health Component Upgrades Room"]
