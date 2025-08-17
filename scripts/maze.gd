@@ -205,8 +205,8 @@ func _generate_maze_modifications(maze: Polyrinthe) -> void:
 			chests_room_ids.remove_at(i)
 	
 	#print("save_points_room_ids\t\t: ", save_points_room_ids)
-	print("updated_chests\t\t\t: ", updated_chests)
-	print("chests_room_ids\t\t\t: ", chests_room_ids)
+	#print("updated_chests\t\t\t: ", updated_chests)
+	#print("chests_room_ids\t\t\t: ", chests_room_ids)
 	#print("spawners_room_ids\t\t: ", spawners_room_ids)
 	
 	grapple_ice_upgrade_room_id = _find_last_dead_end_before_ice(maze)
