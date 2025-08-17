@@ -3,6 +3,8 @@ extends Node3D
 @onready var player: Player = $Player
 @export var player_spawn_position: Vector3 = Vector3(0, 3, 15)
 
+var fight_ended: bool = false
+
 const FAKE_PORTAL = preload("res://scenes/movement/fake_portal.tscn")
 var lobby_scene: PackedScene = preload("res://scenes/demo/lobby.tscn")
 
@@ -141,6 +143,9 @@ func save_meta() -> void:
 
 
 func _on_boss_defeated(_id: int) -> void:
+	if fight_ended:
+		return
+	fight_ended = true
 	player.gain_gold(50)
 	player.gain_essence(Enums.DamageType.NORMAL, 3) #TODO: based on boss type !
 	
@@ -160,6 +165,9 @@ func _on_boss_defeated(_id: int) -> void:
 
 
 func _on_player_death(_id: int) -> void:
+	if fight_ended:
+		return
+	fight_ended = true
 	player.set_ressource_on_death()
 	SceneFade._erase_player_progress(player.get_player_name())
 	_go_to_lobby()

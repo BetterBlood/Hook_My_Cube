@@ -103,6 +103,7 @@ func _spawn_boid() -> void:
 	for i in range(5):
 		var new_bird = bird.instantiate()
 		new_bird.id = i
+		new_bird.summoned = true
 		new_bird.set_mob_data("boss_bird" + str(i), 0, 1)
 		get_parent().add_child(new_bird)
 		new_bird.position = Vector3(randf_range(-1, 1) * max_spawn_radius, randf_range(1, max_spawn_radius), randf_range(-1, 1) * max_spawn_radius)
