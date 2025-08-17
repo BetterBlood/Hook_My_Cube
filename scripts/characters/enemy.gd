@@ -79,6 +79,11 @@ func _death_sequence() -> void:
 	queue_free()
 
 
+func _death_sequence_summoned() -> void:
+	# TODO: animations
+	is_dead.emit(id)
+	queue_free() # no emition of death signals
+
 static func get_next_id() -> int:
 	next_id += 1
 	return next_id - 1

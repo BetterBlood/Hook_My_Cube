@@ -15,6 +15,8 @@ var effect_ids: Dictionary = {}
 
 var instant_speed: float = 0.0
 
+var summoned: bool = false
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -32,7 +34,10 @@ func _on_damage_taken():
 		_lobby_damage_taken() 
 	else:
 		if health_component.health <= 0:
-			_death_sequence()
+			if summoned:
+				_death_sequence_summoned()
+			else:
+				_death_sequence()
 
 func _lobby_damage_taken():
 	if health_component.health <= 0:
@@ -42,6 +47,11 @@ func _lobby_damage_taken():
 func _death_sequence() -> void:
 	# TODO: in herited classes: do something on creature's death !
 	pass
+
+func _death_sequence_summoned() -> void:
+	# TODO: in herited classes: do something on summoned creature's death !
+	is_dead.emit(-1)
+	queue_free() # no emition of death signals
 
 func _on_fire_effect():
 	# TODO: in herited classes: do something on creature on fire !
