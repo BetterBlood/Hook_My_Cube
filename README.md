@@ -4,4 +4,9 @@ Jeu vidéo en 3D dont le but est l’exploration d’un labyrinthe parsemé de m
 
 Using:
 https://www.nuget.org/packages/LogMe.Net
+
 https://godotengine.org/asset-library/asset/4022
+
+"Octopus Tentacle" (https://skfb.ly/6D7tC) by Daniel Gryningstjerna is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+
+https://github.com/BetterBlood/Polyrinthes_addon
