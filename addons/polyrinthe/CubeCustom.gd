@@ -66,6 +66,10 @@ func instatiate_wall_free(pos: Vector3, rot: Vector3) -> void:
 	
 	wallTmp.set_position(pos)
 	wallTmp.set_rotation(rot)
+	
+	wallTmp.get_child(0).lod_bias = 0.5
+	wallTmp.get_child(0).visibility_range_end = 161
+	
 	wallTmp.scale = Vector3(_spec_scale, _spec_scale, _spec_scale)
 	
 	var mesh = wallTmp.get_children()[0] as MeshInstance3D;
