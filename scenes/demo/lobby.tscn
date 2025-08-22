@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://br883pylmypa7"]
+[gd_scene load_steps=39 format=3 uid="uid://br883pylmypa7"]
 
 [ext_resource type="Script" uid="uid://wdhsttcv1ana" path="res://scripts/demo/lobby.gd" id="1_yr8w2"]
 [ext_resource type="PackedScene" uid="uid://y1yw5naea0tu" path="res://scenes/characters/player.tscn" id="2_pdx53"]
@@ -18,6 +18,7 @@
 [ext_resource type="Texture2D" uid="uid://dcjsnb6e48h0p" path="res://images/runes/tsune.png" id="13_y5vlq"]
 [ext_resource type="Texture2D" uid="uid://caxdkceixj6ya" path="res://images/runes/hi2.png" id="14_y0rwf"]
 [ext_resource type="Texture2D" uid="uid://d0qmulsds2tuo" path="res://images/runes/kusa.png" id="15_y0rwf"]
+[ext_resource type="ArrayOccluder3D" uid="uid://3bqu3on6si6y" path="res://materials/occluders/lobby.occ" id="19_uubc7"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_wehoa"]
 sky_top_color = Color(0.0970707, 0.463976, 0.749279, 1)
@@ -90,6 +91,9 @@ height = 50.0
 
 [node name="Lobby" type="Node3D"]
 script = ExtResource("1_yr8w2")
+
+[node name="OccluderInstance3D" type="OccluderInstance3D" parent="."]
+occluder = ExtResource("19_uubc7")
 
 [node name="Player" parent="." instance=ExtResource("2_pdx53")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48.0098, 2, -0.66855)
