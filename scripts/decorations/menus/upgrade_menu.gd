@@ -44,28 +44,31 @@ func set_title(txt: String) -> void:
 func set_adding_new_rune() -> void:
 	allow_second_rune = true
 
-func _on_upgrade_proposition_select_pressed() -> void:
-	function_to_call_on_selection.call(0, is_active_selected, call_to_potentially_free_orbe)
-	_on_close_pressed()
-
 func _init_focus() -> void:
 	close.grab_focus()
 
+func _on_upgrade_proposition_select_pressed() -> void:
+	function_to_call_on_selection.call(0, is_active_selected, call_to_potentially_free_orbe)
+	close_menu()
+
 func _on_upgrade_proposition_2_select_pressed() -> void:
 	function_to_call_on_selection.call(1, is_active_selected, call_to_potentially_free_orbe)
-	_on_close_pressed()
+	close_menu()
 
 
 func _on_upgrade_proposition_3_select_pressed() -> void:
 	function_to_call_on_selection.call(2, is_active_selected, call_to_potentially_free_orbe)
-	_on_close_pressed()
+	close_menu()
 
 
 func _on_close_pressed() -> void:
+	close_menu()
+
+
+func close_menu() -> void:
 	get_tree().paused = false
 	$".".hide()
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-
 
 func _on_active_rune_pressed() -> void:
 	is_active_selected = true

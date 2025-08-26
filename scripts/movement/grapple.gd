@@ -12,16 +12,28 @@ var tmp_destination: Vector3 = Vector3()
 
 
 var _distance: float = 30.0
-var _distance_default_upgrade: float = 10.0
+static var _distance_default_upgrade: float = 10.0
 
 var _speed_boost: float = 1.2
-var _speed_boost_default_upgrade: float = 0.3
+static var _speed_boost_default_upgrade: float = 0.3
 
 var _enemy_mask: int = 4 # 4 means enemy, enemy need to defined it as 2 to catch the player
 var _defaul_mask: int = 16 
 
 var upgrades: Array[int] = [0, 0, 0, 0] # [0:range, 1:boost, 2:enemy, 3:ice_wall]
 static var NBR_UPGRADES: int = 2
+static var upgrade_names: Array[String] = [
+	"range",
+	"speed boost",
+	"enemy grab",
+	"ice wall"
+]
+static var upgrade_default_values: Array[float] = [
+	_distance_default_upgrade,
+	_speed_boost_default_upgrade,
+	1.0,
+	1.0
+]
 
 
 var grapple_owner: Creature

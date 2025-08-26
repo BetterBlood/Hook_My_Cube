@@ -15,6 +15,8 @@ func _ready() -> void:
 	$ContinueMenu.erase_player.connect(_remove_player)
 	
 	_return_to_main_menu()
+	
+	SceneFade.main_loaded.emit()
 
 
 func _new_game_menu() -> void:

@@ -17,6 +17,19 @@ enum RuneUpgradeType {
 	STATUS_EFFECT_CHANCE
 }
 
+static var enum_str_to_int: Dictionary = {
+	"BOUNCE": 0,
+	"COOLDOWN_REDUCTION": 1,
+	"DAMAGE": 2,
+	"EFFECT_DURATION": 3,
+	"EFFECT_RANGE": 4,
+	"PENETRATION": 5,
+	"PERFORATION": 6,
+	"RADIUS": 7,
+	"SPEED": 8,
+	"STATUS_EFFECT_CHANCE": 9
+}
+
 enum UpgradeLevel {
 	ONE = 0,
 	TWO = 1,
@@ -25,16 +38,19 @@ enum UpgradeLevel {
 	FIVE = 4,
 }
 # TODO: balance values
-const VALUES_FOR_BOUNCES: Array[int] 				= [1, 2, 3, 4, 5]
-const VALUES_FOR_COOLDOWN: Array[float] 			= [0.01, 0.02, 0.04, 0.06, 0.1]
-const VALUES_FOR_DAMAGE: Array[float] 				= [1, 3, 6, 10, 15]
-const VALUES_FOR_EFFECT_DURATION: Array[float] 		= [1, 2, 3, 4, 5]
-const VALUES_FOR_EFFECT_RANGE: Array[float] 		= [1, 2, 3, 4, 5]
-const VALUES_FOR_PENETRATION: Array[float] 			= [1, 2, 3, 4, 5]
-const VALUES_FOR_PERFORATION: Array[int] 			= [1, 2, 3, 4, 5]
-const VALUES_FOR_RADIUS: Array[float] 				= [0.1, 0.2, 0.3, 0.4, 0.5]
-const VALUES_FOR_SPEED: Array[float] 				= [1, 2, 3, 4, 5]
-const VALUES_FOR_SATUS_EFFECT_CHANCE: Array[float] 	= [0.01, 0.02, 0.04, 0.06, 0.1]
+const UPGRADE_VALUES: Array = [
+	[1, 2, 3, 4, 5], # BOUNCE
+	[0.01, 0.02, 0.04, 0.06, 0.1], # COOLDOWN_REDUCTION
+	[1, 3, 6, 10, 15], # DAMAGE
+	[1, 2, 3, 4, 5], # EFFECT_DURATION
+	[1, 2, 3, 4, 5], # EFFECT_RANGE
+	[1, 2, 3, 4, 5], # PENETRATION
+	[1, 2, 3, 4, 5], # PERFORATION
+	[0.1, 0.2, 0.3, 0.4, 0.5], # RADIUS
+	[1, 2, 3, 4, 5], # SPEED
+	[0.01, 0.02, 0.04, 0.06, 0.1] # STATUS_EFFECT_CHANCE
+]
+
 
 var upgrade_lvl: UpgradeLevel = UpgradeLevel.ONE
 

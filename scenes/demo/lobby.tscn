@@ -96,7 +96,7 @@ script = ExtResource("1_yr8w2")
 occluder = ExtResource("19_uubc7")
 
 [node name="Player" parent="." instance=ExtResource("2_pdx53")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48.0098, 2, -0.66855)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 47, 2, -1)
 is_in_lobby = true
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]

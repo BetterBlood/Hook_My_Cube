@@ -45,6 +45,7 @@ const LOOT_ORBE_RUNE = preload("res://scenes/decorations/loot_orbe_rune.tscn")
 var tmp_new_runes: Array[int] = []
 var tmp_new_rune
 var tmp_upgrades: Array = []
+const GOLD_UPGRADE_VALUE: int = 20
 
 var essences: Array[int] = [0, 0, 0, 0]
 
@@ -383,18 +384,6 @@ func _init_active_rune_visual_spot() -> void:
 func propose_upgrades(upgrades: Array, call_after: Signal) -> void:
 	#print(upgrades)
 	tmp_upgrades = upgrades
-	#print("[runeType, lvl]")
-	#for rune_up_typ in upgrades[0]:
-		#print(str(RuneUpgrade.RuneUpgradeType.keys()[rune_up_typ[0]]), ": ", (str(RuneUpgrade.UpgradeLevel.keys()[rune_up_typ[1]])))
-	#
-	#print("[healthType, lvl]")
-	#for health_up_type in upgrades[1]:
-		#print(health_up_type[0], ": ", health_up_type[1])
-		#
-	#print("[grapleType, lvl]")
-	#for graple_up_type in upgrades[2]:
-		#print(graple_up_type[0], ": ", graple_up_type[1])
-	
 	
 	get_tree().paused = true
 	# TODO: maybe show the levels but not the upgrade here
@@ -413,7 +402,6 @@ func propose_new_runes(new_runes: Array, call_on_finish: Signal) -> void:
 	tmp_new_runes = new_runes
 	get_tree().paused = true
 	#print(str(Rune.all_runes[new_runes[0]]))
-	# TODO: read description of runes proposed and provide informations for menu display
 	var runes: Array = []
 	for i in range(3):
 		var rune_data: Dictionary = Rune.get_rune_info(int(new_runes[i]))
@@ -433,18 +421,50 @@ func propose_new_runes(new_runes: Array, call_on_finish: Signal) -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 
-func propose_new_rune(new_rune_data, call_on_finish: Signal) -> void:
+func propose_new_rune(new_rune_data: Dictionary, call_on_finish: Signal) -> void:
 	#print(new_rune_data)
 	tmp_new_rune = new_rune_data
 	get_tree().paused = true
 	print(new_rune_data)
-	var rune_2 = ["rune id:" + str(new_rune_data["rune_id"]), "res://images/icons/icon.svg", "Description:\ndata: " + str(new_rune_data["rune_upgrades"])]
+	var rune_data: Dictionary = Rune.get_rune_info(int(new_rune_data["rune_id"]))
+	
+	var cd_reduction: float = _get_total_for_rune_upgrade("COOLDOWN_REDUCTION")
+	var cooldown: float = rune_data["cooldown"] - cd_reduction
+	var damage_upgrades: float = _get_total_for_rune_upgrade("DAMAGE")
+	var damage: float = rune_data["p_damage"] + damage_upgrades
+	var perforation_upgrades: int = int(_get_total_for_rune_upgrade("PERFORATION"))
+	var perforation: int = rune_data["p_perforation_count"] + perforation_upgrades
+	var bounce_upgrades: int = int(_get_total_for_rune_upgrade("BOUNCE"))
+	var bounce: int = rune_data["p_bounce_count"] + bounce_upgrades
+	var penetration_upgrades: float = _get_total_for_rune_upgrade("PENETRATION")
+	var penetration: float = rune_data["p_penetration"] + penetration_upgrades
+	var speed_upgrades: float = _get_total_for_rune_upgrade("SPEED")
+	var speed: float = rune_data["p_speed"] + speed_upgrades
+	
+	var rune_2 = [
+		rune_data["name"], 
+		"res://images/icons/icon.svg", 
+		"Cooldown: " + str(cooldown) + "(" + str(cd_reduction) + ")" +
+			"\nDamage: " + str(damage) + "(" + str(damage_upgrades) + ")" +
+			"\nPerforation: " + str(perforation) + "(" + str(perforation_upgrades) + ")" +
+			"\nBounce: " + str(bounce) + "(" + str(bounce_upgrades) + ")" +
+			"\nPenetration: " + str(penetration) + "(" + str(penetration_upgrades) + ")" +
+			"\nSpeed: " + str(speed) + "(" + str(speed_upgrades) + ")"
+	]
+	#var rune_2 = ["rune id:" + str(new_rune_data["rune_id"]), "res://images/icons/icon.svg", "Description:\ndata: " + str(new_rune_data["rune_upgrades"])]
 	$CanvasLayer/UpgradeMenu.set_up_propositions(null, rune_2, null, set_old_rune_at_placement, call_on_finish)
 	$CanvasLayer/UpgradeMenu.set_title("Swap rune with selected slot")
 	$CanvasLayer/UpgradeMenu.set_adding_new_rune()
 	$CanvasLayer/UpgradeMenu.show()
 	$CanvasLayer/UpgradeMenu._init_focus()
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+
+func _get_total_for_rune_upgrade(upgrade_type:String) -> float:
+	var total: float = 0.0
+	for upgrade in tmp_new_rune["rune_upgrades"]:
+		if upgrade["type"] == upgrade_type:
+			total += RuneUpgrade.UPGRADE_VALUES[RuneUpgrade.enum_str_to_int[upgrade["type"]]][upgrade["level"]]
+	return total
 
 # TODO: update name for set_new_rune_id_at_placement
 func set_new_rune_at_placement(rune_index: int, active_placement: bool, call_on_finish: Signal) -> void:
@@ -505,21 +525,41 @@ func select_upgrade_proposition_type(proposition_type_index: int, _no_active_pla
 	
 	get_tree().paused = true
 	var props: Array = []
-	var func_to_call = [select_rune_upgrade, select_health_upgrade, select_grapple_upgrade]
-	var gold_proposal = ["Golds", "res://images/icons/lvl3_icon.svg", "Description:\nquantité: 20"]
 	if proposition_type_index == 0:
+		$CanvasLayer/UpgradeMenu.set_title("Select a rune upgrade (1 of 3)")
 		for i in range(3):
-			props.append([str(RuneUpgrade.RuneUpgradeType.keys()[tmp_upgrades[0][i][0]]), icons_path + str(tmp_upgrades[0][i][1] + 1) + icons_name, "Description:\nlvl: " + str(tmp_upgrades[0][i][1] + 1)])
+			props.append([
+				str(RuneUpgrade.RuneUpgradeType.keys()[tmp_upgrades[0][i][0]]), 
+				icons_path + str(tmp_upgrades[0][i][1] + 1) + icons_name, 
+				"Description:\nlvl: " + str(tmp_upgrades[0][i][1] + 1) + "\nvalue: " + 
+					str(RuneUpgrade.UPGRADE_VALUES[tmp_upgrades[0][i][0]][tmp_upgrades[0][i][1]])
+			])
 	elif proposition_type_index == 1:
+		$CanvasLayer/UpgradeMenu.set_title("Select a health upgrade (1 of 3)")
 		for i in range(3):
-			props.append([str(tmp_upgrades[proposition_type_index][i][0]), icons_path + str(tmp_upgrades[proposition_type_index][i][1] + 1) + icons_name, "Description:\nlvl: " + str(tmp_upgrades[proposition_type_index][i][1] + 1)])
+			props.append([
+				HealthComponent.upgrades_names[tmp_upgrades[proposition_type_index][i][0]], 
+				icons_path + str(tmp_upgrades[proposition_type_index][i][1] + 1) + icons_name, 
+				"Description:\nlvl: " + str(tmp_upgrades[proposition_type_index][i][1] + 1) +
+					"\nvalue: " + str(HealthComponent.default_upgrades_values[tmp_upgrades[
+						proposition_type_index][i][0]] * (tmp_upgrades[proposition_type_index][i][1] + 1))
+			])
 	else:
+		$CanvasLayer/UpgradeMenu.set_title("Select a grapple upgrade (1 of 2) or gold")
+		var gold_proposal = ["golds", "res://images/icons/lvl3_icon.svg", "Description:\nquantité: " + str(GOLD_UPGRADE_VALUE)]
 		for i in range(2):
-			props.append([str(tmp_upgrades[proposition_type_index][i][0]), icons_path + str(tmp_upgrades[proposition_type_index][i][1] + 1) + icons_name, "Description:\nlvl: " + str(tmp_upgrades[proposition_type_index][i][1] + 1)])
+			props.append([
+				Grapple.upgrade_names[tmp_upgrades[proposition_type_index][i][0]], 
+				icons_path + str(tmp_upgrades[proposition_type_index][i][1] + 1) + icons_name, 
+				"Description:\nlvl: " + str(tmp_upgrades[proposition_type_index][i][1] + 1) +
+					"\nvalue: " + str(Grapple.upgrade_default_values[tmp_upgrades[
+						proposition_type_index][i][0]] * (tmp_upgrades[proposition_type_index][i][1] + 1))
+			])
 		props.append(gold_proposal)
 	#print(props)
+	var func_to_call = [select_rune_upgrade, select_health_upgrade, select_grapple_upgrade]
 	$CanvasLayer/UpgradeMenu.set_up_propositions(props[0], props[1], props[2], func_to_call[proposition_type_index], call_on_finished)
-	$CanvasLayer/UpgradeMenu.set_title("Select an upgrade (1 of 3)")
+	#$CanvasLayer/UpgradeMenu.set_title("Select an upgrade (1 of 3)")
 	$CanvasLayer/UpgradeMenu.show()
 	$CanvasLayer/UpgradeMenu._init_focus()
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
@@ -549,8 +589,8 @@ func select_grapple_upgrade(grapple_upgrade_index: int, _active_placement: bool,
 		1: 
 			for i in range(tmp_upgrades[2][grapple_upgrade_index][1]):
 				grapple.upgrade_boost()
-		2: gold += 20
-		_: push_warning("Player::select_grapple_upgrade: grapple_upgrade_index: ", grapple_upgrade_index, " is unknown upgrade. tmp_upgrades: ", tmp_upgrades)
+		2: gold += GOLD_UPGRADE_VALUE
+		_: push_warning("Player::select_grapple_upgrade: grapple_upgrade_index: ", grapple_upgrade_index, " is unknown, tmp_upgrades: ", tmp_upgrades)
 	
 	call_on_finished.emit(true)
 

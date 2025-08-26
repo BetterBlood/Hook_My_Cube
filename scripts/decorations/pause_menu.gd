@@ -30,5 +30,5 @@ func _on_options_pressed() -> void:
 
 func _on_main_menu_pressed() -> void:
 	get_tree().paused = false
-	# TODO: warning for user: all none saved progress will be lost
-	get_tree().change_scene_to_file("res://scenes/main.tscn")
+	# TODO: warning for user on maze exploration or boss fight: all none saved progress will be lost
+	SceneFade.change_scene_with_file("res://scenes/main.tscn", SceneFade.main_loaded)

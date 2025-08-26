@@ -5,27 +5,34 @@ class_name HealthComponent
 
 @export var _max_health: float = 10.0
 var health: float = _max_health
-var _health_default_upgrade: float = 1.0
+static var _health_default_upgrade: float = 1.0
 
 @export var _health_regen_per_sec: float = 0.0
 var health_regen_timer_reset: float = 0.25
-var _health_regen_default_upgrade: float = 0.1
+static var _health_regen_default_upgrade: float = 0.1
 
 @export var _armor: float = 0.0
-var _armor_default_upgrade: float = 0.25
+static var _armor_default_upgrade: float = 0.25
 @export var _penetration_resistance: float = 0.0 # [0; 1] 
-var _pen_res_default_upgrade: float = 0.01
+static var _pen_res_default_upgrade: float = 0.01
 @export var _max_speed: float = 5
 var speed: float = _max_speed
-var _speed_default_upgrade: float = 0.5
+static var _speed_default_upgrade: float = 0.5
 
 # TODO : balance !
-var _default_upgrades_values: Array[float] = [
+static var default_upgrades_values: Array[float] = [
 	_health_default_upgrade,
 	_health_regen_default_upgrade,
 	_armor_default_upgrade,
 	_pen_res_default_upgrade,
 	_speed_default_upgrade,
+]
+static var upgrades_names: Array[String] = [
+	"max health",
+	"health regen / s",
+	"armor",
+	"penetration res",
+	"max speed",
 ]
 
 # [0:_max_health, 1:_health_regen_per_sec, 2:_armor, 3:_penetration_resistance, 4:_max_speed]
@@ -55,7 +62,7 @@ func set_up_perm_with_data(data) -> void:
 
 func add_perm_upgrade(type: int, level: float) -> void:
 	for i in range(level + 1): # TODO check if level or level + 1
-		perm_upgrades[type] += _default_upgrades_values[type]
+		perm_upgrades[type] += default_upgrades_values[type]
 	#perm_upgrades[type] += value
 
 func get_perm_data():
@@ -73,7 +80,7 @@ func set_up_temp_with_data(data) -> void:
 
 func add_temp_upgrade(type: int, level: float) -> void:
 	for i in range(level + 1): # TODO check if level or level + 1
-		temp_upgrades[type] += _default_upgrades_values[type]
+		temp_upgrades[type] += default_upgrades_values[type]
 	#temp_upgrades[type] += value
 
 func get_temp_data():
