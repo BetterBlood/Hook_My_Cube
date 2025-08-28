@@ -17,7 +17,12 @@ const ESSENCE_ORBE = preload("res://scenes/decorations/essence.tscn")
 
 var damage_area: Node3D = null
 var material_damage_tick: StandardMaterial3D = preload("res://materials/creatures/mob_damage_tick.tres")
-
+const mat = [
+	preload("res://materials/projectiles/normal_projectile.tres"),
+	preload("res://materials/projectiles/fire_projectile.tres"),
+	preload("res://materials/projectiles/plant_projectile.tres"),
+	preload("res://materials/projectiles/electric_projectile.tres")
+]
 func _ready() -> void:
 	super._ready()
 	layer = 4

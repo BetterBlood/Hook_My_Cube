@@ -28,6 +28,7 @@ var joystick_v_event: InputEventJoypadMotion
 var joystick_h_event: InputEventJoypadMotion
 
 const SPHERE = preload("res://addons/polyrinthe/sphere.tscn") # DEBUG
+const burn_effect = preload("res://scenes/fight/statusEffects/burn_effect.tscn")
 
 var active_rune: Rune
 var second_rune: Rune
@@ -187,12 +188,11 @@ func _physics_process(delta):
 			#_attack()
 	
 	if Input.is_action_just_pressed("auto_ignite"): # DEBUG
-		var effect = preload("res://scenes/fight/statusEffects/burn_effect.tscn")
 		var target = self
 		var tmp_id = 17427
 		target.add_effect_id(tmp_id)
-		var effect_instance = effect.instantiate()
-		effect_instance.same_effect = effect
+		var effect_instance = burn_effect.instantiate()
+		effect_instance.same_effect = burn_effect
 		effect_instance.value = 1
 		effect_instance.effect_id = tmp_id
 		effect_instance.target = target

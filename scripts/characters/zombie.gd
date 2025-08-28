@@ -66,11 +66,7 @@ func _on_fire_effect():
 func set_mob_data(human_seed: String, difficulty: int, depth_ratio: float) -> void:
 	super.set_mob_data(human_seed, difficulty, depth_ratio)
 	#print("Zombie::set_mob_data damage_type: ", damage_type)
-	var mat = [
-		preload("res://materials/projectiles/normal_projectile.tres"),
-		preload("res://materials/projectiles/fire_projectile.tres"),
-		preload("res://materials/projectiles/plant_projectile.tres"),
-		preload("res://materials/projectiles/electric_projectile.tres")]
+	
 	$TypeVisualIndicator.mesh.material = mat[get_type()]
 
 func compute_path() -> void:
