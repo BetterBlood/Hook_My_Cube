@@ -367,22 +367,23 @@ func _apply_maze_modifications(maze: Polyrinthe) -> void:
 		#pedestral.set_color(Color(0, 1, 0, 1))
 		pedestral.position = maze.maze[save_point_id].position - save_pedestral_position
 	
-	SceneFade.emit_signal("save_id_changed", last_save_id) # set_up animation for player's spwan point
+	SceneFade.emit_signal("save_id_changed", last_save_id) # set_up save pedesatl animation for player's spwan point
+	
 	var max_rune_pedestal: int = 2
 	for chests_id: int in chests_room_ids: # chests_room_ids is correct, already cleaned
-		var pedestral = PEDESTRAL.instantiate()
-		pedestral.maze = self
-		pedestral.is_save_pedestral = false
-		pedestral.id = chests_id
+		var pedestal = PEDESTRAL.instantiate()
+		pedestal.maze = self
+		pedestal.is_save_pedestral = false
+		pedestal.id = chests_id
 		#pedestral.set_color(Color(0, 0, 1, 1))
 		#pedestral.is_rune = maze.maze[chests_id].position.y == 0
 		if max_rune_pedestal > 0 and Polyrinthe.is_id_on_first_floor(maze.size, chests_id):
-			pedestral.is_rune = true
+			pedestal.is_rune = true
 			max_rune_pedestal -= 1
 		else:
-			pedestral.is_rune = false
-		navigation_region_3d.add_child(pedestral)
-		pedestral.position = maze.maze[chests_id].position - chest_pedestral_position
+			pedestal.is_rune = false
+		navigation_region_3d.add_child(pedestal)
+		pedestal.position = maze.maze[chests_id].position - chest_pedestral_position
 	
 	#print("spawners_room_ids: ", spawners_room_ids)
 	for spawner_id: int in spawners_room_ids:
@@ -391,14 +392,14 @@ func _apply_maze_modifications(maze: Polyrinthe) -> void:
 		#sphere.position = maze.maze[spawner_id].position # DEBUG
 		
 		var mob_id_to_avoid: Array[int] = []
-		if str(spawner_id) in updated_spawners.keys(): #cleaning process
+		if str(spawner_id) in updated_spawners.keys(): # cleaning process
 			mob_id_to_avoid = updated_spawners[str(spawner_id)]
 			#sphere.get_child(0).mesh.material.albedo_color = Color(1, 0, float(len(mob_id_to_avoid))/Spawner.NBR_MOB_BY_SPAWNER, 1) # DEBUG
-			if len(mob_id_to_avoid) >= 3:
+			if len(mob_id_to_avoid) >= Spawner.NBR_MOB_BY_SPAWNER:
 				print("spawner '", spawner_id, "' skipped, all mobs are dead") # DEBUG
 				for i in range(Spawner.NBR_MOB_BY_SPAWNER):
 					Enemy.get_next_id()
-				continue
+				continue # skip spawner creation
 		#else:
 			#sphere.get_child(0).mesh.material.albedo_color = Color(1, 0, 0, 1) # DEBUG
 		
@@ -407,8 +408,8 @@ func _apply_maze_modifications(maze: Polyrinthe) -> void:
 		add_child(spawner)
 		spawner.id = spawner_id
 		spawner.position = maze.maze[spawner_id].position
-		spawner.initialise_mobs_list(maze.seed_human + "spawner" + str(spawner_id), mob_id_to_avoid)
-	
+		spawner.initialise_mobs_list(maze.seed_human + "_spawner_" + str(spawner_id), mob_id_to_avoid)
+		
 	# check player grapple to know if it's needed to spawn this upgrade
 	if player.grapple.upgrades[3] == 0:
 		var loot_orbe_ice_grapple = LOOT_ORBE_ICE_GRAPPLE.instantiate()

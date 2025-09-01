@@ -2,6 +2,7 @@ extends CharacterBody3D
 
 class_name Creature
 
+@export var id: int
 @export var is_in_lobby: bool = false
 signal is_dead(id: int)
 
@@ -57,8 +58,8 @@ func _on_fire_effect():
 	# TODO: in herited classes: do something on creature on fire !
 	pass
 
-func can_host_status_effect(id: int = 0) -> bool:
-	return !effect_ids.has(id)
+func can_host_status_effect(status_id: int = 0) -> bool:
+	return !effect_ids.has(status_id)
 
 func get_health_component() -> HealthComponent:
 	return health_component
@@ -81,8 +82,8 @@ func get_layer() -> int:
 	return layer
 
 
-func add_effect_id(id: int = 0) -> void:
-	effect_ids[id] = true
+func add_effect_id(status_id: int = 0) -> void:
+	effect_ids[status_id] = true
 
 # TODO: remove
 func get_status_ids() -> Array:

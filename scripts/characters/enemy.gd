@@ -3,7 +3,6 @@ extends Creature
 class_name Enemy
 
 static var next_id = 0
-@export var id: int
 
 var damage_type: Enums.DamageType = Enums.DamageType.NORMAL
 var damage: float = 3
@@ -23,6 +22,17 @@ const mat = [
 	preload("res://materials/projectiles/plant_projectile.tres"),
 	preload("res://materials/projectiles/electric_projectile.tres")
 ]
+
+var effect_type: int = -1
+var effect_application_chance: float = 0.05 # 5%
+const effects_data: Array = [
+	[preload("res://scenes/fight/statusEffects/burn_effect.tscn"), 0.25, 1.0, 4.0],
+	[preload("res://scenes/fight/statusEffects/speed_effect.tscn"), 0.8, 0.25, 7.0],
+	[preload("res://scenes/fight/statusEffects/speed_effect.tscn"), 0.0, 0.25, 10.0]
+]
+static var rng: RandomNumberGenerator = RandomNumberGenerator.new()
+
+
 func _ready() -> void:
 	super._ready()
 	layer = 4
@@ -30,7 +40,7 @@ func _ready() -> void:
 func _on_damage_taken():
 	super._on_damage_taken()
 	
-	if damage_area:
+	if damage_area and health_component.health > 0:
 		damage_area.set_surface_override_material(0, material_damage_tick)
 		await get_tree().create_timer(0.1).timeout
 		damage_area.set_surface_override_material(0, null)
@@ -45,10 +55,13 @@ func set_mob_data(human_seed: String, difficulty: int, depth_ratio: float) -> vo
 	var new_diff = difficulty / (4.0 * 4.0) # ~normalisation (/4) attenuation (/4)
 	
 	if depth_ratio + new_diff >= 1/3.0: # typed mobs appears nearer to begin with high difficulty
-		var rng: RandomNumberGenerator = RandomNumberGenerator.new()
+		#var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 		rng.seed = hash(human_seed)
-		damage_type = Enums.DamageType.values()[rng.randi_range(0, len(Enums.damage_type_grid) - 1)]
-	
+		rng.state = hash(human_seed + "wtfstate !!!!!!")
+		var val_tmp: int = rng.randi_range(0, len(Enums.damage_type_grid) - 1)
+		damage_type = Enums.DamageType.values()[val_tmp]
+		effect_type = damage_type - 1
+		#print(self, " ", human_seed, " ", hash(human_seed), " ", val_tmp, " ", damage_type, " ", str(len(Enums.damage_type_grid) - 1))
 	var lvl_max = (difficulty + 3) * 10 # [10; 50]
 	lvl = max(1, int(lvl_max * depth_ratio)) # at least lvl 1, max [10, 20, 30, 40, 50]
 	xp = lvl * (5 - difficulty) # lvl * [7; 3] => [7; 3] to [350; 150]
@@ -82,6 +95,27 @@ func _death_sequence() -> void:
 	is_dead.emit(id) # notify the death (for the spawner or else)
 	
 	queue_free()
+
+
+func _apply_effect(creature: Creature) -> void:
+	if effect_type < 0:
+		return
+	
+	#print(target.has_method("can_host_status_effect"))
+	if 		creature.has_method("can_host_status_effect") && \
+			effect_application_chance > randf_range(0,1):
+		var new_id = StatusEffectId.get_next_id() # TODO : be carefull that the id dosen't grow too quickly, maybe release if not used 
+		if creature.can_host_status_effect(new_id): # TODO: check if really usefull
+			creature.add_effect_id(new_id)
+			var effect_instance = effects_data[effect_type][0].instantiate()
+			effect_instance.same_effect = effects_data[effect_type][0]
+			effect_instance.value = effects_data[effect_type][1]
+			effect_instance.effect_id = new_id
+			effect_instance.target = creature
+			effect_instance.total_duration = effects_data[effect_type][2]
+			effect_instance.total_duration_fixe = effects_data[effect_type][2]
+			effect_instance.effect_area_range_transmission = effects_data[effect_type][3]
+			creature.add_child(effect_instance)
 
 
 func _death_sequence_summoned() -> void:

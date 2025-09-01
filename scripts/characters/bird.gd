@@ -28,9 +28,9 @@ var debug_id: int = -1
 @onready var body: MeshInstance3D = $Meshes/Body
 var spawner: Spawner = null
 var target: Creature = null
-var potential_target: Creature = null
+#var potential_target: Creature = null
 
-var player_force: float = 10 # balanced
+var target_force: float = 10 # balanced
 
 func _ready() -> void:
 	super._ready()
@@ -119,7 +119,7 @@ func _physics_process(delta: float) -> void:
 				
 				if target:
 					#print("\t", i, " target. ", ray_cast.target_position)
-					ray_cast.target_position += to_local(creature_target_direction - global_position) * tick_ray_cast * player_force
+					ray_cast.target_position += to_local(creature_target_direction - global_position) * tick_ray_cast * target_force
 					#print("\t", i, " target: ", ray_cast.target_position)
 					
 				if id == debug_id:
@@ -177,24 +177,36 @@ func _damage_taken() -> void:
 	if spawner: spawner._bird_taking_damage(id)
 
 func set_target(new_target: Creature) -> void:
-	#print("Bird::set_target: ", new_target)
+	#print(id, " Bird::set_target: ", new_target, ", id: ", new_target.id)
 	target = new_target
-	$Meshes/Eye.mesh.material.albedo_color = Color.RED
-	$Meshes/Eye2.mesh.material.albedo_color = Color.RED
+	$Meshes/Eye.set_surface_override_material(0, preload("res://materials/difficulties/mazo.tres"))
+	$Meshes/Eye2.set_surface_override_material(0, preload("res://materials/difficulties/mazo.tres"))
 
 func set_creature_to_listen(new_target: Creature) -> void:
 	#print("Bird::set_creature_to_listen: ", new_target)
-	potential_target = new_target
-	potential_target.health_component.damage_taken.connect(potential_target_take_damage)
+	new_target.health_component.damage_taken.connect(potential_target_take_damage.bind(new_target))
+	new_target.is_dead.connect(potential_target_dead)
 
-func potential_target_take_damage() -> void:
+func potential_target_dead(dead_target_id: int) -> void:
+	#print(id, " Bird::potential_target_dead target: ", dead_target_id)
+	if target and dead_target_id == target.id:
+		remove_creature_to_listen(target)
+		target = null
+	if not target:
+		$Meshes/Eye.set_surface_override_material(0, null)
+		$Meshes/Eye2.set_surface_override_material(0, null)
+
+func potential_target_take_damage(curr_target: Creature) -> void:
 	#print("Bird::potential_target_take_damage")
-	if spawner: spawner.damage_taken_close_to_bird(potential_target, id)
+	if spawner and curr_target.health_component.health > 0: spawner.damage_taken_close_to_bird(curr_target, id)
 
-func remove_creature_to_listen() -> void:
-	#print("Bird::remove_creature_to_listen")
-	potential_target.health_component.damage_taken.disconnect(potential_target_take_damage)
-	potential_target = null
+func remove_creature_to_listen(old_target: Creature) -> void:
+	#print(self, " ", id, " Bird::remove_creature_to_listen")
+	if old_target.is_dead.is_connected(potential_target_dead):
+		old_target.is_dead.disconnect(potential_target_dead)
+	if old_target.health_component.damage_taken.is_connected(potential_target_take_damage):
+		old_target.health_component.damage_taken.disconnect(potential_target_take_damage)
+
 
 func _compute_new_target_position(i: int, max_i: int) -> Vector3:
 	var angle: float = 3*PI / max_i
@@ -244,6 +256,7 @@ func _compute_boids_target_position() -> Vector3:
 
 	return avg_dir + avg_pos + avg_avo
 
+
 func _on_fire_effect():
 	effect.visible = true
 	var cd: float = StatusEffect.DEFAULT_COOLDOWN / 2
@@ -253,6 +266,7 @@ func _on_fire_effect():
 	var timer = get_tree().create_timer(cd)
 	await timer.timeout
 	effect.visible = false
+
 
 func set_mob_data(human_seed: String, difficulty: int, depth_ratio: float) -> void:
 	super.set_mob_data(human_seed, difficulty, depth_ratio)
@@ -288,13 +302,15 @@ func _on_avoidance_vision_area_exited(area: Area3D) -> void:
 		avoidance_birds.erase(parent)
 
 
-func _on_body_body_entered(_body: Node3D) -> void:
-	#print("enemy collide with: ", _body, ", groups: ", _body.get_groups())
+#func _on_body_body_entered(_body: Node3D) -> void:
+	#pass
+	#print(id, " bird collide with: ", _body, ", groups: ", _body.get_groups())
 	#if _body.is_in_group("Player"):
-	var creature = (_body as Creature)
-	if 	creature and creature.has_method("get_health_component") and \
-		creature.has_method("take_damage"):
-			creature.take_damage(damage, get_type(), armor_pen)
+	#var creature = (_body as Creature)
+	#if not spawner or creature.id not in boids_birds:
+		#if 	creature and creature.has_method("get_health_component") and \
+			#creature.has_method("take_damage"):
+				#creature.take_damage(damage, get_type(), armor_pen)
 
 
 func _on_player_detection_area_entered(area: Area3D) -> void:
@@ -303,3 +319,21 @@ func _on_player_detection_area_entered(area: Area3D) -> void:
 
 func _on_player_detection_area_exited(area: Area3D) -> void:
 	if spawner: spawner.player_exited(area.get_parent(), id)
+
+
+func _on_creature_detection_area_entered(area: Area3D) -> void:
+	if spawner: spawner.creature_detected(area.get_parent(), id)
+
+
+func _on_creature_detection_area_exited(area: Area3D) -> void:
+	if spawner: spawner.creature_exited(area.get_parent(), id)
+
+## collision with entity
+func _on_body_area_entered(area: Area3D) -> void:
+	#print(id, " bird _on_body_area_entered: ", (area.get_parent() as Creature).id, " ", area.get_parent())
+	var creature = (area.get_parent() as Creature)
+	if is_in_lobby or creature.id not in boids_birds:
+		if 	creature and creature.has_method("get_health_component") and \
+			creature.has_method("take_damage"):
+				creature.take_damage(damage, get_type(), armor_pen)
+				_apply_effect(creature)

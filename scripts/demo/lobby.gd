@@ -86,7 +86,7 @@ func _ready() -> void:
 	
 	_update_hologram()
 	
-	call_deferred("_init_birds")
+	call_deferred("_init_practice_mobs")
 	
 	SceneFade.emit_signal("lobby_loaded")
 
@@ -112,8 +112,11 @@ func _process(_delta: float) -> void:
 		#get_tree().change_scene_to_packed(maze_scene)
 
 
-func _init_birds() -> void:
-	print(maze_seed)
+func _init_practice_mobs() -> void:
+	#print(maze_seed)
+	
+	# TODO: set-up zombies (and other mobs when they are created)
+	
 	var max_spawn_radius = 10
 	
 	# boid 1

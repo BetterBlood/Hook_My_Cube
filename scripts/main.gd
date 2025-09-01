@@ -18,7 +18,6 @@ func _ready() -> void:
 	
 	SceneFade.main_loaded.emit()
 
-
 func _new_game_menu() -> void:
 	$MainMenu.hide()
 	$NewGameMenu.show()

@@ -15,6 +15,8 @@ func _ready() -> void:
 
 func change_scene(scene: PackedScene, await_loading: Signal) -> void:
 	$ColorRect.mouse_filter = Control.MOUSE_FILTER_STOP
+	Enemy.rng.seed = hash(player_name)
+	Enemy.next_id = 0
 	
 	await fade()
 	
@@ -30,7 +32,8 @@ func change_scene(scene: PackedScene, await_loading: Signal) -> void:
 
 func change_scene_with_file(scene: String, await_loading: Signal) -> void:
 	$ColorRect.mouse_filter = Control.MOUSE_FILTER_STOP
-	
+	Enemy.rng.seed = hash(player_name)
+	Enemy.next_id = 0
 	await fade()
 	
 	get_tree().change_scene_to_file(scene)

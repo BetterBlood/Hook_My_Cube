@@ -91,7 +91,7 @@ func _on_enemy_area_3d_body_entered(_body: Node3D) -> void:
 		if 	creature and creature.has_method("get_health_component") and \
 			creature.has_method("take_damage"):
 				creature.take_damage(damage, get_type(), armor_pen)
-
+				_apply_effect(creature)
 
 func _on_chase_area_area_entered(area: Area3D) -> void:
 	#print("_on_chase_area_area_entered")

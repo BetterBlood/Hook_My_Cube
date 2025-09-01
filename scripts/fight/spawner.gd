@@ -34,10 +34,11 @@ enum Behavior {
 }
 var behavior_color: Array[Color] = [Color.CRIMSON, Color.DARK_ORANGE, Color.DODGER_BLUE, Color.DARK_GREEN]
 var boids_behavior: Behavior = Behavior.PASSIVE
-var action_on_enter_area: Array[Callable] = [_set_target_for_all, _register_creature, _nothing, _nothing]
+var action_on_player_enter_area: Array[Callable] = [_set_target_for_all, _nothing, _nothing, _nothing]
+var action_on_enter_area: Array[Callable] = [_nothing, _register_creature, _nothing, _nothing]
 var action_on_exited_area: Array[Callable] = [_nothing, _unregister_creature, _nothing, _nothing]
 
-var action_on_creature_taking_damage_at_close_range: Array[Callable] = [_set_target_for_all, _set_target_for_all, _nothing, _nothing]
+var action_on_creature_taking_damage_at_close_range: Array[Callable] = [_nothing, _set_target_for_all, _nothing, _nothing]
 
 var action_on_damage_taken: Array[Callable] = [_set_target_for_all, _set_target_for_all, _set_target_for_all, _set_target_for_self]
 
@@ -98,7 +99,7 @@ func initialise_mobs_list(human_seed: String, mob_id_to_avoid: Array[int]) -> vo
 	if id == debug_id:
 		print("Spawner::initialise_mobs_list::id: ", id, ", human_seed: ", human_seed, ", mob_id_to_avoid: ", mob_id_to_avoid, ", difficulty: ", maze.difficulty)
 	
-	rng.seed = hash(human_seed)
+	rng.seed = hash(human_seed) # randomS33d_spawner_num
 	boids_behavior = Behavior.values()[rng.randi_range(0, len(Behavior.values()) - 1)]
 	#print("Spawner::initialise_mobs_list::id: ", id, ", ", str(boids_behavior), " ", Behavior.keys()[boids_behavior])
 	
@@ -110,7 +111,7 @@ func initialise_mobs_list(human_seed: String, mob_id_to_avoid: Array[int]) -> vo
 		if new_id not in mob_dead:
 			if id == debug_id:
 				print("spawn mob with id: ", new_id)
-			var new_human_seed = human_seed + "mob" + str(new_id)
+			var new_human_seed = human_seed + "_mob_" + str(new_id)
 			rng.seed = hash(new_human_seed)
 			var mob_type: int = rng.randi_range(0, len(possible_mobs) - 1)
 			var new_mob = possible_mobs[mob_type].instantiate()
@@ -129,11 +130,17 @@ func initialise_mobs_list(human_seed: String, mob_id_to_avoid: Array[int]) -> vo
 func _bird_taking_damage(bird_id: int) -> void:
 	action_on_damage_taken[boids_behavior].call(get_tree().get_first_node_in_group("Player"), bird_id)
 
-func player_detected(player: Player, mob_id: int) -> void:
-	action_on_enter_area[boids_behavior].call(player, mob_id)
+func creature_detected(creature: Creature, mob_id: int) -> void:
+	action_on_enter_area[boids_behavior].call(creature, mob_id)
 
-func player_exited(player: Player, mob_id: int) -> void:
-	action_on_exited_area[boids_behavior].call(player, mob_id)
+func creature_exited(creature: Creature, mob_id: int) -> void:
+	action_on_exited_area[boids_behavior].call(creature, mob_id)
+
+func player_detected(player: Player, mob_id: int) -> void:
+	action_on_player_enter_area[boids_behavior].call(player, mob_id)
+
+func player_exited(_player: Player, _mob_id: int) -> void:
+	pass # nothing to do
 
 func damage_taken_close_to_bird(creature: Creature, bird_id: int) -> void:
 	action_on_creature_taking_damage_at_close_range[boids_behavior].call(creature, bird_id)
@@ -144,21 +151,26 @@ func _set_target_for_self(player: Player, bird_id: int) -> void:
 			mob.set_target(player)
 			return
 
-func _set_target_for_all(player: Player, _bird_id: int) -> void:
+func _set_target_for_all(creature: Creature, _bird_id: int) -> void:
 	for mob in current_mobs:
 		if mob and mob.id in potential_boids_id:
-			mob.set_target(player)
+			mob.set_target(creature)
 
-func _register_creature(player: Player, bird_id: int) -> void:
+#func _set_target_for_opportun(creature: Creature, _bird_id: int) -> void:
+	#for mob in current_mobs:
+		#if mob and mob.id in potential_boids_id:
+			#mob.set_target(creature)
+
+func _register_creature(creature: Creature, bird_id: int) -> void:
 	for mob in current_mobs:
-		if mob and mob.id == bird_id:
-			mob.set_creature_to_listen(player)
+		if mob and mob.id == bird_id and creature.id not in potential_boids_id:
+			mob.set_creature_to_listen(creature)
 			return
 
-func _unregister_creature(_player: Player, bird_id: int) -> void:
+func _unregister_creature(creature: Creature, bird_id: int) -> void:
 	for mob in current_mobs:
-		if mob and mob.id == bird_id:
-			mob.remove_creature_to_listen()
+		if mob and mob.id == bird_id and creature.id not in potential_boids_id:
+			mob.remove_creature_to_listen(creature)
 			return
 
 func _nothing(_creature: Creature, _bird_id: int) -> void:
@@ -167,10 +179,11 @@ func _nothing(_creature: Creature, _bird_id: int) -> void:
 
 
 func _on_mob_death(mob_id: int) -> void:
-	if mob_id in current_mobs:
-		current_mobs.erase(mob_id)
+	#if mob_id in current_mobs: # psi, no sense... current_mod not an int array
+		#current_mobs.erase(mob_id)
 	if mob_id not in mob_dead:
 		mob_dead.append(mob_id)
+	
 	maze.update_spawner(id, mob_dead)
 	#print("Spawner:: mobs_dead: ", mob_dead)
 	
