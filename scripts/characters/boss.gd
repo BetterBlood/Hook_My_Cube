@@ -38,10 +38,43 @@ func _ready() -> void:
 	
 	attack_cd = 2.0
 	id = -1
+	damage_area = $"Sketchfab_Scene/Sketchfab_model/Collada visual scene group/Cube/defaultMaterial2"
 
 
-func _on_fire_effect(): # TODO: better fire animation
-	#print("fire_effect")
+func _on_burn_effect(): # TODO: better fire animation
+	pass
+	##print("burn_effect")
+	#default_material.set_surface_override_material(0, BOSS_ON_FIRE_1)
+	#shader_mat = default_material.get_surface_override_material(0)
+	#
+	#default_material_2.set_surface_override_material(0, BOSS_ON_FIRE_2)
+	#shader_mat_2 = default_material_2.get_surface_override_material(0)
+	#
+	#default_material_3.set_surface_override_material(0, BOSS_ON_FIRE_3)
+	#shader_mat_3 = default_material_3.get_surface_override_material(0)
+	#
+	#shader_mat.set_shader_parameter("shader_parameter/dissolveSlider", 0.0)
+	#shader_mat_2.set_shader_parameter("shader_parameter/dissolveSlider", 0.0)
+	#shader_mat_3.set_shader_parameter("shader_parameter/dissolveSlider", 0.0)
+	#
+	##shader_parameter/dissolveSlider
+	#var cd: float = StatusEffect.DEFAULT_COOLDOWN / 2
+	#var tween = get_tree().create_tween()
+	#tween.tween_property(shader_mat, "shader_parameter/dissolveSlider", 0.5, cd)
+	#tween.tween_property(shader_mat_2, "shader_parameter/dissolveSlider", 0.5, cd)
+	#tween.tween_property(shader_mat_3, "shader_parameter/dissolveSlider", 0.5, cd)
+	#
+	#var timer = get_tree().create_timer(cd)
+	#await timer.timeout
+	#
+	#default_material.set_surface_override_material(0, null)
+	#default_material_2.set_surface_override_material(0, null)
+	#default_material_3.set_surface_override_material(0, null)
+	#
+	
+
+func apply_visual_burn_effect(duration: float) -> void:
+	burn_applied += 1
 	default_material.set_surface_override_material(0, BOSS_ON_FIRE_1)
 	shader_mat = default_material.get_surface_override_material(0)
 	
@@ -51,26 +84,18 @@ func _on_fire_effect(): # TODO: better fire animation
 	default_material_3.set_surface_override_material(0, BOSS_ON_FIRE_3)
 	shader_mat_3 = default_material_3.get_surface_override_material(0)
 	
-	shader_mat.set_shader_parameter("shader_parameter/dissolveSlider", 0.0)
-	shader_mat_2.set_shader_parameter("shader_parameter/dissolveSlider", 0.0)
-	shader_mat_3.set_shader_parameter("shader_parameter/dissolveSlider", 0.0)
+	shader_mat.set_shader_parameter("dissolveSlider", 1.0)
+	shader_mat_2.set_shader_parameter("dissolveSlider", 1.0)
+	shader_mat_3.set_shader_parameter("dissolveSlider", 1.0)
 	
-	#shader_parameter/dissolveSlider
-	var cd: float = StatusEffect.DEFAULT_COOLDOWN / 2
-	var tween = get_tree().create_tween()
-	tween.tween_property(shader_mat, "shader_parameter/dissolveSlider", 0.5, cd)
-	tween.tween_property(shader_mat_2, "shader_parameter/dissolveSlider", 0.5, cd)
-	tween.tween_property(shader_mat_3, "shader_parameter/dissolveSlider", 0.5, cd)
-	
-	var timer = get_tree().create_timer(cd)
+	var timer = get_tree().create_timer(duration)
 	await timer.timeout
+	burn_applied -= 1
+	if burn_applied <= 0:
+		default_material.set_surface_override_material(0, null)
+		default_material_2.set_surface_override_material(0, null)
+		default_material_3.set_surface_override_material(0, null)
 	
-	default_material.set_surface_override_material(0, null)
-	default_material_2.set_surface_override_material(0, null)
-	default_material_3.set_surface_override_material(0, null)
-	
-	damage_area = $"Sketchfab_Scene/Sketchfab_model/Collada visual scene group/Cube/defaultMaterial2"
-
 
 func _physics_process(delta: float) -> void:
 	if can_rotate:

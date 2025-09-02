@@ -10,8 +10,8 @@ class_name Bird
 
 @onready var ray_casts: Node3D = $RayCasts
 var ray_cast: RayCast3D = RayCast3D.new()
-@onready var effect: MeshInstance3D = $Meshes/Effect
-var shader_mat: ShaderMaterial
+@onready var burn_effect: MeshInstance3D = $Meshes/Effect
+var burn_shader_mat: ShaderMaterial
 
 var delta_last_tick: float = 0.0
 var tick_ray_cast: float = 0.1
@@ -41,7 +41,8 @@ func _ready() -> void:
 	health_component.speed = health_component._max_speed
 	health_component.damage_taken.connect(_damage_taken)
 	
-	shader_mat = effect.mesh.material
+	burn_shader_mat = burn_effect.mesh.material
+	
 	ray_cast.collide_with_areas = false
 	ray_cast.collision_mask = 1
 	ray_cast.target_position = Vector3(0, 0, 10)
@@ -169,6 +170,8 @@ func set_boids(boids: Array) -> void:
 
 func set_color(color: Color) -> void:
 	body.mesh.material.albedo_color = color
+	#print(color, " ", color.hex(color.to_rgba32()), " ", color.hex64(color.to_rgba64()))
+	burn_shader_mat.set_shader_parameter("baseColor", color) # doesn't work don't know why
 
 func set_spawner(manager: Spawner) -> void:
 	spawner = manager
@@ -257,15 +260,27 @@ func _compute_boids_target_position() -> Vector3:
 	return avg_dir + avg_pos + avg_avo
 
 
-func _on_fire_effect():
-	effect.visible = true
-	var cd: float = StatusEffect.DEFAULT_COOLDOWN / 2
-	shader_mat.set_shader_parameter("shader_parameter/dissolveSlider", 0.0)
-	var tween = get_tree().create_tween()
-	tween.tween_property(shader_mat, "shader_parameter/dissolveSlider", 1.0, cd)
-	var timer = get_tree().create_timer(cd)
+func _on_burn_effect() -> void:
+	#burn_effect.visible = true
+	#var cd: float = StatusEffect.DEFAULT_COOLDOWN / 2
+	#burn_shader_mat.set_shader_parameter("shader_parameter/dissolveSlider", 0.0)
+	#var tween = get_tree().create_tween()
+	#tween.tween_property(burn_shader_mat, "shader_parameter/dissolveSlider", 1.0, cd)
+	#var timer = get_tree().create_timer(cd)
+	#await timer.timeout
+	#burn_effect.visible = false
+	pass
+
+
+func apply_visual_burn_effect(duration: float) -> void:
+	burn_applied += 1
+	burn_effect.visible = true
+	burn_shader_mat.set_shader_parameter("dissolveSlider", 1.0)
+	var timer = get_tree().create_timer(duration)
 	await timer.timeout
-	effect.visible = false
+	burn_applied -= 1
+	if burn_applied <= 0:
+		burn_effect.visible = false
 
 
 func set_mob_data(human_seed: String, difficulty: int, depth_ratio: float) -> void:

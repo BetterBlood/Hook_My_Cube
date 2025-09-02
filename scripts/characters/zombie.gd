@@ -8,8 +8,8 @@ var target: Creature
 var base_position: Vector3
 var is_attacking: bool = false
 var player_at_range: bool = false
-@onready var effect: MeshInstance3D = $Effect
-var shader_mat: ShaderMaterial
+@onready var burn_effect: MeshInstance3D = $Effect
+var burn_shader_mat: ShaderMaterial
 
 func _ready() -> void:
 	super._ready()
@@ -22,7 +22,7 @@ func _ready() -> void:
 	health_component._max_speed = SPEED
 	health_component.speed = SPEED 
 	
-	shader_mat = effect.mesh.material
+	burn_shader_mat = burn_effect.mesh.material
 	
 	$Navigation/UpdateNavigation.timeout.connect(compute_path)
 	
@@ -53,15 +53,26 @@ func _physics_process(delta: float) -> void:
 	
 	move_and_slide()
 
-func _on_fire_effect():
-	effect.visible = true
-	var cd: float = StatusEffect.DEFAULT_COOLDOWN / 2
-	shader_mat.set_shader_parameter("shader_parameter/dissolveSlider", 0.0)
-	var tween = get_tree().create_tween()
-	tween.tween_property(shader_mat, "shader_parameter/dissolveSlider", 1.0, cd)
-	var timer = get_tree().create_timer(cd)
+func _on_burn_effect():
+	#burn_effect.visible = true
+	#var cd: float = StatusEffect.DEFAULT_COOLDOWN / 2
+	#burn_shader_mat.set_shader_parameter("shader_parameter/dissolveSlider", 0.0)
+	#var tween = get_tree().create_tween()
+	#tween.tween_property(burn_shader_mat, "shader_parameter/dissolveSlider", 1.0, cd)
+	#var timer = get_tree().create_timer(cd)
+	#await timer.timeout
+	#burn_effect.visible = false
+	pass
+
+func apply_visual_burn_effect(duration: float) -> void:
+	burn_applied += 1
+	burn_effect.visible = true
+	burn_shader_mat.set_shader_parameter("dissolveSlider", 1.0)
+	var timer = get_tree().create_timer(duration)
 	await timer.timeout
-	effect.visible = false
+	burn_applied -= 1
+	if burn_applied <= 0:
+		burn_effect.visible = false
 
 func set_mob_data(human_seed: String, difficulty: int, depth_ratio: float) -> void:
 	super.set_mob_data(human_seed, difficulty, depth_ratio)

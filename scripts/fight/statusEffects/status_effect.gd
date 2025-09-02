@@ -34,6 +34,7 @@ func _ready() -> void:
 		real_target = target.get_health_component()
 		if real_target != null:
 			_apply_effect()
+			_apply_visual_effect()
 
 
 func _on_cooldown_timeout() -> void:
@@ -55,6 +56,8 @@ func _apply_effect() -> void:
 	push_error("_apply_effect not implemented in ", self)
 	assert(false, "Override of `_apply_effect()` needed in " + str(self))
 
+func _apply_visual_effect() -> void:
+	push_warning("_apply_visual_effect not implemented in ", self, ", to dissmiss this warning: override _apply_visual_effect with empty body (pass)")
 
 func _clean_effect() -> void:
 	push_warning("_clean_effect not implemented in ", self)

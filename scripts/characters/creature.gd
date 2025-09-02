@@ -18,6 +18,7 @@ var instant_speed: float = 0.0
 
 var summoned: bool = false
 
+var burn_applied: int = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -28,7 +29,7 @@ func _ready() -> void:
 		add_child(health_component)
 	
 	health_component.damage_taken.connect(_on_damage_taken)
-	health_component.fire_effect.connect(_on_fire_effect)
+	health_component.burn_effect.connect(_on_burn_effect)
 
 func _on_damage_taken():
 	if is_in_lobby:
@@ -54,9 +55,13 @@ func _death_sequence_summoned() -> void:
 	is_dead.emit(-1)
 	queue_free() # no emition of death signals
 
-func _on_fire_effect():
+func _on_burn_effect():
 	# TODO: in herited classes: do something on creature on fire !
 	pass
+
+
+func apply_visual_burn_effect(_duration: float) -> void:
+	push_warning("apply_visual_burn_effect not implemented in ", self, ", to dissmiss this warning: override apply_visual_burn_effect with empty body (pass)")
 
 func can_host_status_effect(status_id: int = 0) -> bool:
 	return !effect_ids.has(status_id)

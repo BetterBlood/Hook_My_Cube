@@ -45,7 +45,7 @@ var health_regen_timer: Timer = Timer.new()
 
 var speed_effects = {}
 
-signal fire_effect()
+signal burn_effect()
 
 func _ready() -> void:
 	health_regen_timer.wait_time = health_regen_timer_reset
@@ -114,10 +114,10 @@ func _passive_heal() -> void:
 	health_regen_timer.start(health_regen_timer_reset)
 
 
-func take_fire_effect(value: float) -> float:
+func take_burn_effect(value: float) -> float:
 	var damage: float = value * _get_grid_modifier(Enums.DamageType.FIRE, get_parent().get_type())
 	#print(get_parent(), "::HealthComponent: I'm literally on fire.... taking (", value, ") -> ", damage, " damages.")
-	fire_effect.emit()
+	burn_effect.emit()
 	health = max(health - damage, 0.0)
 	damage_taken.emit()
 	
