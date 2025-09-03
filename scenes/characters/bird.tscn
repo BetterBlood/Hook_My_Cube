@@ -1,8 +1,9 @@
-[gd_scene load_steps=19 format=3 uid="uid://drnl2ytrefjba"]
+[gd_scene load_steps=21 format=3 uid="uid://drnl2ytrefjba"]
 
 [ext_resource type="Script" uid="uid://fqro76tg5qme" path="res://scripts/characters/bird.gd" id="1_2sltb"]
 [ext_resource type="Material" uid="uid://cluaqb8rwmdm8" path="res://materials/shaders/bird_on_fire.tres" id="2_41i38"]
 [ext_resource type="Material" uid="uid://dtrgxefu8yt4f" path="res://materials/creatures/bird_default.tres" id="2_dwjge"]
+[ext_resource type="Material" uid="uid://8o284etsqdf7" path="res://materials/shaders/health_bar.tres" id="4_142vc"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_142vc"]
 resource_local_to_scene = true
@@ -67,6 +68,10 @@ radius = 25.0
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_45abh"]
 radius = 25.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_aoeho"]
+material = ExtResource("4_142vc")
+size = Vector2(0.5, 0.1)
 
 [node name="Bird" type="CharacterBody3D"]
 collision_layer = 0
@@ -160,6 +165,10 @@ collision_mask = 2
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
 shape = SubResource("SphereShape3D_45abh")
 debug_color = Color(0.733333, 0.462745, 0.258824, 0.419608)
+
+[node name="HealthBar" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.250314, 0)
+mesh = SubResource("QuadMesh_aoeho")
 
 [connection signal="area_entered" from="Body" to="." method="_on_body_area_entered"]
 [connection signal="area_entered" from="CohesionVision" to="." method="_on_cohesion_vision_area_entered"]

@@ -122,22 +122,22 @@ func _init_practice_mobs() -> void:
 	# boid 1
 	for i in range(4):
 		var new_bird = bird.instantiate()
+		new_bird.is_in_lobby = true
 		new_bird.id = i
 		new_bird.set_mob_data(maze_seed + "bird" + str(i), 0, 1)
 		new_bird.position = Vector3(randf_range(-1, 1) * max_spawn_radius, randf_range(-9, -1), randf_range(-1, 1) * max_spawn_radius)
 		add_child(new_bird)
 		new_bird.set_boids(range(4))
-		new_bird.is_in_lobby = true
 	
 	# boid 2
 	for i in range(4, 8):
 		var new_bird = bird.instantiate()
+		new_bird.is_in_lobby = true
 		new_bird.id = i
 		new_bird.set_mob_data(maze_seed + "bird" + str(i), 0, 1)
 		new_bird.position = Vector3(randf_range(-1, 1) * max_spawn_radius, randf_range(-9, -1), randf_range(-1, 1) * max_spawn_radius)
 		add_child(new_bird)
 		new_bird.set_boids(range(4, 8))
-		new_bird.is_in_lobby = true
 
 
 func _initialize_new_maze_file_save() -> void:

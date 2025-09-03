@@ -355,6 +355,8 @@ func _on_damage_taken():
 	super._on_damage_taken()
 	$CanvasLayer/UI.damage_tick()
 
+func _update_life_display():
+	pass # TODO : a life bar or a visual indication for player life
 
 func _on_player_area_3d_body_entered(body: Node3D) -> void:
 	# TODO: unused for the moment, could be used when the player need to react to something physical hitting him

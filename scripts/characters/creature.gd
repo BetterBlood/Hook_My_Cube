@@ -30,6 +30,8 @@ func _ready() -> void:
 	
 	health_component.damage_taken.connect(_on_damage_taken)
 	health_component.burn_effect.connect(_on_burn_effect)
+	health_component.heal_taken.connect(_on_heal_taken)
+	_update_life_display()
 
 func _on_damage_taken():
 	if is_in_lobby:
@@ -40,6 +42,14 @@ func _on_damage_taken():
 				_death_sequence_summoned()
 			else:
 				_death_sequence()
+	
+	_update_life_display()
+
+
+func _on_heal_taken() -> void:
+	#TODO: heal animation ?
+	_update_life_display()
+
 
 func _lobby_damage_taken():
 	if health_component.health <= 0:
@@ -62,6 +72,9 @@ func _on_burn_effect():
 
 func apply_visual_burn_effect(_duration: float) -> void:
 	push_warning("apply_visual_burn_effect not implemented in ", self, ", to dissmiss this warning: override apply_visual_burn_effect with empty body (pass)")
+
+func _update_life_display() -> void:
+	push_warning("_update_life_display not implemented in ", self, ", to dissmiss this warning: override _update_life_display with empty body (pass)")
 
 func can_host_status_effect(status_id: int = 0) -> bool:
 	return !effect_ids.has(status_id)

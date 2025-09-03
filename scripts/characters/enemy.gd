@@ -118,6 +118,13 @@ func _apply_effect(creature: Creature) -> void:
 			creature.add_child(effect_instance)
 
 
+func _update_life_display() -> void:
+	var health_ratio: float = health_component.health / health_component.get_max_health()
+	#print(self, " _update_life_display, health_ratio: ", health_ratio)
+	$HealthBar.set_instance_shader_parameter("health", health_ratio)
+
+
+
 func _death_sequence_summoned() -> void:
 	# TODO: animations
 	is_dead.emit(id)

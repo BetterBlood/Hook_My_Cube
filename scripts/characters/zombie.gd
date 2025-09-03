@@ -104,6 +104,13 @@ func _on_enemy_area_3d_body_entered(_body: Node3D) -> void:
 				creature.take_damage(damage, get_type(), armor_pen)
 				_apply_effect(creature)
 
+
+#func _update_life_display() -> void:
+	#var health_ratio: float = health_component.health / health_component.get_max_health()
+	##print(self, " _update_life_display, health_ratio: ", health_ratio)
+	#$HealthBar.set_instance_shader_parameter("health", health_ratio)
+
+
 func _on_chase_area_area_entered(area: Area3D) -> void:
 	#print("_on_chase_area_area_entered")
 	target = area.get_parent()

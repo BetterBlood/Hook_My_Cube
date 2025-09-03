@@ -41,6 +41,7 @@ var temp_upgrades: Array[float] = [0, 0, 0, 0, 0]
 static var NBR_UPGRADES: int = 5
 
 signal damage_taken()
+signal heal_taken()
 var health_regen_timer: Timer = Timer.new()
 
 var speed_effects = {}
@@ -111,6 +112,7 @@ func _passive_heal() -> void:
 	if get_health_regen_per_sec() > 0.0 and health < get_max_health():
 		health = min(health + get_health_regen_per_sec() * health_regen_timer_reset, get_max_health())
 		#print(self, "::_passive_heal::health: ", health)
+		heal_taken.emit()
 	health_regen_timer.start(health_regen_timer_reset)
 
 

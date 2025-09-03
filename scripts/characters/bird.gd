@@ -35,6 +35,9 @@ var target_force: float = 10 # balanced
 func _ready() -> void:
 	super._ready()
 	
+	if is_in_lobby:
+		health_component._health_regen_per_sec = 0.5
+	
 	health_component._max_health = 5
 	health_component.health = health_component._max_health
 	health_component._max_speed = speed
@@ -281,6 +284,12 @@ func apply_visual_burn_effect(duration: float) -> void:
 	burn_applied -= 1
 	if burn_applied <= 0:
 		burn_effect.visible = false
+
+#func _update_life_display() -> void:
+	#var health_ratio: float = health_component.health / health_component.get_max_health()
+	##print(self, " _update_life_display, health_ratio: ", health_ratio)
+	#$HealthBar.set_instance_shader_parameter("health", health_ratio)
+
 
 
 func set_mob_data(human_seed: String, difficulty: int, depth_ratio: float) -> void:
