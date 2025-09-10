@@ -124,7 +124,6 @@ func _update_life_display() -> void:
 	$HealthBar.set_instance_shader_parameter("health", health_ratio)
 
 
-
 func _death_sequence_summoned() -> void:
 	# TODO: animations
 	is_dead.emit(id)

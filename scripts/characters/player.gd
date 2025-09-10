@@ -356,7 +356,10 @@ func _on_damage_taken():
 	$CanvasLayer/UI.damage_tick()
 
 func _update_life_display():
-	pass # TODO : a life bar or a visual indication for player life
+	var health_ratio: float = health_component.health / health_component.get_max_health()
+	#print(self, " _update_life_display, health_ratio: ", health_ratio)
+	$Head/HealthBar.set_instance_shader_parameter("health", health_ratio)
+	# TODO : a better visual health indication $Head/HealthBar
 
 func _on_player_area_3d_body_entered(body: Node3D) -> void:
 	# TODO: unused for the moment, could be used when the player need to react to something physical hitting him
