@@ -2,7 +2,7 @@ extends CharacterBody3D
 
 class_name Creature
 
-@export var id: int
+@export var id: int = -1
 @export var is_in_lobby: bool = false
 signal is_dead(id: int)
 

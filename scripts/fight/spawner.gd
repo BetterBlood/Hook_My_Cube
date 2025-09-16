@@ -162,9 +162,15 @@ func _set_target_for_all(creature: Creature, _bird_id: int) -> void:
 			#mob.set_target(creature)
 
 func _register_creature(creature: Creature, bird_id: int) -> void:
+	#if creature is Player:
+		#print("spawner::_register_creature creature: ", creature)
 	for mob in current_mobs:
+		#if creature is Player:
+			#print("\tmob: ", mob, ", mob.id: ", mob.id, ", bird_id: ", bird_id, ", creature.id: ", creature.id, ", potential_boids_id: ", potential_boids_id)
 		if mob and mob.id == bird_id and creature.id not in potential_boids_id:
-			mob.set_creature_to_listen(creature)
+			#if creature is Player:
+				#print("\tcall listen !!")
+			(mob as Bird).set_creature_to_listen(creature)
 			return
 
 func _unregister_creature(creature: Creature, bird_id: int) -> void:

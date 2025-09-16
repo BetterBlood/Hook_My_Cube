@@ -189,7 +189,8 @@ func set_target(new_target: Creature) -> void:
 	$Meshes/Eye2.set_surface_override_material(0, preload("res://materials/difficulties/mazo.tres"))
 
 func set_creature_to_listen(new_target: Creature) -> void:
-	#print("Bird::set_creature_to_listen: ", new_target)
+	#if new_target is Player: 
+		#print("Bird::set_creature_to_listen: ", new_target)
 	new_target.health_component.damage_taken.connect(potential_target_take_damage.bind(new_target))
 	new_target.is_dead.connect(potential_target_dead)
 
@@ -203,7 +204,7 @@ func potential_target_dead(dead_target_id: int) -> void:
 		$Meshes/Eye2.set_surface_override_material(0, null)
 
 func potential_target_take_damage(curr_target: Creature) -> void:
-	#print("Bird::potential_target_take_damage")
+	#print("Bird::potential_target_take_damage: curr_target: ", curr_target)
 	if spawner and curr_target.health_component.health > 0: spawner.damage_taken_close_to_bird(curr_target, id)
 
 func remove_creature_to_listen(old_target: Creature) -> void:
