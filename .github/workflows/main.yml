@@ -1,45 +1,154 @@
-name: Godot builds
+name: Godot builds for windows, linux and macOs. New release on success
 
+permissions:
+  contents: write
+  
 on:
   push:
     branches: [ test ]
   pull_request:
     branches: [ test ]
-
   workflow_dispatch:
-  
-jobs:
-  build:
-    runs-on: ubuntu-latest
+    inputs:
+      suffix:
+        description: "Version suffix (-alpha, -beta, -test or empty)"
+        required: false
+        default: "-alpha"
+        type: choice
+        options:
+          - "-alpha"
+          - "-beta"
+          - "-test"
+          - " "
 
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
-      
-      - name: test
-        run: echo test (begin)
-
-        
-      - name: Godot Export
-        # You may pin to the exact commit or the version.
-        # uses: firebelley/godot-export@930577654862a320eef793f399ee911b4479efb9
+      - name: Export Linux build
         uses: firebelley/godot-export@v7.0.0
         with:
-          # The download url of the Linux Headless Godot executable.
-          godot_executable_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_mono_win64.zip
-          # The url of the export templates corresponding to the Godot executable version.
+          godot_executable_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_linux.x86_64.zip
           godot_export_templates_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_mono_export_templates.tpz
-          # The path relative to the root of the git repository that contains the "project.godot" file.
           relative_project_path: ./
-          # If provided, exports will be moved to this directory relative to the root of the Git repository. This setting is overridden by "use_preset_export_path".
-          relative_export_path: release/tmp
-          # If "true" the --verbose flag will be added when exporting Godot projects.
+          relative_export_path: build/linux
           verbose: true
-          # Build using Godot 3 executable (NOTE: `godot_executable_download_url` and `godot_export_templates_download_url` still need to be configured to download the correct version.)
-          use_godot_3: false
 
-          create_release: true
-          
-          
-      - name: test
-        run: echo test (end)
+      - name: Upload Linux artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-build
+          path: build/linux
+
+  build-windows:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Export Windows build
+        uses: firebelley/godot-export@v7.0.0
+        with:
+          godot_executable_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_linux.x86_64.zip
+          godot_export_templates_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_mono_export_templates.tpz
+          relative_project_path: ./
+          relative_export_path: build/windows
+          verbose: true
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: build/windows
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Export macOS build
+        uses: firebelley/godot-export@v7.0.0
+        with:
+          godot_executable_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_mono_macos.universal.zip
+          godot_export_templates_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_mono_export_templates.tpz
+          relative_project_path: ./
+          relative_export_path: build/macos
+          verbose: true
+
+      - name: Upload macOS artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-build
+          path: build/macos
+
+  release:
+    needs: [build-linux, build-windows, build-macos]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # access to git tags
+
+      - name: Get last version tag
+        id: get_version
+        run: |
+          # Get last tag (ex: v0.7.4-alpha or v0.7.4)
+          last_tag=$(git describe --tags --abbrev=0)
+
+          # Remove "v" and the eventual suffix (-alpha, -beta, etc.)
+          base_version=$(echo "$last_tag" | sed -E 's/^v//' | sed -E 's/-.*//')
+
+          major=$(echo $base_version | cut -d. -f1)
+          minor=$(echo $base_version | cut -d. -f2)
+          patch=$(echo $base_version | cut -d. -f3)
+
+          # Suffix from input (default: -alpha)
+          suffix="${{ github.event.inputs.suffix }}"
+          if [ -z "$suffix" ]; then
+            suffix="-alpha"
+          fi
+
+          commit_msg="${{ github.event.head_commit.message }}"
+
+          if [[ "$commit_msg" =~ ^[Bb]ug\ fix ]]; then
+            # Patch increment
+            patch=$((patch + 1))
+          else
+            # Minor increment + patch reset
+            minor=$((minor + 1))
+            patch=0
+          fi
+
+          new_version="v${major}.${minor}.${patch}${suffix}"
+
+          echo "NEW_VERSION=$new_version" >> $GITHUB_ENV
+          echo "SUFFIX=$suffix" >> $GITHUB_ENV
+          echo "Calculated new version: $new_version"
+
+      - name: Push new git tag
+        if: env.SUFFIX != '-test'
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git tag $NEW_VERSION
+          git push origin $NEW_VERSION
+
+      - name: Download all artifacts
+        if: env.SUFFIX != '-test'
+        uses: actions/download-artifact@v4
+        with:
+          path: release
+
+      - name: Create GitHub Release
+        if: env.SUFFIX != '-test'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.NEW_VERSION }}
+          name: "Release ${{ env.NEW_VERSION }}"
+          files: |
+            release/linux-build/**
+            release/windows-build/**
+            release/macos-build/**
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
