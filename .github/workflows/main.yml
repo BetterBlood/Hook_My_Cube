@@ -1,8 +1,8 @@
-name: Godot builds for windows, linux and macOs. New release on success
+name: Godot CI/CD – Linux, Windows, macOS + Release
 
 permissions:
   contents: write
-  
+
 on:
   push:
     branches: [ test ]
@@ -14,15 +14,46 @@ on:
         description: "Version suffix (-alpha, -beta, -test or empty)"
         required: false
         default: "-alpha"
-        type: choice
-        options:
-          - "-alpha"
-          - "-beta"
-          - "-test"
-          - " "
 
 jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      new_version: ${{ steps.setver.outputs.new_version }}
+      suffix: ${{ steps.setver.outputs.suffix }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Calculate next version
+        id: setver
+        run: |
+          last_tag=$(git describe --tags --abbrev=0)
+          base=$(echo "$last_tag" | sed -E 's/^v//' | sed -E 's/-.*//')
+          major=$(echo $base | cut -d. -f1)
+          minor=$(echo $base | cut -d. -f2)
+          patch=$(echo $base | cut -d. -f3)
+
+          suffix="${{ github.event.inputs.suffix }}"
+          if [ -z "$suffix" ]; then suffix="-alpha"; fi
+
+          commit_msg="${{ github.event.head_commit.message }}"
+          if [[ "$commit_msg" =~ ^[Bb]ug\ fix ]]; then
+            patch=$((patch+1))
+          else
+            minor=$((minor+1))
+            patch=0
+          fi
+
+          new="v${major}.${minor}.${patch}${suffix}"
+
+          echo "new_version=$new" >> $GITHUB_OUTPUT
+          echo "suffix=$suffix" >> $GITHUB_OUTPUT
+          echo "Next version: $new"
+
   build-linux:
+    needs: version
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -31,18 +62,22 @@ jobs:
         uses: firebelley/godot-export@v7.0.0
         with:
           godot_executable_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_linux.x86_64.zip
-          godot_export_templates_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_mono_export_templates.tpz
+          godot_export_templates_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_export_templates.tpz
           relative_project_path: ./
           relative_export_path: build/linux
           verbose: true
 
-      - name: Upload Linux artifact
-        uses: actions/upload-artifact@v4
+      - name: Zip Linux
+        run: |
+          zip -r linux-${{ needs.version.outputs.new_version }}.zip build/linux
+
+      - uses: actions/upload-artifact@v4
         with:
-          name: linux-build
-          path: build/linux
+          name: linux
+          path: linux-${{ needs.version.outputs.new_version }}.zip
 
   build-windows:
+    needs: version
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -51,18 +86,22 @@ jobs:
         uses: firebelley/godot-export@v7.0.0
         with:
           godot_executable_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_linux.x86_64.zip
-          godot_export_templates_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_mono_export_templates.tpz
+          godot_export_templates_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_export_templates.tpz
           relative_project_path: ./
           relative_export_path: build/windows
           verbose: true
 
-      - name: Upload Windows artifact
-        uses: actions/upload-artifact@v4
+      - name: Zip Windows
+        run: |
+          zip -r windows-${{ needs.version.outputs.new_version }}.zip build/windows
+
+      - uses: actions/upload-artifact@v4
         with:
-          name: windows-build
-          path: build/windows
+          name: windows
+          path: windows-${{ needs.version.outputs.new_version }}.zip
 
   build-macos:
+    needs: version
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
@@ -70,85 +109,47 @@ jobs:
       - name: Export macOS build
         uses: firebelley/godot-export@v7.0.0
         with:
-          godot_executable_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_mono_macos.universal.zip
-          godot_export_templates_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_mono_export_templates.tpz
+          godot_executable_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_macos.universal.zip
+          godot_export_templates_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_export_templates.tpz
           relative_project_path: ./
           relative_export_path: build/macos
           verbose: true
 
-      - name: Upload macOS artifact
-        uses: actions/upload-artifact@v4
+      - name: Zip macOS
+        run: |
+          zip -r macos-${{ needs.version.outputs.new_version }}.zip build/macos
+
+      - uses: actions/upload-artifact@v4
         with:
-          name: macos-build
-          path: build/macos
+          name: macos
+          path: macos-${{ needs.version.outputs.new_version }}.zip
 
   release:
-    needs: [build-linux, build-windows, build-macos]
+    needs: [version, build-linux, build-windows, build-macos]
     runs-on: ubuntu-latest
+    if: needs.version.outputs.suffix != '-test'
     steps:
       - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0 # access to git tags
 
-      - name: Get last version tag
-        id: get_version
-        run: |
-          # Get last tag (ex: v0.7.4-alpha or v0.7.4)
-          last_tag=$(git describe --tags --abbrev=0)
-
-          # Remove "v" and the eventual suffix (-alpha, -beta, etc.)
-          base_version=$(echo "$last_tag" | sed -E 's/^v//' | sed -E 's/-.*//')
-
-          major=$(echo $base_version | cut -d. -f1)
-          minor=$(echo $base_version | cut -d. -f2)
-          patch=$(echo $base_version | cut -d. -f3)
-
-          # Suffix from input (default: -alpha)
-          suffix="${{ github.event.inputs.suffix }}"
-          if [ -z "$suffix" ]; then
-            suffix="-alpha"
-          fi
-
-          commit_msg="${{ github.event.head_commit.message }}"
-
-          if [[ "$commit_msg" =~ ^[Bb]ug\ fix ]]; then
-            # Patch increment
-            patch=$((patch + 1))
-          else
-            # Minor increment + patch reset
-            minor=$((minor + 1))
-            patch=0
-          fi
-
-          new_version="v${major}.${minor}.${patch}${suffix}"
-
-          echo "NEW_VERSION=$new_version" >> $GITHUB_ENV
-          echo "SUFFIX=$suffix" >> $GITHUB_ENV
-          echo "Calculated new version: $new_version"
-
-      - name: Push new git tag
-        if: env.SUFFIX != '-test'
+      - name: Push git tag
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git tag $NEW_VERSION
-          git push origin $NEW_VERSION
+          git tag ${{ needs.version.outputs.new_version }}
+          git push origin ${{ needs.version.outputs.new_version }}
 
-      - name: Download all artifacts
-        if: env.SUFFIX != '-test'
-        uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v4
         with:
           path: release
 
-      - name: Create GitHub Release
-        if: env.SUFFIX != '-test'
+      - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ env.NEW_VERSION }}
-          name: "Release ${{ env.NEW_VERSION }}"
+          tag_name: ${{ needs.version.outputs.new_version }}
+          name: "Release ${{ needs.version.outputs.new_version }}"
           files: |
-            release/linux-build/**
-            release/windows-build/**
-            release/macos-build/**
+            release/linux/*.zip
+            release/windows/*.zip
+            release/macos/*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
