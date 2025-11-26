@@ -78,6 +78,7 @@ jobs:
           godot_export_templates_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_export_templates.tpz
           relative_project_path: ./
           relative_export_path: build/linux
+          export_preset_name: "Linux"
           verbose: true
 
       - name: Show build/linux contents (debug)
@@ -89,9 +90,8 @@ jobs:
       - name: Zip Linux (only build/linux content)
         run: |
           mkdir -p artifacts
-          pushd build/linux || exit 1
-          # zip the content of build/linux, not the sibling folders
-          zip -r ../../artifacts/linux-${{ needs.version.outputs.new_version }}.zip ./*
+          pushd build/linux/Linux || exit 1
+          zip -r ../../../artifacts/linux-${{ needs.version.outputs.new_version }}.zip ./*
           popd
 
       - name: Upload Linux artifact
@@ -102,32 +102,32 @@ jobs:
 
   build-windows:
     needs: [version, prepare-artifacts]
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
       - name: Export Windows build
         uses: firebelley/godot-export@v7.0.0
         with:
-          godot_executable_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_mono_win64.zip
+          godot_executable_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_linux.x86_64.zip
           godot_export_templates_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_export_templates.tpz
           relative_project_path: ./
           relative_export_path: build/windows
+          export_preset_name: "Windows Desktop"
           verbose: true
 
       - name: Show build/windows contents (debug)
         run: |
           echo "Contents of build/windows:"
-          gci build/windows
-        shell: powershell
+          ls -la build/windows || true
+          find build/windows -maxdepth 2 -type f -print || true
 
       - name: Zip Windows (only build/windows content)
         run: |
-          $zipPath = "artifacts/windows-${{ needs.version.outputs.new_version }}.zip"
           mkdir -p artifacts
-          # Compresse le contenu du dossier build/windows vers le zip
-          Compress-Archive -Path build/windows\* -DestinationPath $zipPath
-        shell: powershell
+          pushd "build/windows/Windows Desktop" || exit 1
+          zip -r ../../../artifacts/windows-${{ needs.version.outputs.new_version }}.zip ./*
+          popd
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
@@ -148,6 +148,7 @@ jobs:
           godot_export_templates_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_export_templates.tpz
           relative_project_path: ./
           relative_export_path: build/macos
+          export_preset_name: "macOS"
           verbose: true
 
       - name: Show build/macos contents (debug)
@@ -159,8 +160,8 @@ jobs:
       - name: Zip macOS (only build/macos content)
         run: |
           mkdir -p artifacts
-          pushd build/macos || exit 1
-          zip -r ../../artifacts/macos-${{ needs.version.outputs.new_version }}.zip ./*
+          pushd build/macos/macOS || exit 1
+          zip -r ../../../artifacts/macos-${{ needs.version.outputs.new_version }}.zip ./*
           popd
 
       - name: Upload macOS artifact
