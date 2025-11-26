@@ -50,7 +50,7 @@ jobs:
           commit_msg="${{ github.event.head_commit.message }}"
           manual_bug_fix="${{ toJSON(github.event.inputs.is_bug_fix_manual) }}"
           
-          if [[ "$commit_msg" =~ ^[Bb]ug\ fix ]] || [[ "$manual_bug_fix" == "true"]]; then
+          if [[ "$commit_msg" =~ ^[Bb]ug\ fix || "$manual_bug_fix" == "true" ]]; then
             patch=$((patch+1))
           else
             minor=$((minor+1))
