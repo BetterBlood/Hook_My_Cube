@@ -87,7 +87,7 @@ jobs:
       - name: Zip Linux
         run: |
           mkdir -p artifacts
-          zip -j artifacts/linux-${{ needs.version.outputs.new_version }}.zip build/linux/*
+          zip -j artifacts/linux-${{ needs.version.outputs.new_version }}.zip exports/linux/*
 
       - name: Upload Linux artifact
         uses: actions/upload-artifact@v4
@@ -117,7 +117,7 @@ jobs:
       - name: Zip Windows
         run: |
           mkdir -p artifacts
-          zip -j artifacts/windows-${{ needs.version.outputs.new_version }}.zip build/windows/*
+          zip -j artifacts/windows-${{ needs.version.outputs.new_version }}.zip exports/windows/*
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
@@ -147,7 +147,7 @@ jobs:
       - name: Zip macOS
         run: |
           mkdir -p artifacts
-          zip -j artifacts/macos-${{ needs.version.outputs.new_version }}.zip build/macos/*
+          zip -j artifacts/macos-${{ needs.version.outputs.new_version }}.zip exports/macos/*
 
       - name: Upload macOS artifact
         uses: actions/upload-artifact@v4
