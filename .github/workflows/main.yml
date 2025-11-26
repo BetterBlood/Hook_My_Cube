@@ -5,15 +5,22 @@ permissions:
 
 on:
   push:
-    branches: [ test ]
+    branches:
+      - main
+      - test
   pull_request:
-    branches: [ test ]
+    branches: [ main ]
   workflow_dispatch:
     inputs:
       suffix:
         description: "Version suffix (-alpha, -beta, -test or empty)"
         required: false
         default: "-alpha"
+      is_bug_fix_manual:
+        description: 'Simuler un "bug fix" (incrémente le PATCH de version)'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   version:
@@ -36,11 +43,14 @@ jobs:
           minor=$(echo $base | cut -d. -f2)
           patch=$(echo $base | cut -d. -f3)
 
-          suffix="${{ github.event.inputs.suffix }}"
+          suffix="${{ toJSON(github.event.inputs.suffix) }}"
+          
           if [ -z "$suffix" ]; then suffix="-alpha"; fi
 
           commit_msg="${{ github.event.head_commit.message }}"
-          if [[ "$commit_msg" =~ ^[Bb]ug\ fix ]]; then
+          manual_bug_fix="${{ toJSON(github.event.inputs.is_bug_fix_manual) }}"
+          
+          if [[ "$commit_msg" =~ ^[Bb]ug\ fix ]] || [[ "$manual_bug_fix" == "true"]]; then
             patch=$((patch+1))
           else
             minor=$((minor+1))
@@ -173,7 +183,9 @@ jobs:
   release:
     needs: [version, build-linux, build-windows, build-macos]
     runs-on: ubuntu-latest
-    if: needs.version.outputs.suffix != '-test'
+    if: |
+      github.event_name == 'push' && github.ref == 'refs/heads/main' ||
+      github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/test'
     steps:
       - uses: actions/checkout@v3
         with:
