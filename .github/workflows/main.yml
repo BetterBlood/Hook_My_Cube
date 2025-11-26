@@ -53,11 +53,20 @@ jobs:
           echo "suffix=$suffix" >> $GITHUB_OUTPUT
           echo "Calculated new version: $new"
 
-  # ================================
-  # LINUX
-  # ================================
+  prepare-artifacts:
+    needs: version
+    runs-on: ubuntu-latest
+    outputs:
+      artifacts_path: ${{ steps.set.outputs.path }}
+    steps:
+      - name: Make artifacts dir
+        id: set
+        run: |
+          mkdir -p artifacts
+          echo "path=artifacts" >> $GITHUB_OUTPUT
+
   build-linux:
-    needs: [version]
+    needs: [version, prepare-artifacts]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -65,17 +74,25 @@ jobs:
       - name: Export Linux build
         uses: firebelley/godot-export@v7.0.0
         with:
-          preset: "Linux"
           godot_executable_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_linux.x86_64.zip
           godot_export_templates_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_export_templates.tpz
           relative_project_path: ./
-          relative_export_path: exports/linux
+          relative_export_path: build/linux
           verbose: true
 
-      - name: Zip Linux
+      - name: Show build/linux contents (debug)
+        run: |
+          echo "Contents of build/linux:"
+          ls -la build/linux || true
+          find build/linux -maxdepth 2 -type f -print || true
+
+      - name: Zip Linux (only build/linux content)
         run: |
           mkdir -p artifacts
-          zip -j artifacts/linux-${{ needs.version.outputs.new_version }}.zip exports/linux/*
+          pushd build/linux || exit 1
+          # zip the content of build/linux, not the sibling folders
+          zip -r ../../artifacts/linux-${{ needs.version.outputs.new_version }}.zip ./*
+          popd
 
       - name: Upload Linux artifact
         uses: actions/upload-artifact@v4
@@ -83,11 +100,8 @@ jobs:
           name: linux-${{ needs.version.outputs.new_version }}
           path: artifacts/linux-${{ needs.version.outputs.new_version }}.zip
 
-  # ================================
-  # WINDOWS
-  # ================================
   build-windows:
-    needs: [version]
+    needs: [version, prepare-artifacts]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -95,17 +109,24 @@ jobs:
       - name: Export Windows build
         uses: firebelley/godot-export@v7.0.0
         with:
-          preset: "Windows Desktop"
           godot_executable_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_linux.x86_64.zip
           godot_export_templates_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_export_templates.tpz
           relative_project_path: ./
-          relative_export_path: exports/windows
+          relative_export_path: build/windows
           verbose: true
 
-      - name: Zip Windows
+      - name: Show build/windows contents (debug)
+        run: |
+          echo "Contents of build/windows:"
+          ls -la build/windows || true
+          find build/windows -maxdepth 2 -type f -print || true
+
+      - name: Zip Windows (only build/windows content)
         run: |
           mkdir -p artifacts
-          zip -j artifacts/windows-${{ needs.version.outputs.new_version }}.zip exports/windows/*
+          pushd build/windows || exit 1
+          zip -r ../../artifacts/windows-${{ needs.version.outputs.new_version }}.zip ./*
+          popd
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
@@ -113,11 +134,8 @@ jobs:
           name: windows-${{ needs.version.outputs.new_version }}
           path: artifacts/windows-${{ needs.version.outputs.new_version }}.zip
 
-  # ================================
-  # MACOS
-  # ================================
   build-macos:
-    needs: [version]
+    needs: [version, prepare-artifacts]
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
@@ -125,17 +143,24 @@ jobs:
       - name: Export macOS build
         uses: firebelley/godot-export@v7.0.0
         with:
-          preset: "macOS"
           godot_executable_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_macos.universal.zip
           godot_export_templates_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_export_templates.tpz
           relative_project_path: ./
-          relative_export_path: exports/macos
+          relative_export_path: build/macos
           verbose: true
 
-      - name: Zip macOS
+      - name: Show build/macos contents (debug)
+        run: |
+          echo "Contents of build/macos:"
+          ls -la build/macos || true
+          find build/macos -maxdepth 2 -type f -print || true
+
+      - name: Zip macOS (only build/macos content)
         run: |
           mkdir -p artifacts
-          zip -j artifacts/macos-${{ needs.version.outputs.new_version }}.zip exports/macos/*
+          pushd build/macos || exit 1
+          zip -r ../../artifacts/macos-${{ needs.version.outputs.new_version }}.zip ./*
+          popd
 
       - name: Upload macOS artifact
         uses: actions/upload-artifact@v4
@@ -143,9 +168,6 @@ jobs:
           name: macos-${{ needs.version.outputs.new_version }}
           path: artifacts/macos-${{ needs.version.outputs.new_version }}.zip
 
-  # ================================
-  # RELEASE
-  # ================================
   release:
     needs: [version, build-linux, build-windows, build-macos]
     runs-on: ubuntu-latest
@@ -173,14 +195,55 @@ jobs:
           name: macos-${{ needs.version.outputs.new_version }}
           path: release/macos
 
-      - name: Create GitHub Release
+      - name: Ensure the three zip files exist (fail early if not)
+        run: |
+          echo "Looking for release zips..."
+          ls -la release || true
+          test -f "release/linux/linux-${{ needs.version.outputs.new_version }}.zip" || (echo "Missing linux zip" && exit 1)
+          test -f "release/windows/windows-${{ needs.version.outputs.new_version }}.zip" || (echo "Missing windows zip" && exit 1)
+          test -f "release/macos/macos-${{ needs.version.outputs.new_version }}.zip" || (echo "Missing macos zip" && exit 1)
+
+      - name: Check if release already exists for tag
+        id: check_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG=${{ needs.version.outputs.new_version }}
+          owner="${{ github.repository_owner }}"
+          repo="$(basename ${{ github.repository }})"
+          release_info=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+            "https://api.github.com/repos/${{ github.repository }}/releases/tags/${TAG}" || true)
+          # If the API returns a release object it will have an "id" field
+          echo "$release_info" | jq -e '.id' >/dev/null 2>&1 && echo "exists=true" || echo "exists=false"
+          exists=$(echo "$release_info" | jq -r '.id // empty')
+          if [ -n "$exists" ]; then
+            echo "release_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "release_exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Push new git tag (only if release doesn't exist)
+        if: steps.check_release.outputs.release_exists == 'false'
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git tag ${{ needs.version.outputs.new_version }} || true
+          git push origin ${{ needs.version.outputs.new_version }} || true
+
+      - name: Create GitHub Release (only if release doesn't exist)
+        if: steps.check_release.outputs.release_exists == 'false'
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ needs.version.outputs.new_version }}
           name: "Release ${{ needs.version.outputs.new_version }}"
           files: |
-            release/linux/*.zip
-            release/windows/*.zip
-            release/macos/*.zip
+            release/linux/linux-${{ needs.version.outputs.new_version }}.zip
+            release/windows/windows-${{ needs.version.outputs.new_version }}.zip
+            release/macos/macos-${{ needs.version.outputs.new_version }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Release already exists message
+        if: steps.check_release.outputs.release_exists == 'true'
+        run: |
+          echo "A release already exists for tag ${{ needs.version.outputs.new_version }} — skipping creation."
