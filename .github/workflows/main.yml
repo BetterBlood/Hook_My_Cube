@@ -19,17 +19,18 @@ jobs:
   version:
     runs-on: ubuntu-latest
     outputs:
-      new_version: ${{ steps.setver.outputs.new_version }}
-      suffix: ${{ steps.setver.outputs.suffix }}
+      new_version: ${{ steps.calc.outputs.new_version }}
+      suffix: ${{ steps.calc.outputs.suffix }}
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
       - name: Calculate next version
-        id: setver
+        id: calc
         run: |
-          last_tag=$(git describe --tags --abbrev=0)
+          # get last tag
+          last_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0-alpha")
           base=$(echo "$last_tag" | sed -E 's/^v//' | sed -E 's/-.*//')
           major=$(echo $base | cut -d. -f1)
           minor=$(echo $base | cut -d. -f2)
@@ -50,10 +51,22 @@ jobs:
 
           echo "new_version=$new" >> $GITHUB_OUTPUT
           echo "suffix=$suffix" >> $GITHUB_OUTPUT
-          echo "Next version: $new"
+          echo "Calculated new version: $new"
+
+  prepare-artifacts:
+    needs: version
+    runs-on: ubuntu-latest
+    outputs:
+      artifacts_path: ${{ steps.set.outputs.path }}
+    steps:
+      - name: Make artifacts dir
+        id: set
+        run: |
+          mkdir -p artifacts
+          echo "path=artifacts" >> $GITHUB_OUTPUT
 
   build-linux:
-    needs: version
+    needs: [version, prepare-artifacts]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -67,17 +80,28 @@ jobs:
           relative_export_path: build/linux
           verbose: true
 
-      - name: Zip Linux
+      - name: Show build/linux contents (debug)
         run: |
-          zip -r linux-${{ needs.version.outputs.new_version }}.zip build/linux
+          echo "Contents of build/linux:"
+          ls -la build/linux || true
+          find build/linux -maxdepth 2 -type f -print || true
 
-      - uses: actions/upload-artifact@v4
+      - name: Zip Linux (only build/linux content)
+        run: |
+          mkdir -p artifacts
+          pushd build/linux || exit 1
+          # zip the content of build/linux, not the sibling folders
+          zip -r ../../artifacts/linux-${{ needs.version.outputs.new_version }}.zip ./*
+          popd
+
+      - name: Upload Linux artifact
+        uses: actions/upload-artifact@v4
         with:
-          name: linux
-          path: linux-${{ needs.version.outputs.new_version }}.zip
+          name: linux-${{ needs.version.outputs.new_version }}
+          path: artifacts/linux-${{ needs.version.outputs.new_version }}.zip
 
   build-windows:
-    needs: version
+    needs: [version, prepare-artifacts]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -91,17 +115,27 @@ jobs:
           relative_export_path: build/windows
           verbose: true
 
-      - name: Zip Windows
+      - name: Show build/windows contents (debug)
         run: |
-          zip -r windows-${{ needs.version.outputs.new_version }}.zip build/windows
+          echo "Contents of build/windows:"
+          ls -la build/windows || true
+          find build/windows -maxdepth 2 -type f -print || true
 
-      - uses: actions/upload-artifact@v4
+      - name: Zip Windows (only build/windows content)
+        run: |
+          mkdir -p artifacts
+          pushd build/windows || exit 1
+          zip -r ../../artifacts/windows-${{ needs.version.outputs.new_version }}.zip ./*
+          popd
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
         with:
-          name: windows
-          path: windows-${{ needs.version.outputs.new_version }}.zip
+          name: windows-${{ needs.version.outputs.new_version }}
+          path: artifacts/windows-${{ needs.version.outputs.new_version }}.zip
 
   build-macos:
-    needs: version
+    needs: [version, prepare-artifacts]
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
@@ -115,14 +149,24 @@ jobs:
           relative_export_path: build/macos
           verbose: true
 
-      - name: Zip macOS
+      - name: Show build/macos contents (debug)
         run: |
-          zip -r macos-${{ needs.version.outputs.new_version }}.zip build/macos
+          echo "Contents of build/macos:"
+          ls -la build/macos || true
+          find build/macos -maxdepth 2 -type f -print || true
 
-      - uses: actions/upload-artifact@v4
+      - name: Zip macOS (only build/macos content)
+        run: |
+          mkdir -p artifacts
+          pushd build/macos || exit 1
+          zip -r ../../artifacts/macos-${{ needs.version.outputs.new_version }}.zip ./*
+          popd
+
+      - name: Upload macOS artifact
+        uses: actions/upload-artifact@v4
         with:
-          name: macos
-          path: macos-${{ needs.version.outputs.new_version }}.zip
+          name: macos-${{ needs.version.outputs.new_version }}
+          path: artifacts/macos-${{ needs.version.outputs.new_version }}.zip
 
   release:
     needs: [version, build-linux, build-windows, build-macos]
@@ -130,26 +174,76 @@ jobs:
     if: needs.version.outputs.suffix != '-test'
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-      - name: Push git tag
+      - name: Download Linux artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-${{ needs.version.outputs.new_version }}
+          path: release/linux
+
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-${{ needs.version.outputs.new_version }}
+          path: release/windows
+
+      - name: Download macOS artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: macos-${{ needs.version.outputs.new_version }}
+          path: release/macos
+
+      - name: Ensure the three zip files exist (fail early if not)
+        run: |
+          echo "Looking for release zips..."
+          ls -la release || true
+          test -f "release/linux/linux-${{ needs.version.outputs.new_version }}.zip" || (echo "Missing linux zip" && exit 1)
+          test -f "release/windows/windows-${{ needs.version.outputs.new_version }}.zip" || (echo "Missing windows zip" && exit 1)
+          test -f "release/macos/macos-${{ needs.version.outputs.new_version }}.zip" || (echo "Missing macos zip" && exit 1)
+
+      - name: Check if release already exists for tag
+        id: check_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG=${{ needs.version.outputs.new_version }}
+          owner="${{ github.repository_owner }}"
+          repo="$(basename ${{ github.repository }})"
+          release_info=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+            "https://api.github.com/repos/${{ github.repository }}/releases/tags/${TAG}" || true)
+          # If the API returns a release object it will have an "id" field
+          echo "$release_info" | jq -e '.id' >/dev/null 2>&1 && echo "exists=true" || echo "exists=false"
+          exists=$(echo "$release_info" | jq -r '.id // empty')
+          if [ -n "$exists" ]; then
+            echo "release_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "release_exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Push new git tag (only if release doesn't exist)
+        if: steps.check_release.outputs.release_exists == 'false'
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git tag ${{ needs.version.outputs.new_version }}
-          git push origin ${{ needs.version.outputs.new_version }}
+          git tag ${{ needs.version.outputs.new_version }} || true
+          git push origin ${{ needs.version.outputs.new_version }} || true
 
-      - uses: actions/download-artifact@v4
-        with:
-          path: release
-
-      - name: Create Release
+      - name: Create GitHub Release (only if release doesn't exist)
+        if: steps.check_release.outputs.release_exists == 'false'
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ needs.version.outputs.new_version }}
           name: "Release ${{ needs.version.outputs.new_version }}"
           files: |
-            release/linux/*.zip
-            release/windows/*.zip
-            release/macos/*.zip
+            release/linux/linux-${{ needs.version.outputs.new_version }}.zip
+            release/windows/windows-${{ needs.version.outputs.new_version }}.zip
+            release/macos/macos-${{ needs.version.outputs.new_version }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Release already exists message
+        if: steps.check_release.outputs.release_exists == 'true'
+        run: |
+          echo "A release already exists for tag ${{ needs.version.outputs.new_version }} — skipping creation."
