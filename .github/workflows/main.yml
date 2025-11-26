@@ -61,7 +61,7 @@ jobs:
           relative_export_path: build/linux
           verbose: true
 
-      - name: Debug: show build/linux
+      - name: Debug show build/linux
         run: |
           echo "== build/linux content =="
           ls -la build/linux || true
@@ -98,7 +98,7 @@ jobs:
           relative_export_path: build/windows
           verbose: true
 
-      - name: Debug: show build/windows
+      - name: Debug show build/windows
         run: |
           echo "== build/windows content =="
           ls -la build/windows || true
@@ -133,7 +133,7 @@ jobs:
           relative_export_path: build/macos
           verbose: true
 
-      - name: Debug: show build/macos
+      - name: Debug show build/macos
         run: |
           echo "== build/macos content =="
           ls -la build/macos || true
