@@ -43,7 +43,7 @@ jobs:
           minor=$(echo $base | cut -d. -f2)
           patch=$(echo $base | cut -d. -f3)
 
-          suffix="${{ toJSON(github.event.inputs.suffix) }}"
+          suffix="${{ github.event.inputs.suffix }}"
           
           if [ -z "$suffix" ]; then suffix="-alpha"; fi
 
