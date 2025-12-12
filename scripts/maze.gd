@@ -11,8 +11,8 @@ var updated_tags: Array = []
 var updated_chests: Array[int] = []
 var updated_spawners: Dictionary = {}
 
-const Logger = preload("res://scripts/CSharp/Logger.cs")
-var logger:Logger = Logger.new()
+#const Logger = preload("res://scripts/CSharp/Logger.cs")
+#var logger:Logger = Logger.new()
 
 const ICE = preload("res://materials/ice.tres")
 const ENV_VALUE = 1
@@ -52,7 +52,7 @@ var lobby_scene: PackedScene = preload("res://scenes/demo/lobby.tscn")
 
 func _ready() -> void:
 	player.current_player_name = SceneFade.player_name
-	add_child(logger)
+	#add_child(logger)
 	#logger.Info("An informational message: " + self.to_string());
 	#logger.Debug("A Debug message: " + self.to_string());
 	#

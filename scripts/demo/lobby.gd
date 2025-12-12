@@ -15,8 +15,8 @@ var unlocked_runes: Array[int] = [0]
 var gold: int = 0
 var essences: Array[int] = [0, 0, 0, 0]
 
-const Logger = preload("res://scripts/CSharp/Logger.cs")
-var logger:Logger = Logger.new()
+#const Logger = preload("res://scripts/CSharp/Logger.cs")
+#var logger:Logger = Logger.new()
 
 var debug_size: int = 3 # DEBUG
 var polyrinthe: Polyrinthe = Polyrinthe.new()
@@ -48,12 +48,12 @@ func _ready() -> void:
 	$HealthComponentUpgradeRoom/Ceil.position = $HealthComponentUpgradeRoom/Ceil.position - Vector3(0, 70, 0)
 	
 	player.current_player_name = SceneFade.player_name
-	add_child(logger)
-	logger.Info("An informational message: " + self.to_string());
-	logger.Debug("A Debug message: " + self.to_string());
+	#add_child(logger)
+	#logger.Info("An informational message: " + self.to_string());
+	#logger.Debug("A Debug message: " + self.to_string());
 	
-	for line in logger.GetLines():
-		print(line)
+	#for line in logger.GetLines():
+		#print(line)
 	print()
 	
 	add_child(polyrinthe)
