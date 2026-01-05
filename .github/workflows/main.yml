@@ -4,13 +4,13 @@ permissions:
   contents: write
 
 on:
-  push:
-    branches:
+  push: 
+    branches: 
       - main
       - test
   pull_request:
     branches: [ main ]
-  workflow_dispatch:
+  workflow_dispatch: 
     inputs:
       suffix:
         description: "Version suffix (-alpha, -beta, -test or empty)"
@@ -81,7 +81,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Export Linux build
+      - name: Export Linux build (DEBUG mode)
         uses: firebelley/godot-export@v7.0.0
         with:
           godot_executable_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_linux.x86_64.zip
@@ -89,6 +89,7 @@ jobs:
           relative_project_path: ./
           relative_export_path: build/linux
           export_preset_name: "Linux"
+          export_debug: true
           verbose: true
 
       - name: Show build/linux contents (debug)
@@ -116,7 +117,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Export Windows build
+      - name: Export Windows build (DEBUG mode with console)
         uses: firebelley/godot-export@v7.0.0
         with:
           godot_executable_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_linux.x86_64.zip
@@ -124,6 +125,7 @@ jobs:
           relative_project_path: ./
           relative_export_path: build/windows
           export_preset_name: "Windows Desktop"
+          export_debug: true
           verbose: true
 
       - name: Show build/windows contents (debug)
@@ -151,7 +153,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Export macOS build
+      - name: Export macOS build (DEBUG mode)
         uses: firebelley/godot-export@v7.0.0
         with:
           godot_executable_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_macos.universal.zip
@@ -159,6 +161,7 @@ jobs:
           relative_project_path: ./
           relative_export_path: build/macos
           export_preset_name: "macOS"
+          export_debug: true
           verbose: true
 
       - name: Show build/macos contents (debug)
@@ -193,13 +196,13 @@ jobs:
 
       - name: Download Linux artifact
         uses: actions/download-artifact@v4
-        with:
+        with: 
           name: linux-${{ needs.version.outputs.new_version }}
           path: release/linux
 
       - name: Download Windows artifact
         uses: actions/download-artifact@v4
-        with:
+        with: 
           name: windows-${{ needs.version.outputs.new_version }}
           path: release/windows
 
@@ -247,9 +250,16 @@ jobs:
       - name: Create GitHub Release (only if release doesn't exist)
         if: steps.check_release.outputs.release_exists == 'false'
         uses: softprops/action-gh-release@v1
-        with:
+        with: 
           tag_name: ${{ needs.version.outputs.new_version }}
-          name: "Release ${{ needs.version.outputs.new_version }}"
+          name: "Release ${{ needs.version.outputs.new_version }} (DEBUG)"
+          body: |
+            ⚠️ **DEBUG BUILD** - This release includes debug executables with console output for troubleshooting.
+            
+            **Changes:**
+            - Linux: Debug build with verbose logging
+            - Windows: Debug build with console window
+            - macOS: Debug build with verbose logging
           files: |
             release/linux/linux-${{ needs.version.outputs.new_version }}.zip
             release/windows/windows-${{ needs.version.outputs.new_version }}.zip
