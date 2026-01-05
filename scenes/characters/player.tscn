@@ -1,7 +1,7 @@
 [gd_scene load_steps=12 format=3 uid="uid://y1yw5naea0tu"]
 
 [ext_resource type="Script" uid="uid://cp0j2ml3yhrbt" path="res://scripts/characters/player.gd" id="1_yewv4"]
-[ext_resource type="Material" uid="uid://8o284etsqdf7" path="res://materials/shaders/health_bar.tres" id="2_kqtwu"]
+[ext_resource type="Material" uid="uid://dc0wnhgk2gfc4" path="res://materials/creatures/health_bar_color.tres" id="3_6eyoc"]
 [ext_resource type="PackedScene" uid="uid://dpx68uy1u0wsw" path="res://scenes/wip/debug_infos.tscn" id="3_76oj4"]
 [ext_resource type="PackedScene" uid="uid://bg58p3le6eq0l" path="res://scenes/fight/ui.tscn" id="4_dyp2m"]
 [ext_resource type="PackedScene" uid="uid://bwxtl2bygbfxx" path="res://scenes/decorations/pause_menu.tscn" id="5_atpat"]
@@ -17,8 +17,8 @@ material = SubResource("StandardMaterial3D_u8vuu")
 radius = 0.4
 height = 1.8
 
-[sub_resource type="QuadMesh" id="QuadMesh_atpat"]
-material = ExtResource("2_kqtwu")
+[sub_resource type="QuadMesh" id="QuadMesh_eojnx"]
+material = ExtResource("3_6eyoc")
 size = Vector2(1, 0.01)
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_yewv4"]
@@ -41,9 +41,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.782, 0)
 [node name="Camera3D" type="Camera3D" parent="Head"]
 
 [node name="HealthBar" type="MeshInstance3D" parent="Head"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.548112, -0.748786)
-mesh = SubResource("QuadMesh_atpat")
-skeleton = NodePath("../../CanvasLayer/UI")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.548, -0.749)
+mesh = SubResource("QuadMesh_eojnx")
 
 [node name="RayCast3D" type="RayCast3D" parent="Head"]
 target_position = Vector3(0, 0, -100)

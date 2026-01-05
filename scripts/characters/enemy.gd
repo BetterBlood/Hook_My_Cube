@@ -91,7 +91,6 @@ func _death_sequence() -> void:
 	get_parent().get_parent().add_child(essence_orbe)
 	essence_orbe.set_type(get_type())
 	
-	
 	is_dead.emit(id) # notify the death (for the spawner or else)
 	
 	queue_free()
@@ -121,8 +120,9 @@ func _apply_effect(creature: Creature) -> void:
 func _update_life_display() -> void:
 	var health_ratio: float = health_component.health / health_component.get_max_health()
 	#print(self, " _update_life_display, health_ratio: ", health_ratio)
-	$HealthBar.set_instance_shader_parameter("health", health_ratio)
-
+	#$HealthBar.set_instance_shader_parameter("health", health_ratio)
+	
+	call_deferred("_update_life_display_custom", health_ratio)
 
 func _death_sequence_summoned() -> void:
 	# TODO: animations

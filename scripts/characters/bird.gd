@@ -33,6 +33,7 @@ var target: Creature = null
 var target_force: float = 10 # balanced
 
 func _ready() -> void:
+	health_bar = $HealthBar
 	super._ready()
 	
 	if is_in_lobby:
@@ -57,6 +58,8 @@ func _ready() -> void:
 	base_position = global_position
 	
 	damage_area = $Meshes/Body
+	
+	health_bar_max_ratio = 0.5
 
 
 func _physics_process(delta: float) -> void:

@@ -20,6 +20,7 @@ var essences: Array[int] = [0, 0, 0, 0]
 
 var debug_size: int = 3 # DEBUG
 var polyrinthe: Polyrinthe = Polyrinthe.new()
+var hologram: Polyrinthe = Polyrinthe.new()
 @onready var player: Player = $Player
 
 var maze_scene: PackedScene = preload("res://scenes/maze.tscn")
@@ -67,6 +68,20 @@ func _ready() -> void:
 	Maze.apply_collision_layer(polyrinthe)
 	Maze.add_torch_to(polyrinthe, true)
 	
+	#_update_hologram()
+	$MazeSelectionFloor/Hologram/Hologram.add_child(hologram)
+	hologram.rotation_order = EULER_ORDER_ZXY
+	hologram.rotation = Vector3(0, 0, PI/4)
+	$MazeSelectionFloor/Hologram/Hologram.rotation = Vector3(PI/5, 0, 0)
+	hologram.debug = true
+	hologram.showWall = false
+	hologram.outWallV = -1
+	hologram.room_scale = 0.1
+	hologram.clean()
+	hologram.algo = hologram.GENERATION_ALGORITHME.DFS_LBL_ALT_6
+	maze_seed = $MazeSelectionFloor/Seed/SeedSelector.curr_seed.text
+	hologram.generate(size, "DEBUG" if SceneFade.player_name == "DEBUG" else maze_seed, [-1, -1, 1])
+	hologram.display()
 	
 	if len(all_runes) == 0:
 		all_runes = Rune.get_runes_infos()
@@ -84,9 +99,9 @@ func _ready() -> void:
 	
 	load_meta()
 	
-	_update_hologram()
-	
 	call_deferred("_init_practice_mobs")
+	call_deferred("_update_hologram")
+	call_deferred("rotate_hologram")
 	
 	SceneFade.emit_signal("lobby_loaded")
 
@@ -298,13 +313,11 @@ func _init_runes_essences_converter() -> void:
 		pedestal.set_give_type(convert_to[i])
 		pedestal.position = positions[i]
 		pedestal.rotation_degrees = rotations[i]
-	
 
 
 func _on_difficulty_selectionner_difficulty_changed(new_difficulty: int) -> void:
 	#print("lobby::_on_difficulty_selectionner_difficulty_changed new_difficulty: ", new_difficulty)
 	difficulty = new_difficulty
-	_update_hologram()
 
 
 func _on_size_selector_size_changed(new_size: int) -> void:
@@ -326,10 +339,13 @@ func _on_algo_selector_algo_changed(new_algo: Polyrinthe.GENERATION_ALGORITHME) 
 
 
 func _update_hologram() -> void:
-	# TODO: on maze param changes (and on lobby _ready function), call this to generate a small hologram of 
-	# the maze who's going to be generated, using debug option (need to update 
-	# Polyrinthes asset to reduce the debug pyramide base sizes (who's hardcoded for now))
-	pass
+	hologram.clean()
+	 
+	hologram.algo = algo
+	hologram.begin_id = begin_id
+	hologram.size = size
+	hologram.generate(size, "DEBUG" if SceneFade.player_name == "DEBUG" else maze_seed)
+	hologram.display()
 
 
 func _on_fake_portal_fake_portal_entered() -> void:
@@ -351,6 +367,7 @@ func unlock_rune(id: int, cost_value: int, cost_type: Enums.DamageType) -> bool:
 		return true
 	return false
 
+
 func convert_essences(cost_value: int, cost_type: Enums.DamageType, give_value: int, give_type: Enums.DamageType) -> bool:
 	if cost_value <= essences[cost_type]:
 		essences[cost_type] -= cost_value
@@ -358,3 +375,13 @@ func convert_essences(cost_value: int, cost_type: Enums.DamageType, give_value: 
 		save_meta()
 		return true
 	return false
+
+
+func rotate_hologram() -> void:
+	$MazeSelectionFloor/Hologram.rotation = Vector3(0, 0, 0)
+	
+	var tween = get_tree().create_tween()
+	tween.tween_property($MazeSelectionFloor/Hologram, "rotation", Vector3(0, -2*PI, 0), 30)
+	
+	await tween.finished
+	rotate_hologram()

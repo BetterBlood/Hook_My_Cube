@@ -599,6 +599,42 @@ shadow_caster_mask = 4293918721
 distance_fade_begin = 50.0
 omni_range = 45.0
 
+[node name="MazeSelectionLight2" type="OmniLight3D" parent="MazeSelectionFloor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 10, 10)
+light_energy = 4.0
+light_bake_mode = 1
+light_cull_mask = 4293918721
+shadow_caster_mask = 4293918721
+distance_fade_begin = 50.0
+omni_range = 45.0
+
+[node name="MazeSelectionLight3" type="OmniLight3D" parent="MazeSelectionFloor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 10, -10)
+light_energy = 4.0
+light_bake_mode = 1
+light_cull_mask = 4293918721
+shadow_caster_mask = 4293918721
+distance_fade_begin = 50.0
+omni_range = 45.0
+
+[node name="MazeSelectionLight4" type="OmniLight3D" parent="MazeSelectionFloor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 10, -10)
+light_energy = 4.0
+light_bake_mode = 1
+light_cull_mask = 4293918721
+shadow_caster_mask = 4293918721
+distance_fade_begin = 50.0
+omni_range = 45.0
+
+[node name="MazeSelectionLight5" type="OmniLight3D" parent="MazeSelectionFloor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 10, 10)
+light_energy = 4.0
+light_bake_mode = 1
+light_cull_mask = 4293918721
+shadow_caster_mask = 4293918721
+distance_fade_begin = 50.0
+omni_range = 45.0
+
 [node name="Floor" type="StaticBody3D" parent="MazeSelectionFloor"]
 collision_layer = 17
 
@@ -631,7 +667,7 @@ transform = Transform3D(0.992546, 0, 0.121869, 0, 1, 0, -0.121869, 0, 0.992546, 
 [node name="DifficultySelectionner" parent="MazeSelectionFloor/Difficulty" instance=ExtResource("7_pdx53")]
 
 [node name="Size" type="Node3D" parent="MazeSelectionFloor"]
-transform = Transform3D(0.992546, 0, 0.121869, 0, 1, 0, -0.121869, 0, 0.992546, 0, 0, -10)
+transform = Transform3D(0.992546, 0, 0.121869, 0, 1, 0, -0.121869, 0, 0.992546, 0, 0, 0)
 
 [node name="SizeSelector" parent="MazeSelectionFloor/Size" instance=ExtResource("7_d1p01")]
 
@@ -646,7 +682,7 @@ transform = Transform3D(0.992546, 0, 0.121869, 0, 1, 0, -0.121869, 0, 0.992546, 
 [node name="BeginIDSelector" parent="MazeSelectionFloor/BeginId" instance=ExtResource("10_f5ty6")]
 
 [node name="obstacle5" type="StaticBody3D" parent="MazeSelectionFloor"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0)
 collision_layer = 17
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="MazeSelectionFloor/obstacle5"]
@@ -661,6 +697,11 @@ transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 20, 1.
 [node name="Label3D" type="Label3D" parent="MazeSelectionFloor/FakePortal"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25219, 0.308487)
 text = "Enter the Maze !"
+
+[node name="Hologram" type="Node3D" parent="MazeSelectionFloor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -12.5)
+
+[node name="Hologram" type="Node3D" parent="MazeSelectionFloor/Hologram"]
 
 [node name="RuneUnlockedRoom" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -100, 0, -50)

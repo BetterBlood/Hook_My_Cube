@@ -12,6 +12,7 @@ var player_at_range: bool = false
 var burn_shader_mat: ShaderMaterial
 
 func _ready() -> void:
+	health_bar = $HealthBar
 	super._ready()
 	
 	if is_in_lobby:

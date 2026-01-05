@@ -37,8 +37,10 @@ var grapple: Grapple
 
 var current_player_name: String = "Peter"
 var gold: int = 0
-var xp_to_lvl_up:float = 10.0 # computed in function of lvl
+#var xp_to_lvl_up:float = 10.0 # computed in function of lvl
 var xp_left: float = 0.0 # used during lvl up
+var xp_left_2: float = 0.0 # used while not enought xp is earn
+var lvl_points: int = 0
 
 const LOOT_ORBE_RUNE = preload("res://scenes/decorations/loot_orbe_rune.tscn")
 
@@ -64,6 +66,7 @@ var icons_path: String = "res://images/icons/lvl"
 var icons_name: String = "_icon.svg"
 
 func _ready():
+	health_bar = $Head/HealthBar
 	super._ready()
 	#print("player::_ready current_player_name: " + current_player_name)
 	godMode = false
@@ -90,8 +93,15 @@ func initialize_player(meta_data, game_data) -> void:
 	active_rune = Rune.create_rune_with_id(meta_data["equiped_rune_lobby"], self)
 	active_rune.set_layet_to_hit(5)
 	_init_active_rune_visual_spot()
+	
 	health_component.set_up_perm_with_data(meta_data["health_component_upgrades"])
-	# TODO: update the lobby accordingly with the perm upgrade already bought
+	
+	var essences_owned: Array[int] = []
+	for essence in meta_data["essences"]:
+		essences_owned.append(int(essence))
+	$CanvasLayer/UI.update_essences(essences_owned)
+	gold = meta_data["gold"]
+	$CanvasLayer/UI.update_gold(gold)
 	
 	#progression data
 	if game_data == null:
@@ -113,7 +123,10 @@ func initialize_player(meta_data, game_data) -> void:
 	health_component.health = game_data["hp"]
 	lvl = game_data["lvl"]
 	xp = game_data["xp"]
-	xp_to_lvl_up = get_xp_for_leveling_up(lvl)
+	$CanvasLayer/UI.update_lvl(lvl + lvl_points, lvl_points)
+	$CanvasLayer/UI.update_essences(essences)
+	$CanvasLayer/UI.update_gold(gold)
+	#xp_to_lvl_up = get_xp_for_leveling_up(lvl)
 	
 	#print(game_data["runes"])
 	var rune1_data = game_data["runes"][0]
@@ -358,8 +371,9 @@ func _on_damage_taken():
 func _update_life_display():
 	var health_ratio: float = health_component.health / health_component.get_max_health()
 	#print(self, " _update_life_display, health_ratio: ", health_ratio)
-	$Head/HealthBar.set_instance_shader_parameter("health", health_ratio)
+	#$Head/HealthBar.set_instance_shader_parameter("health", health_ratio)
 	# TODO : a better visual health indication $Head/HealthBar
+	call_deferred("_update_life_display_custom", health_ratio)
 
 func _on_player_area_3d_body_entered(body: Node3D) -> void:
 	# TODO: unused for the moment, could be used when the player need to react to something physical hitting him
@@ -601,30 +615,54 @@ func select_grapple_upgrade(grapple_upgrade_index: int, _active_placement: bool,
 
 
 func gain_xp(value: float) -> void:
-	xp_left += value
+	#xp_left += value
+	#xp_left_2 += value
 	#print("Player gain xp amount: ", value, ", total: ", xp_left)
+	xp += value
+	
+	while xp >= get_xp_for_leveling_up(lvl + lvl_points):
+		#xp += xp_left_2
+		xp -= get_xp_for_leveling_up(lvl + lvl_points)
+		#xp_left_2 = 0
+		lvl_points += 1
+		$CanvasLayer/UI.update_lvl(lvl + lvl_points, lvl_points)
 
 
 func leveling_phase(maze_seed: String) -> void:
 	#print("Player::leveling_phase")
-	if xp_left > 0:
-		xp += xp_left
-		#xp_to_lvl_up -= xp_left
-		xp_left = 0
+	#if xp_left > 0:
+		#xp += xp_left
+		##xp_to_lvl_up -= xp_left
+		#xp_left = 0
 	
-	if xp >= xp_to_lvl_up:
-		#print("Player::leveling_phase:: lvl up !!")
+	if lvl_points > 0:
 		propose_upgrades(LootUtilities.get_loot(true, maze_seed + "lvl" + str(lvl)), try_lvl_up)
-		xp -= xp_to_lvl_up
+		#xp = xp_left_2
 		lvl += 1
-		xp_to_lvl_up = get_xp_for_leveling_up(lvl)
+		lvl_points -= 1
+		#xp_to_lvl_up = get_xp_for_leveling_up(lvl)
 		await try_lvl_up
+		$CanvasLayer/UI.update_lvl(lvl + lvl_points, lvl_points)
 		await get_tree().create_timer(0.001).timeout
 		leveling_phase(maze_seed)
 	else:
 		await get_tree().create_timer(0.001).timeout
 		#print("Player::leveling_phase:: lvl up end")
 		leveling_phase_ended.emit()
+	
+	#if xp >= xp_to_lvl_up:
+		##print("Player::leveling_phase:: lvl up !!")
+		#propose_upgrades(LootUtilities.get_loot(true, maze_seed + "lvl" + str(lvl)), try_lvl_up)
+		#xp -= xp_to_lvl_up
+		#lvl += 1
+		#xp_to_lvl_up = get_xp_for_leveling_up(lvl)
+		#await try_lvl_up
+		#await get_tree().create_timer(0.001).timeout
+		#leveling_phase(maze_seed)
+	#else:
+		#await get_tree().create_timer(0.001).timeout
+		##print("Player::leveling_phase:: lvl up end")
+		#leveling_phase_ended.emit()
 
 
 func get_xp_for_leveling_up(current_lvl: int) -> float:
@@ -634,11 +672,13 @@ func get_xp_for_leveling_up(current_lvl: int) -> float:
 
 func gain_gold(value: int) -> void:
 	gold += value
+	$CanvasLayer/UI.update_gold(gold)
 	#print("Player gain gold amount: ", value, ", new total: ", gold)
 
 
 func gain_essence(essence_type: Enums.DamageType, value: int) -> void:
 	essences[essence_type] += value
+	$CanvasLayer/UI.update_essences(essences)
 	#print("Player gain essence_type: '", essence_type, "',  amount: ", value, ", total: ", essences)
 
 

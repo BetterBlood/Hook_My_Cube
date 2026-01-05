@@ -20,6 +20,10 @@ var summoned: bool = false
 
 var burn_applied: int = 0
 
+var health_bar_max_ratio: float = 1.0
+
+var health_bar: MeshInstance3D
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	#print("Creature::_ready")
@@ -49,6 +53,9 @@ func _on_damage_taken():
 func _on_heal_taken() -> void:
 	#TODO: heal animation ?
 	_update_life_display()
+
+func _update_life_display_custom(health_ratio: float) -> void:
+	health_bar.mesh.size.x = health_bar_max_ratio * health_ratio
 
 
 func _lobby_damage_taken():

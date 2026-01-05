@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://disolp4bnher6" path="res://scripts/characters/boss.gd" id="1_imw47"]
 [ext_resource type="PackedScene" uid="uid://dnbcx272f5ff4" path="res://addons/octopus_tentacle/scene.gltf" id="2_edpq3"]
-[ext_resource type="Material" uid="uid://8o284etsqdf7" path="res://materials/shaders/health_bar.tres" id="3_r8uym"]
+[ext_resource type="Material" uid="uid://dc0wnhgk2gfc4" path="res://materials/creatures/health_bar_color.tres" id="3_r8uym"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_edpq3"]
 height = 5.0
@@ -274,6 +274,7 @@ radius = 0.01
 height = 0.02
 
 [sub_resource type="QuadMesh" id="QuadMesh_p2gyk"]
+resource_local_to_scene = true
 material = ExtResource("3_r8uym")
 size = Vector2(10, 0.7)
 
@@ -344,6 +345,7 @@ mesh = SubResource("SphereMesh_r8uym")
 [node name="HealthBar" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, 0)
 mesh = SubResource("QuadMesh_p2gyk")
+skeleton = NodePath("")
 
 [connection signal="area_entered" from="PlayerListener" to="." method="_on_player_listener_area_entered"]
 [connection signal="area_entered" from="KnockBackArea" to="." method="_on_knock_back_area_area_entered"]

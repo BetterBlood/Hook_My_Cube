@@ -82,7 +82,7 @@ func _process(_delta: float) -> void:
 		print("pressed")
 		#player.grapple.upgrade_wall()
 		#player.active_rune = RuneUpgradeBounce.new(player.active_rune)
-		player.xp += 1000
+		player.gain_xp(1000.0)
 		#_save_player_progress(size*size-1)
 		#_initialise_player()
 		#SceneFade._erase_player_progress(player.get_player_name())
@@ -240,8 +240,12 @@ func _init_tabs(
 
 func _find_last_dead_end_before_ice(maze: Polyrinthe) -> int:
 	var graphe = maze.cubeGraph
-	var deepest_dead_end_id: int = maze.begin_id # TODO if no dead_end find a better place
+	
+	var deepest_dead_end_id: int = maze.begin_id
 	var deepest_dead_end_depth: int = graphe.getDepth(maze.begin_id)
+	
+	var backup_id: int = maze.begin_id
+	var backup_depth: int = graphe.getDepth(maze.begin_id)
 	
 	var current_depth:int = deepest_dead_end_depth
 	
@@ -252,17 +256,20 @@ func _find_last_dead_end_before_ice(maze: Polyrinthe) -> int:
 		for jd: int in connections:
 			nbr_connection += 1 if jd > -1 else 0
 		
-		if nbr_connection > 1:
-			continue # not a dead-end
-		
 		current_depth = graphe.getDepth(id)
 		
-		if 		deepest_dead_end_depth < current_depth && \
-				current_depth < graphe.get_deepest() * normal_wall_proportion:
-			deepest_dead_end_id = id
-			deepest_dead_end_depth = current_depth
+		if current_depth < graphe.get_deepest() * normal_wall_proportion:
+			if backup_depth < current_depth:
+				backup_id = id
+				backup_depth = current_depth
+			
+			 # not a dead-end and not deeper
+			if nbr_connection <= 1 and deepest_dead_end_depth < current_depth:
+				deepest_dead_end_id = id
+				deepest_dead_end_depth = current_depth
 	
-	return deepest_dead_end_id
+	#print(deepest_dead_end_id, maze.begin_id, backup_id)
+	return deepest_dead_end_id if deepest_dead_end_id != maze.begin_id else backup_id
 
 
 # called on save point: save maze and player progression with the current save point id
@@ -270,6 +277,7 @@ func _save_point_activated(save_point_id: int = 0) -> void:
 	player.remove_all_status_effect()
 	player.save_progression(save_point_id)
 	_save_maze()
+
 
 # save player progression with the current save point id
 func _save_player_progress(save_point_id: int = 0) -> void: 

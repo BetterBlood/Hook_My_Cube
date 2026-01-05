@@ -21,6 +21,7 @@ const BOSS_ON_FIRE_3 = preload("res://materials/shaders/boss_on_fire_3.tres")
 var bird: PackedScene = preload("res://scenes/characters/bird.tscn")
 
 func _ready() -> void:
+	health_bar = $HealthBar
 	super._ready()
 	
 	player = get_tree().get_first_node_in_group("Player")
@@ -39,6 +40,8 @@ func _ready() -> void:
 	attack_cd = 2.0
 	id = -1
 	damage_area = $"Sketchfab_Scene/Sketchfab_model/Collada visual scene group/Cube/defaultMaterial2"
+	
+	health_bar_max_ratio = 10.0
 
 
 func _on_burn_effect(): # TODO: better fire animation
