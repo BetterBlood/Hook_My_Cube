@@ -1,4 +1,4 @@
-extends CanvasLayer
+extends Control
 
 signal new_game()
 signal continue_game()

@@ -1,11 +1,36 @@
-[gd_scene load_steps=12 format=3 uid="uid://y1yw5naea0tu"]
+[gd_scene load_steps=25 format=3 uid="uid://y1yw5naea0tu"]
 
 [ext_resource type="Script" uid="uid://cp0j2ml3yhrbt" path="res://scripts/characters/player.gd" id="1_yewv4"]
+[ext_resource type="PackedScene" uid="uid://bq86r4yll8po" path="res://addons/godot-xr-tools/hands/scenes/lowpoly/left_fullglove_low.tscn" id="2_eojnx"]
 [ext_resource type="Material" uid="uid://dc0wnhgk2gfc4" path="res://materials/creatures/health_bar_color.tres" id="3_6eyoc"]
+[ext_resource type="Material" uid="uid://bphwlg5v8xkde" path="res://materials/difficulties/kido.tres" id="3_7vyk4"]
 [ext_resource type="PackedScene" uid="uid://dpx68uy1u0wsw" path="res://scenes/wip/debug_infos.tscn" id="3_76oj4"]
+[ext_resource type="PackedScene" uid="uid://xqimcf20s2jp" path="res://addons/godot-xr-tools/hands/scenes/lowpoly/right_fullglove_low.tscn" id="3_qgnko"]
 [ext_resource type="PackedScene" uid="uid://bg58p3le6eq0l" path="res://scenes/fight/ui.tscn" id="4_dyp2m"]
+[ext_resource type="PackedScene" uid="uid://bl2nuu3qhlb5k" path="res://addons/godot-xr-tools/functions/movement_direct.tscn" id="4_xhtjm"]
+[ext_resource type="Material" uid="uid://dql877iq35we0" path="res://materials/difficulties/mazo.tres" id="5_2l4js"]
 [ext_resource type="PackedScene" uid="uid://bwxtl2bygbfxx" path="res://scenes/decorations/pause_menu.tscn" id="5_atpat"]
+[ext_resource type="PackedScene" uid="uid://b4ysuy43poobf" path="res://addons/godot-xr-tools/functions/function_pickup.tscn" id="5_k4v7y"]
+[ext_resource type="Script" uid="uid://cjc182lvsit58" path="res://scripts/characters/bridge_vr_to_normal.gd" id="6_d6tgn"]
 [ext_resource type="PackedScene" uid="uid://c4o0dbwehamwl" path="res://scenes/decorations/upgrade_menu.tscn" id="6_kqtwu"]
+[ext_resource type="PackedScene" uid="uid://b6bk2pj8vbj28" path="res://addons/godot-xr-tools/functions/movement_turn.tscn" id="8_xrqxk"]
+[ext_resource type="PackedScene" uid="uid://c2q5phg8w08o" path="res://addons/godot-xr-tools/functions/movement_jump.tscn" id="9_rpnd8"]
+[ext_resource type="PackedScene" uid="uid://cymteydkxagpp" path="res://addons/godot-xr-tools/misc/hold_button.tscn" id="10_3wg1y"]
+[ext_resource type="PackedScene" uid="uid://diyu06cw06syv" path="res://addons/godot-xr-tools/player/player_body.tscn" id="10_d6tgn"]
+[ext_resource type="Script" uid="uid://cjfu28jmrajlo" path="res://addons/godot-xr-tools/overrides/ground_physics_settings.gd" id="12_kmyvj"]
+
+[sub_resource type="Resource" id="Resource_a2luo"]
+script = ExtResource("12_kmyvj")
+flags = 0
+move_drag = 5.0
+move_traction = 30.0
+stop_on_slope = true
+move_max_slope = 45.0
+jump_max_slope = 45.0
+jump_velocity = 9.0
+bounciness = 0.0
+bounce_threshold = 1.0
+metadata/_custom_type_script = "uid://cjfu28jmrajlo"
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u8vuu"]
 albedo_color = Color(0.784314, 0.133333, 0, 1)
@@ -28,6 +53,45 @@ height = 2.2
 [node name="Player" type="CharacterBody3D" groups=["Player"]]
 collision_layer = 32770
 script = ExtResource("1_yewv4")
+
+[node name="XROrigin3D" type="XROrigin3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.782, 0)
+
+[node name="XRCamera3D" type="XRCamera3D" parent="XROrigin3D"]
+
+[node name="LeftController" type="XRController3D" parent="XROrigin3D"]
+tracker = &"left_hand"
+
+[node name="LeftHand" parent="XROrigin3D/LeftController" instance=ExtResource("2_eojnx")]
+hand_material_override = ExtResource("3_7vyk4")
+
+[node name="Move" parent="XROrigin3D/LeftController" instance=ExtResource("4_xhtjm")]
+max_speed = 7.0
+strafe = true
+
+[node name="FunctionPickup" parent="XROrigin3D/LeftController" instance=ExtResource("5_k4v7y")]
+
+[node name="RightController" type="XRController3D" parent="XROrigin3D"]
+tracker = &"right_hand"
+script = ExtResource("6_d6tgn")
+
+[node name="RightHand" parent="XROrigin3D/RightController" instance=ExtResource("3_qgnko")]
+hand_material_override = ExtResource("5_2l4js")
+
+[node name="Turn" parent="XROrigin3D/RightController" instance=ExtResource("8_xrqxk")]
+turn_mode = 2
+
+[node name="FunctionPickup" parent="XROrigin3D/RightController" instance=ExtResource("5_k4v7y")]
+
+[node name="Jump" parent="XROrigin3D/RightController" instance=ExtResource("9_rpnd8")]
+jump_button_action = "ax_button"
+
+[node name="HoldButton" parent="XROrigin3D/RightController" instance=ExtResource("10_3wg1y")]
+activate_action = "by_button"
+
+[node name="PlayerBody" parent="XROrigin3D" instance=ExtResource("10_d6tgn")]
+physics = SubResource("Resource_a2luo")
+ground_control = 1
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_3vyb7")

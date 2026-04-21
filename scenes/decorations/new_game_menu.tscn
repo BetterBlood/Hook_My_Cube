@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=3 uid="uid://da6ne6ua6jw8v"]
 
 [ext_resource type="Script" uid="uid://cpq1o6gpimc3k" path="res://scripts/decorations/new_game_menu.gd" id="1_uge4l"]
-[ext_resource type="Texture2D" uid="uid://cs3ipjs36g710" path="res://addons/polyrinthe/images/MazeInsideView_normalMode_scale2.PNG" id="2_aqtt0"]
+[ext_resource type="Texture2D" uid="uid://bc03uorga8i46" path="res://addons/polyrinthe/images/MazeInsideView_normalMode_scale2.PNG" id="2_aqtt0"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3b1u5"]
 texture = ExtResource("2_aqtt0")
@@ -52,11 +52,18 @@ corner_radius_bottom_left = 16
 shadow_size = 5
 shadow_offset = Vector2(0, 4)
 
-[node name="NewGameMenu" type="CanvasLayer"]
+[node name="NewGameMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 script = ExtResource("1_uge4l")
 
 [node name="MainPanel" type="Control" parent="."]
-layout_mode = 3
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

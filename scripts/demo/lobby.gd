@@ -31,7 +31,23 @@ const PEDESTAL_CONVERT_ESSENCES = preload("res://scenes/decorations/pedestal_con
 var bird: PackedScene = preload("res://scenes/characters/bird.tscn")
 
 
+# VR-XR stuff:
+var xr_interface: XRInterface
+
+
 func _ready() -> void:
+	# VR-XR stuff:
+	xr_interface = XRServer.find_interface("OpenXR")
+	
+	if xr_interface and xr_interface.is_initialized():
+		print("OpenXR succesfully initialized")
+		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
+		get_viewport().use_xr = true
+	else:
+		print("OpenXR failed initialization, headset probably not connected.")
+		player.remove_child(player.get_child(0))
+	
+	
 	# auto closing room
 	$MainFloor/Ceil.position = $MainFloor/Ceil.position - Vector3(0, 40, 0)
 	$MainFloor/Walls/Wall5.position = $MainFloor/Walls/Wall5.position - Vector3(0, 0, 100)

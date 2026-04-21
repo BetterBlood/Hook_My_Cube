@@ -2,8 +2,8 @@ extends Creature
 
 class_name Player
 
-const SPEED = 7.0
-const JUMP_VELOCITY = 9
+const SPEED = 7.0 # TODO: link to VR set
+const JUMP_VELOCITY = 9 # TODO: link to VR set
 @onready var head := $Head
 @onready var camera := $Head/Camera3D
 @onready var elbow: Marker3D = $Elbow

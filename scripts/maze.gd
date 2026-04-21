@@ -47,10 +47,27 @@ const FAKE_PORTAL = preload("res://scenes/movement/fake_portal.tscn")
 var boss_room: PackedScene = preload("res://scenes/boss_room.tscn")
 var lobby_scene: PackedScene = preload("res://scenes/demo/lobby.tscn")
 
+
+# VR-XR stuff:
+var xr_interface: XRInterface
+
+
+
 #func _init(new_player_name: String = "DEBUG") -> void:
 	#player_name = new_player_name
 
 func _ready() -> void:
+		# VR-XR stuff:
+	xr_interface = XRServer.find_interface("OpenXR")
+	
+	if xr_interface and xr_interface.is_initialized():
+		print("OpenXR succesfully initialized")
+		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
+		get_viewport().use_xr = true
+	else:
+		print("OpenXR failed initialization, headset probably not connected.")
+		player.remove_child(player.get_child(0))
+	
 	player.current_player_name = SceneFade.player_name
 	#add_child(logger)
 	#logger.Info("An informational message: " + self.to_string());

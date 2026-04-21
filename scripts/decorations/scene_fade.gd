@@ -2,11 +2,17 @@ extends CanvasLayer
 
 static var player_name: String = "FADE"
 
+@warning_ignore("unused_signal")
 signal lobby_loaded()
+@warning_ignore("unused_signal")
 signal maze_loaded()
+@warning_ignore("unused_signal")
 signal save_id_changed(value: int)
+@warning_ignore("unused_signal")
 signal boss_room_loaded()
+@warning_ignore("unused_signal")
 signal costs_changed()
+@warning_ignore("unused_signal")
 signal main_loaded()
 
 func _ready() -> void:

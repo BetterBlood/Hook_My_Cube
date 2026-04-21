@@ -3,38 +3,64 @@ extends Node
 var lobby_scene: PackedScene = preload("res://scenes/demo/lobby.tscn")
 var maze_scene: PackedScene = preload("res://scenes/maze.tscn")
 
+var main_menu
+var new_game_menu
+var continue_menu
+
+# VR-XR stuff:
+var xr_interface: XRInterface
 
 func _ready() -> void:
-	$MainMenu.new_game.connect(_new_game_menu)
-	$MainMenu.continue_game.connect(_continue_game_menu)
 	
-	$NewGameMenu.new_game.connect(_start_new_game)
-	$NewGameMenu.return_to_main_menu.connect(_return_to_main_menu)
-	$ContinueMenu.continue_game.connect(_continue_game)
-	$ContinueMenu.return_to_main_menu.connect(_return_to_main_menu)
-	$ContinueMenu.erase_player.connect(_remove_player)
+	# VR-XR stuff:
+	xr_interface = XRServer.find_interface("OpenXR")
+	
+	if xr_interface and xr_interface.is_initialized():
+		print("OpenXR succesfully initialized")
+		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
+		get_viewport().use_xr = true
+		
+		main_menu = $Viewport2Din3D_Main
+		new_game_menu = $Viewport2Din3D_NewGame
+		continue_menu = $Viewport2Din3D_Continue
+	else:
+		print("OpenXR failed initialization, headset probably not connected.")
+		$XROrigin3D.queue_free()
+		
+		main_menu = $MainMenu
+		new_game_menu = $NewGameMenu
+		continue_menu = $ContinueMenu
+	
+	main_menu.new_game.connect(_new_game_menu)
+	main_menu.continue_game.connect(_continue_game_menu)
+	
+	new_game_menu.new_game.connect(_start_new_game)
+	new_game_menu.return_to_main_menu.connect(_return_to_main_menu)
+	continue_menu.continue_game.connect(_continue_game)
+	continue_menu.return_to_main_menu.connect(_return_to_main_menu)
+	continue_menu.erase_player.connect(_remove_player)
 	
 	_return_to_main_menu()
 	
 	SceneFade.main_loaded.emit()
 
 func _new_game_menu() -> void:
-	$MainMenu.hide()
-	$NewGameMenu.show()
-	$NewGameMenu._init_focus()
+	main_menu.hide()
+	new_game_menu.show()
+	new_game_menu._init_focus()
 
 
 func _continue_game_menu() -> void:
-	$MainMenu.hide()
-	$ContinueMenu.show()
-	$ContinueMenu._init_focus()
+	main_menu.hide()
+	continue_menu.show()
+	continue_menu._init_focus()
 
 
 func _return_to_main_menu() -> void:
-	$ContinueMenu.hide()
-	$NewGameMenu.hide()
-	$MainMenu.show()
-	$MainMenu._init_focus()
+	continue_menu.hide()
+	new_game_menu.hide()
+	main_menu.show()
+	main_menu._init_focus()
 
 
 func _start_new_game(player_name: String = "default") -> void:
@@ -73,8 +99,8 @@ static func _player_exist(player_name: String) -> bool:
 	if err != OK:
 		return false
 	
-	for player: String in players_config.get_sections():
-		if player == player_name:
+	for player_name_tmp: String in players_config.get_sections():
+		if player_name_tmp == player_name:
 			return true
 	
 	return false
