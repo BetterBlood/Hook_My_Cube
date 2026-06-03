@@ -1,4 +1,4 @@
-extends Control
+extends CanvasLayer
 
 signal continue_game(player_name: String)
 signal return_to_main_menu()

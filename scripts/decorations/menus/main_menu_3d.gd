@@ -1,25 +1,22 @@
-extends CanvasLayer
+@tool
+extends XRToolsViewport2DIn3D
 
 signal new_game()
 signal continue_game()
 
-@onready var new_game_button: Button = $MainPanel/VBoxContainer/NewGame
-
-func _ready() -> void:
-	new_game_button.grab_focus()
-
 
 func _on_new_game_pressed() -> void:
-	print("wtf ?")
+	print("new game pressed ?")
 	new_game.emit()
 
 
 func _on_continue_pressed() -> void:
+	print("continue pressed ?")
 	continue_game.emit()
 
 
 func _init_focus() -> void:
-	new_game_button.grab_focus()
+	pass # TODO check if can be removed for VR
 
 
 func _on_options_pressed() -> void:
@@ -28,4 +25,5 @@ func _on_options_pressed() -> void:
 
 
 func _on_exit_pressed() -> void:
+	print("exit pressed ?")
 	get_tree().quit(0)

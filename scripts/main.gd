@@ -7,11 +7,16 @@ var main_menu
 var new_game_menu
 var continue_menu
 
+var main_menu_vr
+var new_game_menu_vr
+var continue_menu_vr
+
+signal new_game_menu_from_vr
+
 # VR-XR stuff:
 var xr_interface: XRInterface
 
 func _ready() -> void:
-	
 	# VR-XR stuff:
 	xr_interface = XRServer.find_interface("OpenXR")
 	
@@ -20,23 +25,25 @@ func _ready() -> void:
 		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 		get_viewport().use_xr = true
 		
-		main_menu = $Viewport2Din3D_Main
-		new_game_menu = $Viewport2Din3D_NewGame
-		continue_menu = $Viewport2Din3D_Continue
+		main_menu_vr = $Viewport2Din3D_Main
+		new_game_menu_vr = $Viewport2Din3D_NewGame
+		continue_menu_vr = $Viewport2Din3D_Continue
+		
 	else:
 		print("OpenXR failed initialization, headset probably not connected.")
-		$XROrigin3D.queue_free()
-		
-		main_menu = $MainMenu
-		new_game_menu = $NewGameMenu
-		continue_menu = $ContinueMenu
+		if $XROrigin3D:
+			$XROrigin3D.queue_free()
+	
+	main_menu = $MainMenu
+	new_game_menu = $NewGameMenu
+	continue_menu = $ContinueMenu
 	
 	main_menu.new_game.connect(_new_game_menu)
 	main_menu.continue_game.connect(_continue_game_menu)
 	
 	new_game_menu.new_game.connect(_start_new_game)
 	new_game_menu.return_to_main_menu.connect(_return_to_main_menu)
-	continue_menu.continue_game.connect(_continue_game)
+	continue_menu.continue_game.connect(_continue_game_menu)
 	continue_menu.return_to_main_menu.connect(_return_to_main_menu)
 	continue_menu.erase_player.connect(_remove_player)
 	
@@ -44,7 +51,17 @@ func _ready() -> void:
 	
 	SceneFade.main_loaded.emit()
 
+func test():
+	print("test")
+	new_game_menu_from_vr.emit()
+
 func _new_game_menu() -> void:
+	print("func ?")
+	if main_menu_vr:
+		main_menu_vr.hide()
+		new_game_menu_vr.show()
+		new_game_menu_vr._init_focus()
+		print("VR ?")
 	main_menu.hide()
 	new_game_menu.show()
 	new_game_menu._init_focus()

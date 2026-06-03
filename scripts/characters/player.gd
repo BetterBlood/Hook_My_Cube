@@ -65,6 +65,9 @@ var difficulty: int = 0
 var icons_path: String = "res://images/icons/lvl"
 var icons_name: String = "_icon.svg"
 
+
+var xr_interface: XRInterface
+
 func _ready():
 	health_bar = $Head/HealthBar
 	super._ready()
@@ -81,6 +84,10 @@ func _ready():
 	grapple = Grapple.new()
 	grapple.set_creature_owner(self)
 	$GrapplinPosition.add_child(grapple)
+	
+	xr_interface = XRServer.find_interface("OpenXR")
+	if xr_interface and xr_interface.is_initialized():
+		$MeshInstance3D.queue_free() # TODO: need to check the cohabitation of vr stuff and none vr stuff
 
 
 func initialize_player(meta_data, game_data) -> void:
@@ -193,6 +200,15 @@ func _unhandled_input(event):
 func _physics_process(delta):
 	instant_speed = (position - last_delta_position).length() / delta
 	
+	# adjust health bar, rune position and grapple position for vr
+	if xr_interface and xr_interface.is_initialized():
+		var vr_cam = $XROrigin3D/XRCamera3D
+		
+		$Head/HealthBar.global_transform = vr_cam.global_transform * Transform3D().translated(Vector3(0, -0.4, -1))
+		$GrapplinPosition.global_transform = $XROrigin3D/RightController.global_transform * Transform3D().translated(Vector3(-0.1, 0, 0))
+		$RuneSpot.global_transform = $XROrigin3D/LeftController.global_transform * Transform3D().translated(Vector3(0, -0.1, -0.2))
+	
+	
 	if hold_attack:
 		attack_timer += delta
 		# TODO: animation at 0.25 holding time, shader on the visual rune indicator something shinning idk
@@ -200,7 +216,7 @@ func _physics_process(delta):
 		#if attack_timer >= 2.0: # mmmmm don't know what I prefer: release on 2 sec holding or give information to player and let him release by himself ?
 			#_attack()
 	
-	if Input.is_action_just_pressed("auto_ignite"): # DEBUG
+	if InputMap.has_action("auto_ignite") and Input.is_action_just_pressed("auto_ignite"): # DEBUG
 		var target = self
 		var tmp_id = 17427
 		target.add_effect_id(tmp_id)
@@ -214,19 +230,26 @@ func _physics_process(delta):
 		effect_instance.effect_area_range_transmission = 1.0
 		target.add_child(effect_instance)
 	
-	if Input.is_action_just_pressed("SwapRune"):
+	if InputMap.has_action("SwapRune") and Input.is_action_just_pressed("SwapRune"):
 		_swap_runes() # TODO: animations !!
 	
-	if Input.is_action_just_pressed("attack") and is_able_to_attack:
+	if InputMap.has_action("attack") and Input.is_action_just_pressed("attack") and is_able_to_attack:
 		#print("Input.is_action_just_pressed")
 		attack_timer = 0.0
 		hold_attack = true
 	
-	if Input.is_action_just_released("attack") and is_able_to_attack and hold_attack:
+	if InputMap.has_action("attack") and Input.is_action_just_released("attack") and is_able_to_attack and hold_attack:
 		#print("Input.is_action_just_released")
 		_attack()
 	
-	if Input.is_action_just_pressed("grapple"):
+	if InputMap.has_action("grapple") and Input.is_action_just_pressed("grapple"):
+		#print("grapple ?")
+		
+		if xr_interface and xr_interface.is_initialized():
+			ray_cast_3d.global_transform = $XROrigin3D/RightController.global_transform.rotated_local(Vector3.RIGHT, deg_to_rad(-45))
+		else:
+			ray_cast_3d.transform = Transform3D()
+		
 		ray_cast_3d.collision_mask = grapple.get_collision_mask()
 		ray_cast_3d.target_position = Vector3(0, 0, -grapple.get_distance())
 		ray_cast_3d.force_raycast_update()
@@ -242,6 +265,11 @@ func _physics_process(delta):
 			destination = $Head/RayCast3D/Marker3D.global_position
 			hit = false
 		
+		if xr_interface and xr_interface.is_initialized():
+			ray_cast_3d.global_transform = $XROrigin3D/RightController.global_transform.rotated_local(Vector3.RIGHT, deg_to_rad(-45))
+		else:
+			ray_cast_3d.transform = Transform3D()
+		
 		ray_cast_3d.collision_mask = 32768 - 1 - 8 # -8 to avoid collision with projectiles
 		ray_cast_3d.target_position = Vector3(0, 0, -grapple.get_distance() - 1)
 		ray_cast_3d.force_raycast_update()
@@ -253,13 +281,13 @@ func _physics_process(delta):
 				destination = ray_cast_3d.get_collision_point()
 				hit2 = true
 				hit = false
-		
 		grapple.shoot(destination, hit, hit2)
 	
-	if Input.is_action_just_released("grapple"):
+	if InputMap.has_action("grapple") and Input.is_action_just_released("grapple"):
+		#print("grapple released")
 		grapple.cancel_grab()
 	
-	if Input.is_action_just_pressed("godMod"):
+	if InputMap.has_action("godMod") and Input.is_action_just_pressed("godMod"):
 		godMode = !godMode
 		if godMode:
 			collisionShape.disabled = true
@@ -274,6 +302,17 @@ func _physics_process(delta):
 			head.rotate_x(deg_to_rad(-joystick_v_event.get_axis_value() * right_stick_sensitivity_v))
 			head.rotation.x = clamp(head.rotation.x, deg_to_rad(-89), deg_to_rad(89))
 	
+	if xr_interface and xr_interface.is_initialized():
+		var xr_rotate = $XROrigin3D/RightController.get_vector2("rotate")
+		if abs(xr_rotate.x) > JOY_DEADZONE:
+			rotate_y(deg_to_rad(-xr_rotate.x * right_stick_sensitivity_h))
+		
+		# check if usefull, but got nausea with (X~X)
+		#if abs(xr_rotate.y) > 0.4:
+			#$XROrigin3D.rotate_x(deg_to_rad(xr_rotate.y * right_stick_sensitivity_v))
+			#$XROrigin3D.rotation.x = clamp($XROrigin3D.rotation.x, deg_to_rad(-44), deg_to_rad(44))
+	
+	
 	# Add the gravity.
 	if not is_on_floor() && !godMode:
 		velocity.y -= gravity * delta * 2
@@ -281,7 +320,7 @@ func _physics_process(delta):
 	directionnalInputs = Vector3(0,0,0)
 	
 	# Handle Jump.
-	if Input.is_action_just_pressed("jump") && is_on_floor():
+	if InputMap.has_action("jump") and Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y += JUMP_VELOCITY
 	
 	# Get the input direction and handle the movement/deceleration.
@@ -292,7 +331,19 @@ func _physics_process(delta):
 	var vertical = Input.get_axis("down", "up")
 	directionnalInputs.y = vertical
 	
-	var direction = (get_global_transform().basis * directionnalInputs).normalized()
+	var direction: Vector3 = Vector3()
+	
+	if xr_interface and xr_interface.is_initialized():
+		var xr_move = $XROrigin3D/LeftController.get_vector2("move")
+		directionnalInputs.x = xr_move.x
+		directionnalInputs.z = -xr_move.y
+		
+		var cam_basis = $XROrigin3D/XRCamera3D.global_transform.basis
+		direction = (cam_basis * directionnalInputs)
+		direction.y = 0
+		direction = direction.normalized()
+	else:
+		direction = (get_global_transform().basis * directionnalInputs).normalized()
 	
 	if direction.x:
 		if grapple.is_dragging:
@@ -322,11 +373,16 @@ func _physics_process(delta):
 
 
 func _attack() -> void:
-	#print("Input.is_action_just_released")
+	#print("Input.u_just_released")
 	hold_attack = false
 	#print("orphan:")
 	#print_orphan_nodes() # DEBUG
 	#print("---")
+	
+	if xr_interface and xr_interface.is_initialized():
+		ray_cast_3d.global_transform = $XROrigin3D/LeftController.global_transform.rotated_local(Vector3.RIGHT, deg_to_rad(-45))
+	else:
+		ray_cast_3d.transform = Transform3D()
 	
 	ray_cast_3d.collision_mask = 7
 	ray_cast_3d.target_position = Vector3(0, 0, -100)

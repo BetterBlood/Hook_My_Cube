@@ -8,19 +8,23 @@
 
 config_version=5
 
+[animation]
+
+compatibility/default_parent_skeleton_in_mesh_instance_3d=true
+
 [application]
 
 config/name="Hook_My_Cube"
 run/main_scene="uid://dwm3bngj0v645"
-config/features=PackedStringArray("4.4", "GL Compatibility")
+config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://images/icons/icon.svg"
 
 [autoload]
 
 SceneFade="*res://scenes/decorations/scene_fade.tscn"
 InteractionsManager="*res://scenes/interactions/interactions_manager.tscn"
-XRToolsUserSettings="*res://addons/godot-xr-tools/user_settings/user_settings.gd"
-XRToolsRumbleManager="*res://addons/godot-xr-tools/rumble/rumble_manager.gd"
+XRToolsUserSettings="*uid://bqgb8i74tm0t"
+XRToolsRumbleManager="*uid://by853dk86g1qw"
 
 [display]
 
@@ -183,10 +187,14 @@ auto_ignite={
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 textures/vram_compression/import_etc2_astc=true
+anti_aliasing/quality/msaa_3d=1
 occlusion_culling/use_occlusion_culling=true
+vrs/mode=2
 
 [xr]
 
 openxr/enabled=true
 openxr/default_action_map="uid://3aefxbloqf82"
+openxr/foveation_level=3
+openxr/foveation_dynamic=true
 shaders/enabled=true
