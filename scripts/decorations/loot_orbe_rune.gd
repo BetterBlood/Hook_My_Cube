@@ -24,5 +24,4 @@ func set_loot(_is_upgrade: bool, _special_seed: String) -> void:
 
 
 func init_with_rune(rune_data) -> void:
-	#print("LootOrbe::init_with_rune:TODO rune_data: ", rune_data)
 	new_rune_data = rune_data

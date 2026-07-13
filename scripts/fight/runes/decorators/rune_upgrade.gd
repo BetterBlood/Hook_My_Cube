@@ -83,6 +83,9 @@ func get_save_infos() -> Dictionary:
 func get_rune_spot() -> Marker3D:
 	return rune_upgraded.get_rune_spot()
 
+func get_rune_spot_two() -> Marker3D:
+	return rune_upgraded.get_rune_spot_two()
+
 func get_active_mat() -> StandardMaterial3D:
 	return rune_upgraded.get_active_mat()
 	

@@ -29,6 +29,15 @@ func _ready() -> void:
 		new_game_menu_vr = $Viewport2Din3D_NewGame
 		continue_menu_vr = $Viewport2Din3D_Continue
 		
+		main_menu_vr.new_game.connect(_new_game_menu)
+		main_menu_vr.continue_game.connect(_continue_game_menu)
+		
+		new_game_menu_vr.new_game.connect(_start_new_game)
+		new_game_menu_vr.return_to_main_menu.connect(_return_to_main_menu)
+		continue_menu_vr.continue_game.connect(_continue_game)
+		continue_menu_vr.return_to_main_menu.connect(_return_to_main_menu)
+		continue_menu_vr.erase_player.connect(_remove_player)
+		
 	else:
 		print("OpenXR failed initialization, headset probably not connected.")
 		if $XROrigin3D:
@@ -43,7 +52,7 @@ func _ready() -> void:
 	
 	new_game_menu.new_game.connect(_start_new_game)
 	new_game_menu.return_to_main_menu.connect(_return_to_main_menu)
-	continue_menu.continue_game.connect(_continue_game_menu)
+	continue_menu.continue_game.connect(_continue_game)
 	continue_menu.return_to_main_menu.connect(_return_to_main_menu)
 	continue_menu.erase_player.connect(_remove_player)
 	
@@ -51,29 +60,32 @@ func _ready() -> void:
 	
 	SceneFade.main_loaded.emit()
 
-func test():
-	print("test")
-	new_game_menu_from_vr.emit()
-
 func _new_game_menu() -> void:
-	print("func ?")
 	if main_menu_vr:
 		main_menu_vr.hide()
 		new_game_menu_vr.show()
 		new_game_menu_vr._init_focus()
-		print("VR ?")
 	main_menu.hide()
 	new_game_menu.show()
 	new_game_menu._init_focus()
 
 
 func _continue_game_menu() -> void:
+	if main_menu_vr:
+		main_menu_vr.hide()
+		continue_menu_vr.show()
+		continue_menu_vr._init_focus()
 	main_menu.hide()
 	continue_menu.show()
 	continue_menu._init_focus()
 
 
 func _return_to_main_menu() -> void:
+	if main_menu_vr:
+		continue_menu_vr.hide()
+		new_game_menu_vr.hide()
+		main_menu_vr.show()
+		main_menu_vr._init_focus()
 	continue_menu.hide()
 	new_game_menu.hide()
 	main_menu.show()
@@ -82,6 +94,12 @@ func _return_to_main_menu() -> void:
 
 func _start_new_game(player_name: String = "default") -> void:
 	#TODO: check if name is okey for file system
+	
+	#print("_start_new_game::main")
+	if main_menu_vr:
+		main_menu_vr.hide()
+		continue_menu_vr.hide()
+		new_game_menu_vr.hide()
 	
 	# check that not already used
 	if player_name.is_empty() or _player_exist(player_name):
@@ -95,6 +113,13 @@ func _start_new_game(player_name: String = "default") -> void:
 
 
 func _continue_game(player_name: String = "default") -> void:
+	#print("_continue_game::main")
+	
+	if main_menu_vr:
+		main_menu_vr.hide()
+		continue_menu_vr.hide()
+		new_game_menu_vr.hide()
+	
 	# check if name is already a known name
 	if player_name.is_empty() or !_player_exist(player_name):
 		push_warning("Player name: '" + player_name + "' does not exist !")
@@ -156,6 +181,5 @@ func _remove_player(player_name: String) -> void:
 	players_configs.erase_section(player_name)
 	players_configs.save("user://players.cfg")
 	SceneFade._remove_player(player_name)
-
 	
 	_continue_game_menu()

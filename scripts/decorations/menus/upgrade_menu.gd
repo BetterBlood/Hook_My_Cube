@@ -16,6 +16,20 @@ var is_active_selected: bool = true
 var allow_second_rune: bool = false
 var call_to_potentially_free_orbe: Signal
 
+signal open_upgrade()
+signal close_upgrade()
+
+var is_vr_active: bool = false
+
+func _ready() -> void:
+	hide()
+	
+	var xr_interface: XRInterface = XRServer.find_interface("OpenXR")
+	if xr_interface and xr_interface.is_initialized():
+		is_vr_active = true
+		if get_parent() is CanvasLayer:
+			process_mode = Node.PROCESS_MODE_DISABLED
+			hide()
 
 func set_up_propositions(prop_1, prop_2, prop_3, dont_forget_to_call: Callable, call_on_finish: Signal) -> void:
 	function_to_call_on_selection = dont_forget_to_call
@@ -64,11 +78,28 @@ func _on_upgrade_proposition_3_select_pressed() -> void:
 func _on_close_pressed() -> void:
 	close_menu()
 
+func open_menu() -> void:
+	show()
+	_init_focus()
+	
+	if is_vr_active:
+		open_upgrade.emit()
+		
+		if not get_tree().paused:
+			for i in range(3):
+				await get_tree().physics_frame
+	
+	get_tree().paused = true
+	
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 func close_menu() -> void:
 	get_tree().paused = false
 	$".".hide()
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	
+	if is_vr_active:
+		close_upgrade.emit()
 
 func _on_active_rune_pressed() -> void:
 	is_active_selected = true

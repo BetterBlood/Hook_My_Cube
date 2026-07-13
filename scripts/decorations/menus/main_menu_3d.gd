@@ -4,14 +4,19 @@ extends XRToolsViewport2DIn3D
 signal new_game()
 signal continue_game()
 
-
+func _ready() -> void:
+	super._ready() 
+	
+	var menu_instance = get_scene_instance()
+	if menu_instance:
+		menu_instance.new_game.connect(_on_new_game_pressed)
+		menu_instance.continue_game.connect(_on_continue_pressed)
+	
 func _on_new_game_pressed() -> void:
-	print("new game pressed ?")
 	new_game.emit()
 
 
 func _on_continue_pressed() -> void:
-	print("continue pressed ?")
 	continue_game.emit()
 
 
@@ -25,5 +30,4 @@ func _on_options_pressed() -> void:
 
 
 func _on_exit_pressed() -> void:
-	print("exit pressed ?")
 	get_tree().quit(0)

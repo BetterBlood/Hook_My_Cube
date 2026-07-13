@@ -8,10 +8,13 @@ func _process(_delta):
 	_bridge_action("attack", "attack")
 	_bridge_action("jump", "jump")
 	_bridge_action("grapple", "grapple")
-	_bridge_action("interact", "Interact")
+	_bridge_action("interact", "interact")
 	_bridge_action("god_mod", "godMod")
 	_bridge_action("up", "up")
 	_bridge_action("down", "down")
+	_bridge_action("pause", "pause")
+	_bridge_action("swap_rune", "swap_rune")
+
 
 func _bridge_action(xr_action_name: String, input_map_name: String):
 	if not action_states.has(xr_action_name):

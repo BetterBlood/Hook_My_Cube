@@ -10,7 +10,6 @@ func _ready() -> void:
 
 
 func _on_new_game_pressed() -> void:
-	print("wtf ?")
 	new_game.emit()
 
 

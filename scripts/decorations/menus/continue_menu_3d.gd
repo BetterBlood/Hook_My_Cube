@@ -6,10 +6,21 @@ signal continue_game(player_name: String)
 signal return_to_main_menu()
 signal erase_player(player_name: String)
 
-#@onready var player_name: LineEdit = $MainPanel/VBoxContainer/HBoxContainer/PlayerName
+@onready var player_name: LineEdit# = $MainPanel/VBoxContainer/HBoxContainer/PlayerName
 #@onready var continue_button: Button = $MainPanel/VBoxContainer/Continue
 #@onready var known_player: VBoxContainer = $MainPanel/KnownPlayer
 
+func _ready() -> void:
+	super._ready() 
+	
+	var menu_instance = get_scene_instance()
+	if menu_instance:
+		menu_instance.continue_game.connect(_on_continue_pressed)
+		menu_instance.return_to_main_menu.connect(_on_return_pressed)
+		#menu_instance.erase_player.connect(??)
+		#print(menu_instance.get_children()[0].get_children()[2].get_children()[0].get_children()[1])
+		player_name = menu_instance.get_children()[0].get_children()[2].get_children()[0].get_children()[1]
+	
 
 func _process(_delta: float) -> void:
 	if InputMap.has_action("return") and Input.is_action_just_pressed("return"):
@@ -56,9 +67,9 @@ func _init_focus() -> void:
 			#)
 
 
-func _on_continue_pressed() -> void:
+func _on_continue_pressed(player_name_txt) -> void:
 	#continue_game.emit(player_name.text)
-	continue_game.emit("teeeeeest_VR")
+	continue_game.emit(player_name_txt)
 
 
 func _on_return_pressed() -> void:

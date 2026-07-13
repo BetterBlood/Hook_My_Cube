@@ -13,6 +13,7 @@ func _ready() -> void:
 	
 
 func _on_body_entered(_body: Node3D) -> void:
+	#print("_on_body_entered::InteractionDetector")
 	InteractionsManager.registerArea(self)
 
 

@@ -12,10 +12,12 @@ var projectile_scene: Resource
 var projectile_layer_to_hit: int = 1
 var projectile_source: Creature
 var rune_spot: Marker3D
+var rune_spot_two: Marker3D
 
 static var NBR_UPGRADES: int = 10
 
 const RUNE_VISUAL_IDENTIFIER = preload("res://scenes/fight/runes/visualIndicators/rune_visual_identifier.tscn")
+const SECOND_RUNE_VISUAL_IDENTIFIER = preload("res://scenes/fight/runes/visualIndicators/second_rune_visual_identifier.tscn")
 var visual_rune: Node3D
 var active_mat: StandardMaterial3D
 
@@ -28,11 +30,18 @@ func _init(parent: Node3D) -> void:
 	#print("_init de Rune: ", self)
 	projectile_source = parent
 	rune_spot = projectile_source.get_fire_projectile_spot()
+	rune_spot_two = projectile_source.get_waiting_rune_spot()
 	if rune_spot == null:
 		push_warning("Rune shooting position not set, set to (0, 0, 0)")
 		rune_spot = Marker3D.new()
 		rune_spot.position = Vector3()
 		#get_parent().add_child(rune_spot)
+	if rune_spot_two == null:
+		push_warning("Rune waiting position position not set, set to (0, 0, 0)")
+		rune_spot_two = Marker3D.new()
+		rune_spot_two.position = Vector3()
+		#get_parent().add_child(rune_spot_two)
+		
 
 
 func activate() -> void:
@@ -43,9 +52,20 @@ func activate() -> void:
 	get_rune_spot().add_child(visual_rune)
 	visual_rune.get_child(0).mesh.material = get_active_mat()
 
+func activate_two() -> void:
+	for child in get_rune_spot_two().get_children():
+		child.queue_free()
+	visual_rune = SECOND_RUNE_VISUAL_IDENTIFIER.instantiate()
+	visual_rune.scale = Vector3(0.1, 0.1, 0.1)
+	get_rune_spot_two().add_child(visual_rune)
+	visual_rune.get_child(0).mesh.material = get_active_mat()
+
 func get_rune_spot() -> Marker3D:
 	return rune_spot
-	
+
+func get_rune_spot_two() -> Marker3D:
+	return rune_spot_two
+
 func get_active_mat() -> StandardMaterial3D:
 	return active_mat
 

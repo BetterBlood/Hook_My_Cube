@@ -13,6 +13,9 @@
 [ext_resource type="PackedScene" uid="uid://cqhw276realc" path="res://addons/godot-xr-tools/functions/function_pointer.tscn" id="6_3wg1y"]
 [ext_resource type="Script" uid="uid://cjc182lvsit58" path="res://scripts/characters/bridge_vr_to_normal.gd" id="6_d6tgn"]
 [ext_resource type="PackedScene" uid="uid://c4o0dbwehamwl" path="res://scenes/decorations/upgrade_menu.tscn" id="6_kqtwu"]
+[ext_resource type="PackedScene" uid="uid://clujaf3u776a3" path="res://addons/godot-xr-tools/objects/viewport_2d_in_3d.tscn" id="7_k4v7y"]
+[ext_resource type="Script" uid="uid://dsj6j0et048b2" path="res://scripts/decorations/menus/pause_menu_3d.gd" id="12_xrqxk"]
+[ext_resource type="Script" uid="uid://bfkihanbfm45k" path="res://scripts/decorations/menus/upgrade_menu_3d.gd" id="14_g66nw"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u8vuu"]
 albedo_color = Color(0.784314, 0.133333, 0, 1)
@@ -44,12 +47,14 @@ mesh = SubResource("CapsuleMesh_3vyb7")
 shape = SubResource("CapsuleShape3D_g2els")
 
 [node name="XROrigin3D" type="XROrigin3D" parent="." unique_id=602473296]
+process_mode = 3
 
 [node name="XRCamera3D" type="XRCamera3D" parent="XROrigin3D" unique_id=1214587072]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.72523206, 0)
 current = true
 
 [node name="LeftController" type="XRController3D" parent="XROrigin3D" unique_id=647596235]
+process_mode = 3
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.24682379, 0.782, 0)
 tracker = &"left_hand"
 pose = &"grip"
@@ -66,7 +71,27 @@ transform = Transform3D(1, 0, 0, 0, 0.70710677, 0.70710677, 0, -0.70710677, 0.70
 show_target = true
 target_radius = 0.005
 
+[node name="Viewport2Din3D_UI" parent="XROrigin3D/LeftController" unique_id=190006590 instance=ExtResource("7_k4v7y")]
+process_mode = 3
+transform = Transform3D(0.11297549, -0.8423024, -0.5270324, -0.5287813, -0.5000436, 0.68581825, -0.84120584, 0.20120424, -0.5018862, -0.17, -0.045, 0.05)
+screen_size = Vector2(0.2, 0.2)
+collision_layer = 5242880
+scene = ExtResource("4_dyp2m")
+viewport_size = Vector2(400, 400)
+transparent = 1
+scene_properties_keys = PackedStringArray("ui.gd")
+
+[node name="Viewport2Din3D_DEBUG" parent="XROrigin3D/LeftController" unique_id=2069482061 instance=ExtResource("7_k4v7y")]
+transform = Transform3D(0.11297548, -0.8423024, -0.5270325, -0.52878124, -0.5000436, 0.6858184, -0.8412057, 0.20120424, -0.5018863, -0.17, -0.045, 0.05)
+screen_size = Vector2(0.2, 0.2)
+collision_layer = 5242880
+scene = ExtResource("3_76oj4")
+viewport_size = Vector2(400, 400)
+transparent = 1
+scene_properties_keys = PackedStringArray("debug_infos.gd")
+
 [node name="RightController" type="XRController3D" parent="XROrigin3D" unique_id=205739333]
+process_mode = 3
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4077201, 0.782, 0)
 tracker = &"right_hand"
 pose = &"grip"
@@ -79,9 +104,31 @@ hand_material_override = ExtResource("5_2l4js")
 transform = Transform3D(1, 0, 0, 0, 0.70710677, 0.70710677, 0, -0.70710677, 0.70710677, 0, 0, 0)
 
 [node name="FunctionPointer" parent="XROrigin3D/RightController" unique_id=1212916066 instance=ExtResource("6_3wg1y")]
+process_mode = 3
 transform = Transform3D(1, 0, 0, 0, 0.70710677, 0.70710677, 0, -0.70710677, 0.70710677, -0.02, -0.03535534, -0.10606602)
 show_target = true
 target_radius = 0.005
+collision_mask = 5242881
+
+[node name="Viewport2Din3D_Pause" parent="XROrigin3D" unique_id=1532644214 instance=ExtResource("7_k4v7y")]
+process_mode = 3
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -1.4)
+visible = false
+script = ExtResource("12_xrqxk")
+scene = ExtResource("5_atpat")
+viewport_size = Vector2(1920, 1080)
+transparent = 1
+scene_properties_keys = PackedStringArray("pause_menu.gd")
+
+[node name="Viewport2Din3D_Upgrade" parent="XROrigin3D" unique_id=927864594 instance=ExtResource("7_k4v7y")]
+process_mode = 3
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -1.5)
+visible = false
+script = ExtResource("14_g66nw")
+scene = ExtResource("6_kqtwu")
+viewport_size = Vector2(1920, 1080)
+transparent = 1
+scene_properties_keys = PackedStringArray("upgrade_menu.gd")
 
 [node name="Head" type="Node3D" parent="." unique_id=1725934758]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.782, 0)
@@ -130,6 +177,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.651, 0.282, -0.733)
 
 [node name="RuneSpot" type="Marker3D" parent="." unique_id=1127498505]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.7, 0.35, -1.5)
+
+[node name="RuneSpotTwo" type="Marker3D" parent="." unique_id=1906086822]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.7, 0, -1.5)
 
 [node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=485300928]
 light_energy = 5.0

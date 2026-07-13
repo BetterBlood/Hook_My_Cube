@@ -8,6 +8,7 @@ const JUMP_VELOCITY = 9 # TODO: link to VR set
 @onready var camera := $Head/Camera3D
 @onready var elbow: Marker3D = $Elbow
 @onready var rune_spot: Marker3D = $RuneSpot
+@onready var rune_spot_two: Marker3D = $RuneSpotTwo
 @onready var ray_cast_3d: RayCast3D = $Head/RayCast3D
 
 const SENSITIVITY = 0.07
@@ -67,6 +68,9 @@ var icons_name: String = "_icon.svg"
 
 
 var xr_interface: XRInterface
+var ui: Node
+
+@onready var active_upgrade_menu = $CanvasLayer/UpgradeMenu # Default upgrade menu
 
 func _ready():
 	health_bar = $Head/HealthBar
@@ -76,7 +80,8 @@ func _ready():
 	collisionShape.disabled = false
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
-	active_rune = NormalRune1.new(self)
+	#active_rune = NormalRune1.new(self)
+	active_rune = DebugRune.new(self)
 	_init_active_rune_visual_spot()
 	
 	layer = 2
@@ -88,7 +93,26 @@ func _ready():
 	xr_interface = XRServer.find_interface("OpenXR")
 	if xr_interface and xr_interface.is_initialized():
 		$MeshInstance3D.queue_free() # TODO: need to check the cohabitation of vr stuff and none vr stuff
-
+		ui = $XROrigin3D/LeftController/Viewport2Din3D_UI.get_scene_instance()
+		
+		var vr_menu_node = $XROrigin3D/Viewport2Din3D_Upgrade
+		if vr_menu_node:
+			active_upgrade_menu = vr_menu_node.get_scene_instance()
+		
+		var vr_pause_node = $XROrigin3D/Viewport2Din3D_Pause
+		if vr_pause_node and vr_menu_node:
+			var pause_menu_instance = vr_pause_node.get_scene_instance()
+			if pause_menu_instance:
+				var original_layer = vr_menu_node.collision_layer
+				pause_menu_instance.open_pause.connect(func():
+					vr_menu_node.collision_layer = 0
+				)
+				pause_menu_instance.close_pause.connect(func():
+					vr_menu_node.collision_layer = original_layer
+				)
+	else:
+		$XROrigin3D.queue_free()
+		ui = $CanvasLayer/UI
 
 func initialize_player(meta_data, game_data) -> void:
 	if meta_data == null:
@@ -106,9 +130,9 @@ func initialize_player(meta_data, game_data) -> void:
 	var essences_owned: Array[int] = []
 	for essence in meta_data["essences"]:
 		essences_owned.append(int(essence))
-	$CanvasLayer/UI.update_essences(essences_owned)
+	ui.update_essences(essences_owned)
 	gold = meta_data["gold"]
-	$CanvasLayer/UI.update_gold(gold)
+	ui.update_gold(gold)
 	
 	#progression data
 	if game_data == null:
@@ -130,9 +154,9 @@ func initialize_player(meta_data, game_data) -> void:
 	health_component.health = game_data["hp"]
 	lvl = game_data["lvl"]
 	xp = game_data["xp"]
-	$CanvasLayer/UI.update_lvl(lvl + lvl_points, lvl_points)
-	$CanvasLayer/UI.update_essences(essences)
-	$CanvasLayer/UI.update_gold(gold)
+	ui.update_lvl(lvl + lvl_points, lvl_points)
+	ui.update_essences(essences)
+	ui.update_gold(gold)
 	#xp_to_lvl_up = get_xp_for_leveling_up(lvl)
 	
 	#print(game_data["runes"])
@@ -145,7 +169,7 @@ func initialize_player(meta_data, game_data) -> void:
 	_init_active_rune_visual_spot()
 	second_rune = Rune.create_rune(rune2_data, self)
 	if second_rune:
-		second_rune.set_layet_to_hit(5)
+		_init_second_rune_visual_spot()
 	
 	health_component.set_up_temp_with_data(game_data["health_component_upgrades"])
 	grapple.set_up_with_data(game_data["grappin_upgrades"])
@@ -192,6 +216,7 @@ func _input(event):
 
 func _unhandled_input(event):
 	if event is InputEventMouseMotion:
+		#print("mouse_motion_detect: ", event)
 		rotate_y(deg_to_rad(-event.relative.x * SENSITIVITY))
 		head.rotate_x(deg_to_rad(-event.relative.y * SENSITIVITY))
 		head.rotation.x = clamp(head.rotation.x, deg_to_rad(-89), deg_to_rad(89))
@@ -207,7 +232,7 @@ func _physics_process(delta):
 		$Head/HealthBar.global_transform = vr_cam.global_transform * Transform3D().translated(Vector3(0, -0.4, -1))
 		$GrapplinPosition.global_transform = $XROrigin3D/RightController.global_transform * Transform3D().translated(Vector3(-0.1, 0, 0))
 		$RuneSpot.global_transform = $XROrigin3D/LeftController.global_transform * Transform3D().translated(Vector3(0, -0.1, -0.2))
-	
+		$RuneSpotTwo.global_transform = $XROrigin3D/LeftController.global_transform * Transform3D().translated(Vector3(0.1, 0, 0.1)) # TODO adjust with helmet
 	
 	if hold_attack:
 		attack_timer += delta
@@ -230,7 +255,7 @@ func _physics_process(delta):
 		effect_instance.effect_area_range_transmission = 1.0
 		target.add_child(effect_instance)
 	
-	if InputMap.has_action("SwapRune") and Input.is_action_just_pressed("SwapRune"):
+	if InputMap.has_action("swap_rune") and Input.is_action_just_pressed("swap_rune"):
 		_swap_runes() # TODO: animations !!
 	
 	if InputMap.has_action("attack") and Input.is_action_just_pressed("attack") and is_able_to_attack:
@@ -422,7 +447,7 @@ func _attack() -> void:
 
 func _on_damage_taken():
 	super._on_damage_taken()
-	$CanvasLayer/UI.damage_tick()
+	ui.damage_tick()
 
 func _update_life_display():
 	var health_ratio: float = health_component.health / health_component.get_max_health()
@@ -446,6 +471,7 @@ func _swap_runes() -> void:
 		var tmp_rune = active_rune
 		active_rune = second_rune
 		second_rune = tmp_rune
+		_init_second_rune_visual_spot()
 	
 	_init_active_rune_visual_spot()
 
@@ -455,27 +481,33 @@ func _init_active_rune_visual_spot() -> void:
 	active_rune.set_layet_to_hit(5)
 	# TODO: animation ?
 
+func _init_second_rune_visual_spot() -> void:
+	if second_rune:
+		second_rune.activate_two()
+		second_rune.set_layet_to_hit(5)
+		# TODO: animation ?
+
 # upgrades: [[runeType, lvl], [healthType, lvl], [grapleType, lvl]]
 func propose_upgrades(upgrades: Array, call_after: Signal) -> void:
 	#print(upgrades)
 	tmp_upgrades = upgrades
 	
-	get_tree().paused = true
+	#get_tree().paused = true
 	# TODO: maybe show the levels but not the upgrade here
 	var prop_1 = ["Rune upgrade", "res://images/icons/icon.svg", "Description:\nSelect 1 of 3 upgrades for selected rune"]
 	var prop_2 = ["Player upgrade", "res://images/icons/icon.svg", "Description:\nSelect 1 of 3 upgrades for the health component"]
 	var prop_3 = ["Grapple upgrade", "res://images/icons/icon.svg", "Description:\nSelect 1 of 3 upgrades for the grapple"]
-	$CanvasLayer/UpgradeMenu.set_up_propositions(prop_1, prop_2, prop_3, select_upgrade_proposition_type, call_after)
-	$CanvasLayer/UpgradeMenu.set_title("Select an upgrade (rune, health, grapple)")
-	$CanvasLayer/UpgradeMenu.show()
-	$CanvasLayer/UpgradeMenu._init_focus()
+	active_upgrade_menu.set_up_propositions(prop_1, prop_2, prop_3, select_upgrade_proposition_type, call_after)
+	active_upgrade_menu.set_title("Select an upgrade (rune, health, grapple)")
+	active_upgrade_menu.open_menu()
+	active_upgrade_menu._init_focus()
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 
 func propose_new_runes(new_runes: Array, call_on_finish: Signal) -> void:
 	#print(new_runes)
 	tmp_new_runes = new_runes
-	get_tree().paused = true
+	#get_tree().paused = true
 	#print(str(Rune.all_runes[new_runes[0]]))
 	var runes: Array = []
 	for i in range(3):
@@ -488,19 +520,19 @@ func propose_new_runes(new_runes: Array, call_on_finish: Signal) -> void:
 			"\nPenetration: " + str(rune_data["p_penetration"]) +
 			"\nSpeed: " + str(rune_data["p_speed"])
 		])
-	$CanvasLayer/UpgradeMenu.set_up_propositions(runes[0], runes[1], runes[2], set_new_rune_at_placement, call_on_finish)
-	$CanvasLayer/UpgradeMenu.set_title("Select a new Rune")
-	$CanvasLayer/UpgradeMenu.set_adding_new_rune()
-	$CanvasLayer/UpgradeMenu.show()
-	$CanvasLayer/UpgradeMenu._init_focus()
+	active_upgrade_menu.set_up_propositions(runes[0], runes[1], runes[2], set_new_rune_at_placement, call_on_finish)
+	active_upgrade_menu.set_title("Select a new Rune")
+	active_upgrade_menu.set_adding_new_rune()
+	active_upgrade_menu.open_menu()
+	active_upgrade_menu._init_focus()
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 
 func propose_new_rune(new_rune_data: Dictionary, call_on_finish: Signal) -> void:
 	#print(new_rune_data)
 	tmp_new_rune = new_rune_data
-	get_tree().paused = true
-	print(new_rune_data)
+	#get_tree().paused = true
+	#print(new_rune_data)
 	var rune_data: Dictionary = Rune.get_rune_info(int(new_rune_data["rune_id"]))
 	
 	var cd_reduction: float = _get_total_for_rune_upgrade("COOLDOWN_REDUCTION")
@@ -527,11 +559,11 @@ func propose_new_rune(new_rune_data: Dictionary, call_on_finish: Signal) -> void
 			"\nSpeed: " + str(speed) + "(" + str(speed_upgrades) + ")"
 	]
 	#var rune_2 = ["rune id:" + str(new_rune_data["rune_id"]), "res://images/icons/icon.svg", "Description:\ndata: " + str(new_rune_data["rune_upgrades"])]
-	$CanvasLayer/UpgradeMenu.set_up_propositions(null, rune_2, null, set_old_rune_at_placement, call_on_finish)
-	$CanvasLayer/UpgradeMenu.set_title("Swap rune with selected slot")
-	$CanvasLayer/UpgradeMenu.set_adding_new_rune()
-	$CanvasLayer/UpgradeMenu.show()
-	$CanvasLayer/UpgradeMenu._init_focus()
+	active_upgrade_menu.set_up_propositions(null, rune_2, null, set_old_rune_at_placement, call_on_finish)
+	active_upgrade_menu.set_title("Swap rune with selected slot")
+	active_upgrade_menu.set_adding_new_rune()
+	active_upgrade_menu.open_menu()
+	active_upgrade_menu._init_focus()
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 func _get_total_for_rune_upgrade(upgrade_type:String) -> float:
@@ -556,6 +588,7 @@ func set_new_rune_at_placement(rune_index: int, active_placement: bool, call_on_
 			loot_orbe_rune.init_with_rune(second_rune.get_save_infos())
 			get_parent().add_child(loot_orbe_rune)
 		second_rune = Rune.create_rune_with_id(tmp_new_runes[rune_index], self)
+		_init_second_rune_visual_spot()
 	call_on_finish.emit(true)
 	#_set_new_rune_at_placement(tmp_new_runes[rune_index], active_placement, call_on_finish)
 
@@ -574,6 +607,7 @@ func set_old_rune_at_placement(_not_used: int, active_placement: bool, call_on_f
 			loot_orbe_rune.init_with_rune(second_rune.get_save_infos())
 			get_parent().add_child(loot_orbe_rune)
 		second_rune = Rune.create_rune(tmp_new_rune, self)
+		_init_second_rune_visual_spot()
 	call_on_finish.emit(true)
 	#_set_new_rune_at_placement(tmp_new_rune, active_placement, call_on_finish)
 
@@ -592,16 +626,17 @@ func set_old_rune_at_placement(_not_used: int, active_placement: bool, call_on_f
 			#loot_orbe_rune.init_with_rune(second_rune.get_save_infos())
 			#get_parent().add_child(loot_orbe_rune)
 		#second_rune = Rune.create_rune(new_rune, self)
+		#_init_second_rune_visual_spot()
 	#call_on_finish.emit(true)
 
 
 func select_upgrade_proposition_type(proposition_type_index: int, _no_active_placement: bool, call_on_finished: Signal) -> void:
 	await get_tree().create_timer(0.01).timeout
 	
-	get_tree().paused = true
+	#get_tree().paused = true
 	var props: Array = []
 	if proposition_type_index == 0:
-		$CanvasLayer/UpgradeMenu.set_title("Select a rune upgrade (1 of 3)")
+		active_upgrade_menu.set_title("Select a rune upgrade (1 of 3)")
 		for i in range(3):
 			props.append([
 				str(RuneUpgrade.RuneUpgradeType.keys()[tmp_upgrades[0][i][0]]), 
@@ -610,7 +645,7 @@ func select_upgrade_proposition_type(proposition_type_index: int, _no_active_pla
 					str(RuneUpgrade.UPGRADE_VALUES[tmp_upgrades[0][i][0]][tmp_upgrades[0][i][1]])
 			])
 	elif proposition_type_index == 1:
-		$CanvasLayer/UpgradeMenu.set_title("Select a health upgrade (1 of 3)")
+		active_upgrade_menu.set_title("Select a health upgrade (1 of 3)")
 		for i in range(3):
 			props.append([
 				HealthComponent.upgrades_names[tmp_upgrades[proposition_type_index][i][0]], 
@@ -620,7 +655,7 @@ func select_upgrade_proposition_type(proposition_type_index: int, _no_active_pla
 						proposition_type_index][i][0]] * (tmp_upgrades[proposition_type_index][i][1] + 1))
 			])
 	else:
-		$CanvasLayer/UpgradeMenu.set_title("Select a grapple upgrade (1 of 2) or gold")
+		active_upgrade_menu.set_title("Select a grapple upgrade (1 of 2) or gold")
 		var gold_proposal = ["golds", "res://images/icons/lvl3_icon.svg", "Description:\nquantité: " + str(GOLD_UPGRADE_VALUE)]
 		for i in range(2):
 			props.append([
@@ -633,10 +668,10 @@ func select_upgrade_proposition_type(proposition_type_index: int, _no_active_pla
 		props.append(gold_proposal)
 	#print(props)
 	var func_to_call = [select_rune_upgrade, select_health_upgrade, select_grapple_upgrade]
-	$CanvasLayer/UpgradeMenu.set_up_propositions(props[0], props[1], props[2], func_to_call[proposition_type_index], call_on_finished)
-	#$CanvasLayer/UpgradeMenu.set_title("Select an upgrade (1 of 3)")
-	$CanvasLayer/UpgradeMenu.show()
-	$CanvasLayer/UpgradeMenu._init_focus()
+	active_upgrade_menu.set_up_propositions(props[0], props[1], props[2], func_to_call[proposition_type_index], call_on_finished)
+	#active_upgrade_menu.set_title("Select an upgrade (1 of 3)")
+	active_upgrade_menu.open_menu()
+	active_upgrade_menu._init_focus()
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 
@@ -647,6 +682,7 @@ func select_rune_upgrade(rune_upgrade_index: int, active_placement: bool, call_o
 		_init_active_rune_visual_spot()
 	elif second_rune:
 		second_rune =  Rune.upgrade_rune(second_rune, str(RuneUpgrade.RuneUpgradeType.keys()[tmp_upgrades[0][rune_upgrade_index][0]]), tmp_upgrades[0][rune_upgrade_index][1])
+		_init_second_rune_visual_spot()
 	
 	call_on_finished.emit(true)
 
@@ -681,7 +717,7 @@ func gain_xp(value: float) -> void:
 		xp -= get_xp_for_leveling_up(lvl + lvl_points)
 		#xp_left_2 = 0
 		lvl_points += 1
-		$CanvasLayer/UI.update_lvl(lvl + lvl_points, lvl_points)
+		ui.update_lvl(lvl + lvl_points, lvl_points)
 
 
 func leveling_phase(maze_seed: String) -> void:
@@ -698,7 +734,7 @@ func leveling_phase(maze_seed: String) -> void:
 		lvl_points -= 1
 		#xp_to_lvl_up = get_xp_for_leveling_up(lvl)
 		await try_lvl_up
-		$CanvasLayer/UI.update_lvl(lvl + lvl_points, lvl_points)
+		ui.update_lvl(lvl + lvl_points, lvl_points)
 		await get_tree().create_timer(0.001).timeout
 		leveling_phase(maze_seed)
 	else:
@@ -728,13 +764,13 @@ func get_xp_for_leveling_up(current_lvl: int) -> float:
 
 func gain_gold(value: int) -> void:
 	gold += value
-	$CanvasLayer/UI.update_gold(gold)
+	ui.update_gold(gold)
 	#print("Player gain gold amount: ", value, ", new total: ", gold)
 
 
 func gain_essence(essence_type: Enums.DamageType, value: int) -> void:
 	essences[essence_type] += value
-	$CanvasLayer/UI.update_essences(essences)
+	ui.update_essences(essences)
 	#print("Player gain essence_type: '", essence_type, "',  amount: ", value, ", total: ", essences)
 
 
@@ -745,13 +781,16 @@ func gain_ice_wall_grab_upgrade() -> void:
 func get_fire_projectile_spot() -> Marker3D:
 	return rune_spot
 
+func get_waiting_rune_spot() -> Marker3D:
+	return rune_spot_two
+
 
 func get_player_name() -> String:
 	return current_player_name
 
 
 func get_interaction_label() -> Label:
-	return $CanvasLayer/UI.get_children()[1]
+	return ui.get_children()[1]
 
 
 func set_ressource_on_boss_win() -> void:
@@ -779,6 +818,7 @@ func set_rune_at_placement(rune_id: int, active_placement: bool = true) -> void:
 		_init_active_rune_visual_spot()
 	else:
 		second_rune = Rune.create_rune_with_id(rune_id, self)
+		_init_second_rune_visual_spot()
 
 # TODO: be carefull when removing an effect pls be certain to correctly clean effect
 func remove_all_status_effect() -> void:

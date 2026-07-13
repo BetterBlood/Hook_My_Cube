@@ -45,7 +45,7 @@ func _init_focus() -> void:
 		
 		known_player.add_child(player_line)
 	
-	if len(player_names) > 1:
+	if len(player_names) > 0: # (O.o) < WTF ?
 		player_name.focus_neighbor_right = known_player.get_child(1).get_path()
 		continue_button.focus_neighbor_right = known_player.get_child(1).get_path()
 		$MainPanel/VBoxContainer/Return.focus_neighbor_right = known_player.get_child(1).get_path()

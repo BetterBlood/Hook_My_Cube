@@ -8,7 +8,7 @@ var give_type: Enums.DamageType = Enums.DamageType.FIRE
 var give_value: int = 1 
 var lobby: Lobby
 
-var materials: Array[Material] = [ # TODO: update on other type or runes
+var materials: Array[Material] = [ # TODO: update on other type or runes added
 	preload("res://materials/projectiles/normal_projectile.tres"),
 	preload("res://materials/projectiles/fire_projectile.tres"),
 	preload("res://materials/projectiles/plant_projectile.tres"),
